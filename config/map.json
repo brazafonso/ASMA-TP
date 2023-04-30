@@ -1,0 +1,12 @@
+{
+    "height" : 5,
+    "width"  : 5,
+    "map"    :
+    [
+        [{"type":"station","company" : "1","purpose": "comercial"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"station","company" : "1","purpose": "goods"}],
+        [{"type":"airstrip"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"station","company" : "","purpose": "goods"}],
+        [{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"}],
+        [{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"}],
+        [{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"}]
+    ]
+}

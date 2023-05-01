@@ -9,10 +9,14 @@ class ControlTowerListener(CyclicBehaviour):
 
             # If message and content are not None
             if msg:
+                  print('got message')
                   performative = msg.get_metadata('performative')
                   source = str(msg.sender)
                   if performative == 'request' and msg.body:
                         obj = jsonpickle.decode(msg.body)
-                        
+
+                        print(type(obj))
+                        print(obj)
+
                         
                   

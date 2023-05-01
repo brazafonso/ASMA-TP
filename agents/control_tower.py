@@ -1,5 +1,6 @@
 from spade import agent
 from objects.airport_map import AirportMap
+from behaviours.control_tower_listener import ControlTowerListener
 
 class ControlTowerAgent(agent.Agent):
 
@@ -9,6 +10,7 @@ class ControlTowerAgent(agent.Agent):
         print(f'Control tower starting id : {self.jid}')
         self.set('landing_queue',[])
         self.set('take_off_queue',[])
+        self.add_behaviour(ControlTowerListener())
 
 
 

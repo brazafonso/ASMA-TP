@@ -11,6 +11,12 @@ class Airstrip():
         self.pos = Position(x,y)
 
 
+    def get_pos_x(self):
+        return self.pos.x
+    
+    def get_pos_y(self):
+        return self.pos.y
+
     def __str__(self) -> str:
         return f'''Strip {self.id}:
         - vacancy : {self.state}

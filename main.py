@@ -3,6 +3,7 @@
 # Imports
 from spade import agent, quit_spade
 from agents.control_tower import ControlTowerAgent
+from agents.station_manager import StationManagerAgent
 from agents.plane import PlaneAgent
 from objects.airport_map import AirportMap
 import time
@@ -39,6 +40,12 @@ if __name__ == "__main__":
 
     futureCT = control_tower.start()
 
+    # Criar station manager
+    station_manager = StationManagerAgent(f'station_manager@{USER}',PASSWORD)
+    station_manager.set('airport_map',airport_map)
+    station_manager.set('control_tower',f'control_tower@{USER}')
+
+    futureSM = station_manager.start()
 
     # Criar aviao
 
@@ -51,6 +58,7 @@ if __name__ == "__main__":
     
     
     futureCT.result()
+    futureSM.result()
     futureP.result()
 
 
@@ -59,6 +67,9 @@ if __name__ == "__main__":
     print(control_tower.status())
     control_tower.stop()
     print("Control Tower stopped")
+
+    station_manager.stop()
+    print("Station Manager stopped")
 
     plane1.stop()
 

@@ -8,6 +8,9 @@ class Position():
 
     def __str__(self) -> str:
         return f'({self.x},{self.y})'
+    
+    def distance(self,other):
+        return ((self.x-other.x)**2+(self.y-other.y)**2)**(1/2)
 
     
     

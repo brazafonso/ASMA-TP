@@ -146,6 +146,17 @@ class AviaoRequestTakeoffBehaviour(State):
         while((data_agora.minute != data_descolagem.minute)or(data_agora.second != data_descolagem.second)):
             time.sleep(0.5)
 
+        # TODO: Criar package com type='takeoff request'
+        #
+        # Fica algo do género:
+        #
+        # package = Package('takeoff request',self.agent.plane)
+        # msg = Message(to=self.get('station_manager')) # assumindo que envias isto qnd querias o avião
+        # msg.set_metadata("performative", "request")
+        # msg.body = jsonpickle.encode(package)
+        #
+        # await self.send(msg)
+
         msg = Message(to='Gestor_de_Gares@alexandre-aspire-a515-52g')
         msg.set_metadata("performative", "request")
         msg.body = jsonpickle.encode(self.agent.name)

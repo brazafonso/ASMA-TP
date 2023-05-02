@@ -24,21 +24,21 @@ if __name__ == "__main__":
     file = open('config/airport.json', 'r')
     config = json.load(file)
     file.close()
-    aiorport_map = AirportMap(config)
-    aiorport_map.set_frame()
-    aiorport_map.place_airstrips()
-    aiorport_map.place_stations()
-    aiorport_map.draw_map()
+    airport_map = AirportMap(config)
+    airport_map.set_frame()
+    airport_map.place_airstrips()
+    airport_map.place_stations()
+    airport_map.draw_map()
 
     
     # Criar torre de controlo
     control_tower = ControlTowerAgent(f'control_tower@{USER}',PASSWORD)
-    control_tower.set('airport_map',aiorport_map)
+    control_tower.set('airport_map',airport_map)
+    control_tower.set('station_manager',f'station_manager@{USER}')
 
 
     futureCT = control_tower.start()
 
-    futureCT.result()
 
     # Criar aviao
 
@@ -48,11 +48,18 @@ if __name__ == "__main__":
 
     futureP = plane1.start()
 
+    
+    
+    futureCT.result()
     futureP.result()
 
-    print(control_tower.status())
 
+    time.sleep(5)
+
+    print(control_tower.status())
     control_tower.stop()
     print("Control Tower stopped")
+
+    plane1.stop()
 
     quit_spade()

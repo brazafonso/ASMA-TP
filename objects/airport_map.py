@@ -14,6 +14,14 @@ class AirportMap():
         self.scrape_airport_map()
 
 
+    def available_airstrips(self):
+        '''Devolve a lista das pistas disponiveis'''
+        available = []
+        for airstrip in self.airstrips:
+            if airstrip.state == 0:
+                available.append(airstrip)
+        return available
+
 
     def scrape_airport_map(self):
         '''Obtém informação mais detalhada a partir do mapa (como as pistas e gares)'''

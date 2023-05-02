@@ -2,6 +2,7 @@ import jsonpickle
 import random
 import time
 import datetime
+from objects.package import Package
 from spade.agent import Agent
 from spade.behaviour import FSMBehaviour, State
 from spade.message import Message
@@ -23,23 +24,25 @@ class AviaoFSMBehaviour(FSMBehaviour):
 class AviaoRequestLandingBehaviour(State):
 
     async def run(self):
-
+        print('Plane in AviaoRequestLandingBehaviour')
         #O agente Avião muda o estado de pedir para descolar se já estiver estacionado numa gare
-        if not(self.agent.estado):
+        
+        if not self.agent.plane.state:
             self.set_next_state(STATE_THREE)
 
+        package = Package('landing request',self.agent.plane)
         msg = Message(to=self.get('control_tower'))
         msg.set_metadata("performative", "request")
-        msg.body = jsonpickle.encode(self.agent)
+        msg.body = jsonpickle.encode(package)
         
         await self.send(msg)
-
+        print('Landing request sent')
         self.set_next_state(STATE_TWO)
         
 class AviaoListenLandingBehaviour(State):
 
     async def run(self):
-
+        print('Plane in AviaoListenLandingBehaviour')
         #TODO decidir/ajustar tempo de timeout
         msg = await self.receive(timeout=60)
 
@@ -52,7 +55,7 @@ class AviaoListenLandingBehaviour(State):
             print(f'{self.agent.name} recebeu uma mensagem com a performativa \
                   {performative} do agente {fromA}')
 
-            if fromA == 'Torre_de_Controlo':
+            if fromA == self.get('control_tower'):
                 
                 if performative == 'inform':
 
@@ -130,7 +133,7 @@ class AviaoListenLandingBehaviour(State):
 class AviaoRequestTakeoffBehaviour(State):
 
     async def run(self):
-
+        print('Plane in AviaoRequestTakeoffBehaviour')
 
         #TODO faz mais sentido definir quando se cria o Avião mas depois não temos a 
         # certeza se passamos da data com as esperas que introduzimos. Pode ser dicutido
@@ -155,7 +158,7 @@ class AviaoRequestTakeoffBehaviour(State):
 class AviaoListenTakeoffBehavior(State):
 
     async def run(self):
-
+        print('Plane in AviaoListenTakeoffBehavior')
         msg = await self.receive()
 
         performative = msg.get_metadata('performative')

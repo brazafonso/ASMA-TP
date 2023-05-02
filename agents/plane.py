@@ -1,6 +1,7 @@
 import datetime
 from spade import agent
 from objects.flight import Flight
+from objects.plane import Plane
 from behaviours import plane_FMS_behaviour
 
 class PlaneAgent(agent.Agent):
@@ -12,8 +13,10 @@ class PlaneAgent(agent.Agent):
         self.estado = True
         self.nome_companhia = 'TAP'
         self.tipo = 'comercial' #'mercadorias'
-        data_agora = datetime.datetime.now()
-        self.voo = Flight('Porto','Lisboa',data_agora)
+        now = datetime.datetime.now()
+        flight = Flight('Porto','Lisboa',now)
+
+        self.plane = Plane(id=self.name,state=True,company='TAP',type='comercial',flight=flight)
 
         STATE_ONE = 'STATE_ONE'
         STATE_TWO = 'STATE_TWO'
@@ -23,13 +26,13 @@ class PlaneAgent(agent.Agent):
         #Set Behaviors
         fsm = plane_FMS_behaviour.AviaoFSMBehaviour()
         fsm.add_state(name=STATE_ONE, state=plane_FMS_behaviour.AviaoRequestLandingBehaviour(), initial=True)
-        fsm.add_state(name=STATE_TWO, state=plane_FMS_behaviour.AviaoRequestLandingBehaviour()) 
+        fsm.add_state(name=STATE_TWO, state=plane_FMS_behaviour.AviaoListenLandingBehaviour()) 
         fsm.add_state(name=STATE_THREE, state=plane_FMS_behaviour.AviaoRequestTakeoffBehaviour())
-        fsm.add_state(name=STATE_FOUR, state=plane_FMS_behaviour.AviaoListenLandingBehaviour())
+        fsm.add_state(name=STATE_FOUR, state=plane_FMS_behaviour.AviaoListenTakeoffBehavior())
         fsm.add_transition(source=STATE_ONE,dest=STATE_TWO)
         fsm.add_transition(source=STATE_ONE,dest=STATE_THREE)
         fsm.add_transition(source=STATE_TWO,dest=STATE_THREE)
         fsm.add_transition(source=STATE_THREE,dest=STATE_FOUR)
-        self.add_behavior(fsm)
+        self.add_behaviour(fsm)
 
 

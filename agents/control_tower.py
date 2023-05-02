@@ -1,6 +1,6 @@
 from spade import agent
 from objects.airport_map import AirportMap
-from behaviours.control_tower_listener import ControlTowerListener
+from behaviours.control_tower_behaviour import *
 
 class ControlTowerAgent(agent.Agent):
 
@@ -8,9 +8,10 @@ class ControlTowerAgent(agent.Agent):
     # Agent setup
     async def setup(self):
         print(f'Control tower starting id : {self.jid}')
-        self.set('landing_queue',[])
-        self.set('take_off_queue',[])
+        self.landing_queue = []
+        self.take_off_queue = []
         self.add_behaviour(ControlTowerListener())
+        self.add_behaviour(ControlTowerLandingRequester())
 
 
 
@@ -19,8 +20,8 @@ class ControlTowerAgent(agent.Agent):
     def status(self):
         '''Print o estado do aeroporto'''
         status = ''
-        landing_queue = self.get('landing_queue')
-        take_off_queue = self.get('take_off_queue')
+        landing_queue = self.landing_queue
+        take_off_queue = self.take_off_queue
         airport_map:AirportMap = self.get('airport_map') 
 
         status += '''

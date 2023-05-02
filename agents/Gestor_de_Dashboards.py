@@ -1,6 +1,6 @@
 from spade.agent import Agent
 from objects import Maps
-from behaviours import DrawAirportBehaviour
+from behaviours import draw_airport_behaviour
 
 class Gestor_de_Dashboards(Agent):
 
@@ -9,5 +9,5 @@ class Gestor_de_Dashboards(Agent):
         self.mapa = Maps()
 
         #Set Behaviors
-        draw = DrawAirportBehaviour.DrawAirportBehaviour()
+        draw = draw_airport_behaviour.DrawAirportBehaviour()
         self.add_behaviour(draw)

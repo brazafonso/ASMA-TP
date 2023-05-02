@@ -113,7 +113,7 @@ class AirportMap():
 
     def draw_map(self):
         for i in range(0,self.height):
-            print(self.map[i])
+            print(self.map_draw[i])
         
 
         

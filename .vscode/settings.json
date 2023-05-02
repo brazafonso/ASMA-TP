@@ -1,5 +1,8 @@
 {
     "python.analysis.extraPaths": [
         "./objects"
-    ]
+    ],
+    "liveshare.publishWorkspaceInfo": true,
+    "liveshare.allowGuestDebugControl": true,
+    "liveshare.allowGuestTaskControl": true
 }

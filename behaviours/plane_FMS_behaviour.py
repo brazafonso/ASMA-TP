@@ -28,7 +28,7 @@ class AviaoRequestLandingBehaviour(State):
         if not(self.agent.estado):
             self.set_next_state(STATE_THREE)
 
-        msg = Message(to='Torre_de_Controlo@alexandre-aspire-a515-52g')
+        msg = Message(to=self.get('control_tower'))
         msg.set_metadata("performative", "request")
         msg.body = jsonpickle.encode(self.agent)
         
@@ -49,7 +49,7 @@ class AviaoListenLandingBehaviour(State):
 
             fromA = msg.sender()
 
-            print(f'{self.agent.name} recebou uma mensagem com a performativa \
+            print(f'{self.agent.name} recebeu uma mensagem com a performativa \
                   {performative} do agente {fromA}')
 
             if fromA == 'Torre_de_Controlo':

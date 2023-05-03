@@ -101,6 +101,7 @@ class StationManagerListener(CyclicBehaviour):
                             print('Station manager: available station sent!')
                     else:
                         print('Station manager: no available station.')
+                        # TODO: Handle falta de gares
 
             elif performative == 'request':
                 # Request to leave station
@@ -171,6 +172,6 @@ class StationManagerClearOldReservationsBehaviour(PeriodicBehaviour):
         current_time = time.time()
         for station_id in self.agent.pending_arrivals:
             _, timestamp = self.agent.pending_arrivals[station_id]
-            if current_time - timestamp > 15:
+            if current_time - timestamp > 15: # TODO: Definir...
                 del self.agent.pending_arrivals[station_id]
                 print('Station manager: cleared old reservation, station id: ' + str(station_id))

@@ -3,9 +3,71 @@ from spade.message import Message
 from objects.package import Package
 
 import jsonpickle
+import time
 
 class StationManagerListener(CyclicBehaviour):
     '''Listener principal do station manager'''
+
+    async def choose_airstrip(self, available_airstrips, plane, retries=1):
+        if retries == 0:
+            return None, None
+
+        closest_airstrip = None
+        closest_station = None
+        min_distance = None
+        for airstrip in available_airstrips:
+            # Check if this airstrip is in the pending arrivals
+            airstrip_available = True
+            for pending_airstrip, _ in self.agent.pending_arrivals.values():
+                if pending_airstrip.id == airstrip.id:
+                    airstrip_available = False
+                    break
+            
+            if airstrip_available:
+                for station in self.get('airport_map').stations:
+                    if station.id not in self.agent.pending_arrivals and station.state == 0 and station.type == plane.type:
+                        if closest_station is None:
+                            closest_airstrip = airstrip
+                            closest_station = station
+                            min_distance = airstrip.pos.distance(station.pos)
+                        else:
+                            distance = airstrip.pos.distance(station.pos)
+                            if distance < min_distance:
+                                closest_airstrip = airstrip
+                                closest_station = station
+                                min_distance = distance
+        
+        # If the values are still None, retry
+        if closest_airstrip is None or closest_station is None:
+            return await self.choose_airstrip(available_airstrips, plane, retries-1)
+
+        # Make the reservation
+        key = closest_station.id
+        val = (closest_airstrip.id, time.time())
+
+        def_val = self.agent.pending_arrivals.setdefault(key, val)
+
+        # If the key already existed, the value is an old reservation, so we try again
+        if val[0] != def_val[0] or val[1] != def_val[1]:
+            return await self.choose_airstrip(available_airstrips, plane, retries-1)
+        
+        # If the key didn't exist, we have a new reservation
+        # We still need to check if the airstrip is still available
+        # This is used to keep the pending arrivals consistent
+        else:
+            airstrip_available = True
+            for pending_station in self.agent.pending_arrivals:
+                if pending_station != closest_station.id:
+                    if self.agent.pending_arrivals[pending_station][0] == closest_airstrip.id:
+                        airstrip_available = False
+                        break
+            
+            if not airstrip_available:
+                del self.agent.pending_arrivals[key]
+                return await self.choose_airstrip(available_airstrips, plane, retries-1)
+            else:
+                return closest_airstrip, closest_station
+
     async def run(self):
         # Get message
         msg = await self.receive(timeout=10)
@@ -23,24 +85,12 @@ class StationManagerListener(CyclicBehaviour):
                 package = jsonpickle.decode(msg.body)
                 type = package.message
                 if type == 'landing request':
-                    airstrip, plane = package.body
+                    available_airstrips, plane = package.body
 
-                    # Check closest station to airstrip
-                    closest_station = None
-                    min_distance = None
-                    for station in self.get('airport_map').stations:
-                        if station.state == 0 and station.type == plane.type:
-                            if closest_station is None:
-                                closest_station = station
-                                min_distance = airstrip.pos.distance(station.pos)
-                            else:
-                                distance = airstrip.pos.distance(station.pos)
-                                if distance < min_distance:
-                                    closest_station = station
-                                    min_distance = distance
-                    
-                    if closest_station is not None:
-                        package = Package('available station',closest_station)
+                    closest_airstrip, closest_station = await self.choose_airstrip(available_airstrips, plane, retries=10)
+
+                    if closest_station is not None and closest_airstrip is not None:
+                        package = Package('available station',(closest_airstrip, closest_station))
                         control_tower = self.get('control_tower')
                         if control_tower:
                             msg = Message(to=control_tower)
@@ -49,12 +99,8 @@ class StationManagerListener(CyclicBehaviour):
 
                             await self.send(msg)
                             print('Station manager: available station sent!')
-
-                            # Update station state
-                            for station in self.get('airport_map').stations:
-                                if station.id == closest_station.id:
-                                    station.state = 1 # Occupied
-                                    break
+                    else:
+                        print('Station manager: no available station.')
 
             elif performative == 'request':
                 # Request to leave station
@@ -83,7 +129,19 @@ class StationManagerListener(CyclicBehaviour):
                 # Send inform for plane to leave station
                 package = jsonpickle.decode(msg.body)
                 type = package.message
-                if type == 'available airstrip':
+
+                if type == 'confirm pending arrival':
+                    station_id = package.body
+                    if station_id in self.agent.pending_arrivals:
+                        for station in self.get('airport_map').stations:
+                            if station.id == station_id:
+                                station.state = 1 # Occupied
+                                break
+
+                        # Remove from pending arrivals
+                        del self.agent.pending_arrivals[station_id]
+
+                elif type == 'available airstrip':
                     airstrip_pos, plane_id = package.body
 
                     # Set station as available

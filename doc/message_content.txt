@@ -1,7 +1,10 @@
+------------------
+
 Aterrar:
 1: Request : serialize(Avião) -> pede para aterrar
-2: Query-IF : serialize((Pista, Avião)) -> pede gare mais próxima da pista para o avião
-3: Inform: serialize(Gare) -> informa gare disponível para estacionar
+2: Query-IF : serialize((Lista de Pistas disponíveis, Avião)) -> pede gare mais próxima da pista para o avião
+3: Inform: serialize(Pista, Gare) -> informa gare e pista escolhidas para atterar e estacionar
+3.5 (NOVA) (TControlo->GGares): serialize(idGare) -> confirmar ao gestor de gares que a pista estava de facto livre e pode reservar gare
 4: Inform: serialize((Pista, Gare)) -> informa pista para aterrar e gare de destino
 5: Inform: idAvião (jid) -> avisar que saiu da pista
 
@@ -10,5 +13,6 @@ Descolar:
 7: Query-IF : serialize(Posição) -> posição da gare para escolher pista mais próxima
 8: Inform : serialize(Posição, Aviao) -> posição da pista + id avião
 9: Inform: serialize(Posição) -> posição da pista
-10: Inform: idAvião (jid) -> avisar que descolou
+10: Inform: idAvião (jid) -> avisar que descolou 
 
+------------------

@@ -24,11 +24,11 @@ class PlaneAgent(agent.Agent):
         STATE_FOUR = 'STATE_FOUR'
 
         #Set Behaviors
-        fsm = plane_FMS_behaviour.AviaoFSMBehaviour()
-        fsm.add_state(name=STATE_ONE, state=plane_FMS_behaviour.AviaoRequestLandingBehaviour(), initial=True)
-        fsm.add_state(name=STATE_TWO, state=plane_FMS_behaviour.AviaoListenLandingBehaviour()) 
-        fsm.add_state(name=STATE_THREE, state=plane_FMS_behaviour.AviaoRequestTakeoffBehaviour())
-        fsm.add_state(name=STATE_FOUR, state=plane_FMS_behaviour.AviaoListenTakeoffBehavior())
+        fsm = plane_FMS_behaviour.PlaneFSMBehaviour()
+        fsm.add_state(name=STATE_ONE, state=plane_FMS_behaviour.PlaneRequestLandingBehaviour(), initial=True)
+        fsm.add_state(name=STATE_TWO, state=plane_FMS_behaviour.PlaneListenLandingBehaviour()) 
+        fsm.add_state(name=STATE_THREE, state=plane_FMS_behaviour.PlaneRequestTakeoffBehaviour())
+        fsm.add_state(name=STATE_FOUR, state=plane_FMS_behaviour.PlaneListenTakeoffBehavior())
         fsm.add_transition(source=STATE_ONE,dest=STATE_TWO)
         fsm.add_transition(source=STATE_ONE,dest=STATE_THREE)
         fsm.add_transition(source=STATE_TWO,dest=STATE_THREE)

@@ -12,7 +12,7 @@ STATE_TWO = 'STATE_TWO'
 STATE_THREE = 'STATE_THREE'
 STATE_FOUR = 'STATE_FOUR'
 
-class AviaoFSMBehaviour(FSMBehaviour):
+class PlaneFSMBehaviour(FSMBehaviour):
 
     async def on_start(self):
         print(f'{self.agent.name} começou o seu comportamento!')
@@ -21,10 +21,10 @@ class AviaoFSMBehaviour(FSMBehaviour):
         print(f'{self.agent.name} acabou o seu comportamento!')
         await self.agent.stop()
 
-class AviaoRequestLandingBehaviour(State):
+class PlaneRequestLandingBehaviour(State):
 
     async def run(self):
-        print('Plane in AviaoRequestLandingBehaviour')
+        print('Plane in PlaneRequestLandingBehaviour')
         #O agente Avião muda o estado de pedir para descolar se já estiver estacionado numa gare
         
         if not self.agent.plane.state:
@@ -39,10 +39,10 @@ class AviaoRequestLandingBehaviour(State):
         print('Landing request sent')
         self.set_next_state(STATE_TWO)
         
-class AviaoListenLandingBehaviour(State):
+class PlaneListenLandingBehaviour(State):
 
     async def run(self):
-        print('Plane in AviaoListenLandingBehaviour')
+        print('Plane in PlaneListenLandingBehaviour')
         #TODO decidir/ajustar tempo de timeout
         msg = await self.receive(timeout=60)
 
@@ -130,10 +130,10 @@ class AviaoListenLandingBehaviour(State):
                   Torre de Controlo.')
             
 
-class AviaoRequestTakeoffBehaviour(State):
+class PlaneRequestTakeoffBehaviour(State):
 
     async def run(self):
-        print('Plane in AviaoRequestTakeoffBehaviour')
+        print('Plane in PlaneRequestTakeoffBehaviour')
 
         #TODO faz mais sentido definir quando se cria o Avião mas depois não temos a 
         # certeza se passamos da data com as esperas que introduzimos. Pode ser dicutido
@@ -166,10 +166,10 @@ class AviaoRequestTakeoffBehaviour(State):
         self.set_next_state(STATE_FOUR)
 
 
-class AviaoListenTakeoffBehavior(State):
+class PlaneListenTakeoffBehavior(State):
 
     async def run(self):
-        print('Plane in AviaoListenTakeoffBehavior')
+        print('Plane in PlaneListenTakeoffBehavior')
         msg = await self.receive()
 
         performative = msg.get_metadata('performative')

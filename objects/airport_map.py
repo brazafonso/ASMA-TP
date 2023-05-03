@@ -7,6 +7,7 @@ class AirportMap():
     def __init__(self,map_json):
         self.airstrips = []
         self.stations = []
+        self.name = map_json['name']
         self.width = map_json['width']
         self.height = map_json['height']
         self.map = map_json['map']
@@ -49,11 +50,11 @@ class AirportMap():
 
 
     #Moldura que vai envolver o aeroporto
-    def set_frame(self,airport_name='Airport'):
+    def set_frame(self):
 
         #Definir o Header com o nome do aeroporto
 
-        border_lenght = self.width - len(airport_name)
+        border_lenght = self.width - len(self.name)
 
         if (border_lenght % 2) == 0:
             border_left = int(border_lenght / 2)
@@ -63,7 +64,7 @@ class AirportMap():
             border_left = int(border_lenght / 2)
             border_right = int(border_left + 1)
 
-        self.map_draw[0] = '+'+'−'*(border_left-1)+airport_name+'−'*(border_right-1)+'+'
+        self.map_draw[0] = '+'+'−'*(border_left-1)+self.name+'−'*(border_right-1)+'+'
 
         #Definir as bordas dos lados
 
@@ -74,13 +75,9 @@ class AirportMap():
 
         self.map_draw[-1] = '+'+'−'*(self.width-2)+'+'
 
-        #Replace de teste
-
-        #Map.replacer(self,17,70,'teste')
-
 
     def place_stations(self):
-        topline = '+−−+'
+        topline = '_'*4
 
         bottomline = '|−−|'
 
@@ -117,6 +114,51 @@ class AirportMap():
             self.replacer(y,x,topline)
             self.replacer(y+2,x,midline)
             self.replacer(y+4,x,bottomline)
+
+    def placeRoads(self):
+
+        mid = int((self.size_x-2) / 2)
+
+        # Lista de tuplos (posicao_x,posicao_y) das pistas do aeroporto
+        pos_roads = []
+
+        for i in self.pistas:
+            pos_roads.append((i.getPosicaoX(),i.getPosicaoY()))
+
+        print(f"Lista das possicoes das pistas:\n{pos_roads}")
+
+        # Dicionario onde as chaves são a posicao_y das gares e o valor será uma lista com a posicao_x
+        # das gares com essa coordenada y 
+        pos_gares = {}
+
+        posxlist = []
+        
+        for i in range(len(self.gares)):
+            if (i == 0):
+                lasty = self.gares[0].getPosicaoY()
+                posxlist.append(self.gares[0].getPosicaoX())
+            elif (i == (len(self.gares) - 1)):
+                lasty = self.gares[i-1].getPosicaoY()
+                y = self.gares[i].getPosicaoY()
+                if(lasty == y):
+                    posxlist.append(self.gares[i].getPosicaoX())
+                    pos_gares[lasty] = posxlist
+                else:
+                    pos_gares[lasty] = posxlist
+                    posxlist = []
+                    posxlist.append(self.gares[i].getPosicaoX())
+                    pos_gares[y] = posxlist
+            else:
+                lasty = self.gares[i-1].getPosicaoY()
+                y = self.gares[i].getPosicaoY()
+                if(lasty == y):
+                    posxlist.append(self.gares[i].getPosicaoX())
+                else:
+                    pos_gares[lasty] = posxlist
+                    posxlist = []
+                    posxlist.append(self.gares[i].getPosicaoX())
+
+        print(f"Dicionario das posicoes das gares:\n{pos_gares}") 
 
 
     def draw_map(self):

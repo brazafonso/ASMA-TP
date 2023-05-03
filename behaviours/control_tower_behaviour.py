@@ -35,8 +35,6 @@ class ControlTowerLandingRequester(CyclicBehaviour):
                   available_airstrips = self.get('airport_map').available_airstrips()
                   if available_airstrips:
                         print('Control tower:','sending requests to station manager')
-                        # TODO: Penso que aqui apenas tenha de ser enviada uma pista, dado que é a torre que escolhe a pista
-                        #       Na parte do station_manager vou já assumir que estou a receber uma pista
                         package = Package('landing request',(available_airstrips,plane))
                         station_manager = self.get('station_manager')
                         if station_manager:

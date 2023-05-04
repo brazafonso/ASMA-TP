@@ -9,14 +9,14 @@ class PlaneAgent(agent.Agent):
     async def setup(self):
 
         #Set Variables
-        self.id_aviao = self.name
+        self.id_aviao = self.jid
         self.estado = True
         self.nome_companhia = 'TAP'
         self.tipo = 'comercial' #'goods'
         now = datetime.datetime.now()
         flight = Flight('Porto','Lisboa',now)
 
-        self.plane = Plane(id=self.name,state=True,company='TAP',type='comercial',flight=flight)
+        self.plane = Plane(id=self.jid,state=True,company='TAP',type='comercial',flight=flight)
 
         STATE_ONE = 'STATE_ONE'
         STATE_TWO = 'STATE_TWO'
@@ -33,6 +33,7 @@ class PlaneAgent(agent.Agent):
         fsm.add_transition(source=STATE_ONE,dest=STATE_THREE)
         fsm.add_transition(source=STATE_TWO,dest=STATE_THREE)
         fsm.add_transition(source=STATE_THREE,dest=STATE_FOUR)
+        fsm.add_transition(source=STATE_FOUR,dest=STATE_THREE)
         self.add_behaviour(fsm)
 
 

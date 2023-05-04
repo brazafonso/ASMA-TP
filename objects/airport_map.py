@@ -1,5 +1,6 @@
 from objects.airstrip import Airstrip
 from objects.station import Station
+from objects.position import Position
 
 class AirportMap():
     '''Classe representante do mapa do aeroporto'''
@@ -22,6 +23,84 @@ class AirportMap():
             if airstrip.state == 0:
                 available.append(airstrip)
         return available
+    
+    def available_airstrip(self,id):
+        '''Devolve se uma pista esta disponivel'''
+        available = False
+        for airstrip in self.airstrips:
+            if airstrip.id == id:
+                available = airstrip.state == 0
+        return available
+    
+    def closest_available_airstrip(self,pos:Position):
+        '''Devolve a pista mais proxima disponivel'''
+        closest = None
+        distance = None
+        for airstrip in self.airstrips:
+            if airstrip.state == 0:
+                if closest:
+                    if pos.distance(airstrip.pos) < distance:
+                        closest = airstrip
+                        distance = pos.distance(airstrip.pos) 
+                else:
+                    closest = airstrip
+                    distance = pos.distance(airstrip.pos)
+        return closest
+    
+    def free_airstrip(self,id=None,plane_id=None):
+        '''Torna uma pista livre'''
+        if id:
+            for airstrip in self.airstrips:
+                if airstrip.id == id:
+                    airstrip.state = 0
+                    airstrip.plane = None
+                    break
+
+        elif plane_id:
+            for airstrip in self.airstrips:
+                if airstrip.state == 1:
+                    if airstrip.plane.id == plane_id:
+                        airstrip.state = 0
+                        airstrip.plane = None
+                        break
+
+    def reserve_airstrip(self,id,plane):
+        '''Torna uma pista ocupada'''
+        for airstrip in self.airstrips:
+            if airstrip.id == id:
+                airstrip.state = 1
+                airstrip.plane = plane
+                break
+
+    
+    def free_station(self,id=None,plane_id=None):
+        '''Torna uma gare livre'''
+        if id:
+            for station in self.stations:
+                if station.id == id:
+                    station.state = 0
+                    station.plane = None
+                    break
+
+        elif plane_id:
+            for station in self.stations:
+                if station.state == 1:
+                    if station.plane.id == plane_id:
+                        station.state = 0
+                        station.plane = None
+                        break
+
+
+    def reserve_station(self,id,plane):
+        '''Torna uma gare ocupada'''
+        reserved = False
+        for station in self.stations:
+            if station.id == id:
+                station.state = 1
+                station.plane = plane
+                reserved = True
+                break
+        return reserved
 
 
     def scrape_airport_map(self):

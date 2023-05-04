@@ -1,4 +1,4 @@
-from spade.behaviour import CyclicBehaviour
+from spade.behaviour import CyclicBehaviour, PeriodicBehaviour
 from spade.message import Message
 from objects.package import Package
 
@@ -101,6 +101,7 @@ class StationManagerListener(CyclicBehaviour):
                             print('Station manager: available station sent!')
                     else:
                         print('Station manager: no available station.')
+                        # TODO: Handle falta de gares
 
             elif performative == 'request':
                 # Request to leave station
@@ -111,7 +112,7 @@ class StationManagerListener(CyclicBehaviour):
                     plane_jid = package.body
                     # Check if plane is in station
                     for station in self.get('airport_map').stations:
-                        if station.plane is not None and station.plane.id == plane_jid:
+                        if station.state == 1 and station.plane is not None and station.plane.id == plane_jid:
                             # Send query-if to control tower
                             package = Package('takeoff request', station.pos)
                             control_tower = self.get('control_tower')
@@ -136,10 +137,12 @@ class StationManagerListener(CyclicBehaviour):
                         for station in self.get('airport_map').stations:
                             if station.id == station_id:
                                 station.state = 1 # Occupied
+
+                                # Remove from pending arrivals
+                                del self.agent.pending_arrivals[station_id]
+
                                 break
 
-                        # Remove from pending arrivals
-                        del self.agent.pending_arrivals[station_id]
 
                 elif type == 'available airstrip':
                     airstrip_pos, plane_id = package.body
@@ -161,3 +164,14 @@ class StationManagerListener(CyclicBehaviour):
                             print('Station manager: available airstrip sent to plane!')
 
                             break
+
+
+class StationManagerClearOldReservationsBehaviour(PeriodicBehaviour):
+    async def run(self):
+        # Clear old reservations
+        current_time = time.time()
+        for station_id in self.agent.pending_arrivals:
+            _, timestamp = self.agent.pending_arrivals[station_id]
+            if current_time - timestamp > 15: # TODO: Definir...
+                del self.agent.pending_arrivals[station_id]
+                print('Station manager: cleared old reservation, station id: ' + str(station_id))

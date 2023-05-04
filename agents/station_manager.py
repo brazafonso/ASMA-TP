@@ -11,5 +11,5 @@ class StationManagerAgent(agent.Agent):
         # "Station ID" : ("Airstrip ID", timestamp)
         self.pending_arrivals = {}
 
-        # TODO: Periodically check if there are any old pending arrivals
         self.add_behaviour(StationManagerListener())
+        self.add_behaviour(StationManagerClearOldReservationsBehaviour(period=1))

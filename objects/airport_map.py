@@ -77,7 +77,7 @@ class AirportMap():
 
 
     def place_stations(self):
-        topline = '_'*4
+        topline = '_/\_'
 
         bottomline = '|xx|'
 
@@ -122,8 +122,6 @@ class AirportMap():
 
         for i in self.airstrips:
             pos_roads.append((i.get_pos_x(),i.get_pos_y()))
-
-        print(f"Lista das possicoes das pistas:\n{pos_roads}")
 
         # Dicionario onde as chaves são a posicao_y das gares e o valor será uma lista com a posicao_x
         # das gares com essa coordenada y 
@@ -170,40 +168,59 @@ class AirportMap():
 
                         if ind == len(pos_gares[key])-1: 
 
-                            topline += '|  |'
+                            topline += '/  \\'
 
                         else:
 
                             between_space = (pos_gares[key][ind+1] - elem) - 4
 
-                            topline += '|  |'+'_'*between_space
+                            topline += '/  \\'+'_'*between_space
 
-                    midline = '|'+'_'*(int(road_width/2) - 1)+' '*4+'_'*(int(road_width/2) - 1)+'|'
+                    midline = '\\'+'_'*(int(road_width/2) - 1)+' '*4+'_'*(int(road_width/2) - 1)+'/'
 
-                    bottomline = '|  |'
+                    bottomline = '\  /'
 
-                elif (key - posr[1] == 4):
+                    mid_diff = int(self.width/2) - int(road_width/2)
+
+                    bottomline_x = int(road_width/2) + mid_diff - 2
+
+                    self.replacer(key+1,pos_gares[key][0],topline)
+                    self.replacer(key+2,pos_gares[key][0],midline)
+                    self.replacer(key+3,bottomline_x,bottomline)
+
+                elif (key - posr[1] == 8):
 
                     bottomline = ''
 
                     for ind,elem in enumerate(pos_gares[key]):
 
-                        between_space = (pos_gares[key][ind+1][0] - elem[0]) - 4
+                        if ind == len(pos_gares[key])-1: 
 
-                        bottomline += '|  |'+'_'*between_space
+                            bottomline += '|  |'
 
-                    midline = '|'+'_'*(int(road_width/2) - 1)+' '*4+'_'*(int(road_width/2) - 1)+'|'
+                        else:
+
+                            between_space = (pos_gares[key][ind+1] - elem) - 4
+
+                            bottomline += '|  |'+'‾'*between_space
+
+                    midline = '|'+'‾'*(int(road_width/2) - 1)+' '*4+'‾'*(int(road_width/2) - 1)+'|'
 
                     topline = '|  |'
 
-                bottomline_x = int(self.width/2) - 2
+                    mid_diff = int(self.width/2) - int(road_width/2)
 
-                self.replacer(key+1,pos_gares[key][0],topline)
-                self.replacer(key+2,pos_gares[key][0],midline)
-                self.replacer(key+3,bottomline_x,bottomline)
+                    topline_x = int(road_width/2) + mid_diff - 2
 
-        print(f"Dicionario das posicoes das gares:\n{pos_gares}") 
+                    self.replacer(key-2,pos_gares[key][0],bottomline)
+                    self.replacer(key-3,pos_gares[key][0],midline)
+                    self.replacer(key-4,topline_x,topline)
 
+    def update_landing_queue():
+        pass
+
+    def update_take_off_queue():
+        pass
 
     def draw_map(self):
         for i in range(0,self.height):

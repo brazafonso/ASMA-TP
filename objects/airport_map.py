@@ -79,7 +79,7 @@ class AirportMap():
     def place_stations(self):
         topline = '_'*4
 
-        bottomline = '|−−|'
+        bottomline = '|xx|'
 
         for i in self.stations:
             x = i.get_pos_x()
@@ -115,15 +115,13 @@ class AirportMap():
             self.replacer(y+2,x,midline)
             self.replacer(y+4,x,bottomline)
 
-    def placeRoads(self):
-
-        mid = int((self.size_x-2) / 2)
+    def place_roads(self):
 
         # Lista de tuplos (posicao_x,posicao_y) das pistas do aeroporto
         pos_roads = []
 
-        for i in self.pistas:
-            pos_roads.append((i.getPosicaoX(),i.getPosicaoY()))
+        for i in self.airstrips:
+            pos_roads.append((i.get_pos_x(),i.get_pos_y()))
 
         print(f"Lista das possicoes das pistas:\n{pos_roads}")
 
@@ -133,30 +131,76 @@ class AirportMap():
 
         posxlist = []
         
-        for i in range(len(self.gares)):
+        for i in range(len(self.stations)):
             if (i == 0):
-                lasty = self.gares[0].getPosicaoY()
-                posxlist.append(self.gares[0].getPosicaoX())
-            elif (i == (len(self.gares) - 1)):
-                lasty = self.gares[i-1].getPosicaoY()
-                y = self.gares[i].getPosicaoY()
+                lasty = self.stations[0].get_pos_y()
+                posxlist.append(self.stations[0].get_pos_x())
+            elif (i == (len(self.stations) - 1)):
+                lasty = self.stations[i-1].get_pos_y()
+                y = self.stations[i].get_pos_y()
                 if(lasty == y):
-                    posxlist.append(self.gares[i].getPosicaoX())
+                    posxlist.append(self.stations[i].get_pos_x())
                     pos_gares[lasty] = posxlist
                 else:
                     pos_gares[lasty] = posxlist
                     posxlist = []
-                    posxlist.append(self.gares[i].getPosicaoX())
+                    posxlist.append(self.stations[i].get_pos_x())
                     pos_gares[y] = posxlist
             else:
-                lasty = self.gares[i-1].getPosicaoY()
-                y = self.gares[i].getPosicaoY()
+                lasty = self.stations[i-1].get_pos_y()
+                y = self.stations[i].get_pos_y()
                 if(lasty == y):
-                    posxlist.append(self.gares[i].getPosicaoX())
+                    posxlist.append(self.stations[i].get_pos_x())
                 else:
                     pos_gares[lasty] = posxlist
                     posxlist = []
-                    posxlist.append(self.gares[i].getPosicaoX())
+                    posxlist.append(self.stations[i].get_pos_x())
+
+        for i,key in enumerate(pos_gares):
+
+            road_width = pos_gares[key][-1] - pos_gares[key][0]
+
+            for posr in pos_roads:
+
+                if (posr[1] - key == 3):
+
+                    topline = ''
+
+                    for ind,elem in enumerate(pos_gares[key]):
+
+                        if ind == len(pos_gares[key])-1: 
+
+                            topline += '|  |'
+
+                        else:
+
+                            between_space = (pos_gares[key][ind+1] - elem) - 4
+
+                            topline += '|  |'+'_'*between_space
+
+                    midline = '|'+'_'*(int(road_width/2) - 1)+' '*4+'_'*(int(road_width/2) - 1)+'|'
+
+                    bottomline = '|  |'
+
+                elif (key - posr[1] == 4):
+
+                    bottomline = ''
+
+                    for ind,elem in enumerate(pos_gares[key]):
+
+                        between_space = (pos_gares[key][ind+1][0] - elem[0]) - 4
+
+                        bottomline += '|  |'+'_'*between_space
+
+                    midline = '|'+'_'*(int(road_width/2) - 1)+' '*4+'_'*(int(road_width/2) - 1)+'|'
+
+                    topline = '|  |'
+
+                bottomline_x = int(self.width/2) - 2
+
+                self.replacer(key+1,pos_gares[key][0],topline)
+                self.replacer(key+2,pos_gares[key][0],midline)
+                self.replacer(key+3,bottomline_x,bottomline)
 
         print(f"Dicionario das posicoes das gares:\n{pos_gares}") 
 

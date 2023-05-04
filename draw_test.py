@@ -42,9 +42,9 @@ ap_map = json.load(f)
 
 map1 = airport_map.AirportMap(ap_map)
 map1.set_frame()
-map1.scrape_airport_map()
 map1.place_airstrips()
 map1.place_stations()
+map1.place_roads()
 map1.draw_map()
 
 map2 = airport_map.AirportMap(ap_map)

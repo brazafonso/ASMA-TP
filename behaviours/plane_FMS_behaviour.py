@@ -12,6 +12,7 @@ STATE_TWO = 'STATE_TWO'
 STATE_THREE = 'STATE_THREE'
 STATE_FOUR = 'STATE_FOUR'
 
+#TODO: Não sei bem onde começar este start_time
 start_time = datetime.datetime.now()
 
 class PlaneFSMBehaviour(FSMBehaviour):
@@ -48,8 +49,6 @@ class PlaneListenLandingBehaviour(State):
         print('Plane in PlaneListenLandingBehaviour')
         #TODO decidir/ajustar tempo de timeout
         msg = await self.receive(timeout=60)
-
-        #TODO: Não sei bem onde começar este start_time
 
         if msg:
 

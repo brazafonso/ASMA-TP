@@ -13,7 +13,7 @@ def addAirstrips(poslist):
 def addStations(stationlist):
     '''Aceita como argumento uma lista de tuplos de posições (x,y), número de gares 
     nessa linha y, o espaçamento, em x, entre elas e o tipo de aviões que podem estacionar na gare 
-    (people,goods). O elemento vai ter o seguite aspeto (pos_x, pos_y, 10, 4, 'people').'''
+    (comercial,goods). O elemento vai ter o seguite aspeto (pos_x, pos_y, 10, 4, 'comercial').'''
 
     for pos_x,pos_y,number,spacing,station_type in stationlist:
 
@@ -27,7 +27,7 @@ def createAirportconfig1(filename,name,width,height):
 
     airstrip_list = [(1,10),(1,25)]
 
-    station_list = [(5,7,14,10,'people'),(5,18,14,10,'goods'),(5,22,14,10,'people'),(5,33,14,10,'goods')]
+    station_list = [(5,7,14,10,'comercial'),(5,18,14,10,'goods'),(5,22,14,10,'comercial'),(5,33,14,10,'goods')]
 
     map_config['name'] = name
     map_config['width'] = width

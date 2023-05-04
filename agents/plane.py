@@ -12,7 +12,7 @@ class PlaneAgent(agent.Agent):
         self.id_aviao = self.name
         self.estado = True
         self.nome_companhia = 'TAP'
-        self.tipo = 'comercial' #'mercadorias'
+        self.tipo = 'comercial' #'goods'
         now = datetime.datetime.now()
         flight = Flight('Porto','Lisboa',now)
 

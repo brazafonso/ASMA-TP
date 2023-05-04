@@ -187,6 +187,8 @@ map1.stations = gares1
 
 map1.place_stations()
 
+map1.place_roads()
+
 map1.draw_map()
 
 pistas2 = []

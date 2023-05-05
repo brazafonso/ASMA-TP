@@ -1,3 +1,4 @@
+import asyncio
 import jsonpickle
 import random
 import time
@@ -51,48 +52,52 @@ class PlaneListenLandingBehaviour(State):
         msg = await self.receive(timeout=60)
 
         if msg:
-
             performative = msg.get_metadata('performative')
 
-            fromA = msg.sender()
+            fromA = msg.sender
 
             print(f'{self.agent.name} recebeu uma mensagem com a performativa \
                   {performative} do agente {fromA}')
 
-            if fromA == self.get('control_tower'):
-                
+            if str(fromA) == self.get('control_tower'):
                 if performative == 'inform':
 
-                        pista, gare = jsonpickle.decode(msg.body)
-
                         package = jsonpickle.decode(msg.body)
-                        
+
                         type = package.message
                         
                         if type == 'confirm landing':
+                            pista, gare = package.body
+                            
+                            # Confirmar à torre de controlo que ainda esta a espera
+                            package = Package('still waiting',self.agent.jid)
+                            msg = Message(to=self.get('control_tower'))
+                            msg.set_metadata("performative", "inform")
+                            msg.body = jsonpickle.encode(package)
+                            
+                            await self.send(msg)
 
-                            pista, gare = package.body 
 
                             print(f'Permição consedida ao avião {self.agent.name} para aterrar \
-                                na pista {pista.getId_pista()} e para estacionar na gare {gare.getId_gare()}')
+                                na pista {pista.id} e para estacionar na gare {gare.id}')
 
                             time_now = datetime.datetime.now()
 
                             #TODO: Verificar tempo de inicio de converçações com a torre de controlo
-
+                            print('Plane: ','Landing')
                             while((time_now-start_time).seconds<20):
 
                                 time_now = datetime.datetime.now()
 
-                                time.sleep(0.5)
+                                await asyncio.sleep(0.5)
 
                             #TODO: Verificar o tempo passado na pista de aterragem
                             
-                            time.sleep(3)
+                            await asyncio.sleep(3)
                             
                             #Envio de mensagem à torre de controlo para indicar o fim do uso da pista
 
-                            package = Package('landed',self.agent.name)
+                            package = Package('landed',self.agent.jid)
                             msg = Message(to=self.get('control_tower'))
                             msg.set_metadata("performative", "inform")
                             msg.body = jsonpickle.encode(package)
@@ -103,7 +108,7 @@ class PlaneListenLandingBehaviour(State):
                             
                             #TODO: Verificar tempo de viagem até à gare
 
-                            time.sleep(5)
+                            await asyncio.sleep(5)
 
                             #TODO: Avisar a Gare? 
 
@@ -112,14 +117,14 @@ class PlaneListenLandingBehaviour(State):
                         else:
 
                             print(f'Tipo da mensagem {type} inesperada \
-                            agente {self.agent.name} vai abandonar o aeroporto!')
+                            agente {self.agent.jid} vai abandonar o aeroporto!')
                         
                             self.kill()      
 
                 #TODO definir a performative de abandonar o aeroporto
                 elif performative =='refuse':
 
-                    print(f'Agente {self.agent.name} vai abandonar o aeroporto, porque \
+                    print(f'Agente {self.agent.jid} vai abandonar o aeroporto, porque \
                           recebeu uma mensagem com a performative refuse do aeroporto!')
                     
                     self.kill()
@@ -127,20 +132,20 @@ class PlaneListenLandingBehaviour(State):
                 else:
                     
                     print(f'Performative {performative} inesperada \
-                          agente {self.agent.name} vai abandonar o aeroporto!')
+                          agente {self.agent.jid} vai abandonar o aeroporto!')
                     
                     self.kill()
                 
             else:
 
                 print(f'Mensagem recibida do agente {fromA} ao tentar aterrar \
-                      agente {self.agent.name} vai abandonar o aeroporto!')
+                      agente {self.agent.jid} vai abandonar o aeroporto!')
                 
                 self.kill()
 
         else:
 
-            print(f'O agente {self.agent.name} não recebeu mensagem de resposta da \
+            print(f'O agente {self.agent.jid} não recebeu mensagem de resposta da \
                   Torre de Controlo.')
             
             self.kill()
@@ -154,16 +159,18 @@ class PlaneRequestTakeoffBehaviour(State):
         #TODO faz mais sentido definir quando se cria o Avião mas depois não temos a 
         # certeza se passamos da data com as esperas que introduzimos. Pode ser dicutido
 
-        offset = random.randint(30,60)
+        offset = random.randint(1,10)
         data_agora = datetime.datetime.now()
         data_descolagem = data_agora + datetime.timedelta(seconds = offset)
-        self.agent.flight.set_take_off_date(data_descolagem)
+        self.agent.plane.flight.set_take_off_date(data_descolagem)
+
+        print('Plane: ',f'waiting for {(data_descolagem-data_agora).seconds} seconds')
 
         while((data_descolagem-data_agora).seconds>1):
             data_agora = datetime.datetime.now()
-            time.sleep(0.5)
+            await asyncio.sleep(0.5)
 
-        package = Package('takeoff request',self.agent.name)
+        package = Package('takeoff request',self.agent.jid)
         msg = Message(to=self.get('station_manager')) # assumindo que envias isto qnd querias o avião
         msg.set_metadata("performative", "request")
         msg.body = jsonpickle.encode(package)
@@ -177,70 +184,78 @@ class PlaneListenTakeoffBehavior(State):
 
     async def run(self):
         print('Plane in PlaneListenTakeoffBehavior')
-        msg = await self.receive()
+        msg = await self.receive(timeout=60)
 
-        performative = msg.get_metadata('performative')
 
-        fromA = msg.sender()
+        if msg:
+            performative = msg.get_metadata('performative')
 
-        print(f'{self.agent.name} recebou uma mensagem com a performativa \
-                {performative} do agente {fromA}')
+            fromA = msg.sender
 
-        if fromA == self.get('station_manager'):
-            
-            if performative == 'inform':
+            print(f'{self.agent.name} recebou uma mensagem com a performativa \
+                    {performative} do agente {fromA}')
 
-                package = jsonpickle.decode(msg.body)
+            if str(fromA) == self.get('station_manager'):
+                
+                if performative == 'inform':
 
-                type = package.message
-                    
-                if type == 'available airstrip':
+                    package = jsonpickle.decode(msg.body)
 
-                    posicao = package.body
+                    type = package.message
+                        
+                    if type == 'available airstrip':
 
-                    print(f'Permição consedida ao avião {self.agent.name} para descolar \
-                        na pista localizada na posição X:{posicao[0]},Y:{posicao[1]}')
+                        posicao = package.body
 
-                    #TODO Preciso de saber distâncias para fazer o sleep dinâmico. Neste caso o station manager pode 
-                    # mandar também a posição da gare
+                        print(f'Permição consedida ao avião {self.agent.jid} para descolar \
+                            na pista localizada na posição X:{posicao.x},Y:{posicao.y}')
 
-                    #TODO: Discutir tempos
+                        #TODO Preciso de saber distâncias para fazer o sleep dinâmico. Neste caso o station manager pode 
+                        # mandar também a posição da gare
 
-                    #Tempo Gare -> Pista
+                        #TODO: Discutir tempos
 
-                    time.sleep(5)
+                        #Tempo Gare -> Pista
 
-                    #Tempo Pista -> Ar
+                        await asyncio.sleep(5)
 
-                    time.sleep(5)
+                        #Tempo Pista -> Ar
 
-                    package = Package('took off',self.agent.name)
-                    msg = Message(to=self.get('control_tower'))
-                    msg.set_metadata("performative", "inform")
-                    msg.body = jsonpickle.encode(package)
-                    
-                    await self.send(msg)   
-                    
-                    self.kill()
+                        await asyncio.sleep(5)
+
+                        package = Package('took off',self.agent.jid)
+                        msg = Message(to=self.get('control_tower'))
+                        msg.set_metadata("performative", "inform")
+                        msg.body = jsonpickle.encode(package)
+                        
+                        await self.send(msg)   
+                        
+                        self.kill()
+
+                    else:
+
+                        print(f'Tipo da mensagem {type} inesperada \
+                                agente {self.agent.jid} vai abandonar o aeroporto!')
+                        
+                        self.kill()
 
                 else:
-
-                    print(f'Tipo da mensagem {type} inesperada \
-                            agente {self.agent.name} vai abandonar o aeroporto!')
+                                
+                    print(f'Performative {performative} inesperada \
+                        agente {self.agent.jid} vai abandonar o aeroporto!')
                     
                     self.kill()
-
+                        
             else:
-                            
-                print(f'Performative {performative} inesperada \
-                    agente {self.agent.name} vai abandonar o aeroporto!')
+
+                print(f'Mensagem recibida do agente {fromA} ao tentar levantar \
+                    agente {self.agent.jid} vai abandonar o aeroporto!')
                 
                 self.kill()
-                    
         else:
 
-            print(f'Mensagem recibida do agente {fromA} ao tentar aterrar \
-                agente {self.agent.name} vai abandonar o aeroporto!')
-            
-            self.kill()  
+            print(f'O agente {self.agent.jid} não recebeu mensagem de resposta do \
+                  Gestor de Gares.')
+            self.set_next_state(STATE_THREE)
+
 

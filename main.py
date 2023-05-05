@@ -22,19 +22,20 @@ if __name__ == "__main__":
     PASSWORD = creds['password']
 
     # airport map
-    file = open('config/airport.json', 'r')
+    file = open('config/airport2.json', 'r')
     config = json.load(file)
     file.close()
     airport_map = AirportMap(config)
     airport_map.set_frame()
     airport_map.place_airstrips()
     airport_map.place_stations()
-    airport_map.draw_map()
-
+    #airport_map.draw_map()
+    max_queue = config['max_queue']
     
     # Criar torre de controlo
     control_tower = ControlTowerAgent(f'control_tower@{USER}',PASSWORD)
     control_tower.set('airport_map',airport_map)
+    control_tower.set('max_queue',max_queue)
     control_tower.set('station_manager',f'station_manager@{USER}')
 
 
@@ -47,22 +48,25 @@ if __name__ == "__main__":
 
     futureSM = station_manager.start()
 
-    # Criar aviao
+    futureCT.result()
+    futureSM.result()
 
+
+    # Criar aviao
     plane1 = PlaneAgent(f'plane@{USER}',PASSWORD)
     plane1.set('id',1)
     plane1.set('control_tower',f'control_tower@{USER}')
-
+    plane1.set('station_manager',f'station_manager@{USER}')
     futureP = plane1.start()
 
+
+
+
     
-    
-    futureCT.result()
-    futureSM.result()
     futureP.result()
 
-
-    time.sleep(5)
+    while(control_tower.is_alive()):
+        time.sleep(5)
 
     print(control_tower.status())
     control_tower.stop()

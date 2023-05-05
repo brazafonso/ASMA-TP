@@ -175,3 +175,20 @@ class StationManagerClearOldReservationsBehaviour(PeriodicBehaviour):
             if current_time - timestamp > 15: # TODO: Definir...
                 del self.agent.pending_arrivals[station_id]
                 print('Station manager: cleared old reservation, station id: ' + str(station_id))
+
+
+class StationManagerStatusSender(PeriodicBehaviour):
+    '''Periodicamente envia o estado das gares para a torre de controlo'''
+
+    async def run(self):
+        print('Station manager: Sending stations status.')
+
+        airport_map = self.get('airport_map')
+        stations = airport_map.stations
+
+        package = Package('station status report',stations)
+        msg = Message(to=self.get('control_tower'))
+        msg.set_metadata("performative", "inform")
+        msg.body = jsonpickle.encode(package)
+
+        await self.send(msg)

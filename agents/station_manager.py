@@ -13,3 +13,4 @@ class StationManagerAgent(agent.Agent):
 
         self.add_behaviour(StationManagerListener())
         self.add_behaviour(StationManagerClearOldReservationsBehaviour(period=1))
+        self.add_behaviour(StationManagerStatusSender(period=2))

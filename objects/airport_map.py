@@ -216,11 +216,29 @@ class AirportMap():
                     self.replacer(key-3,pos_gares[key][0],midline)
                     self.replacer(key-4,topline_x,topline)
 
-    def update_landing_queue():
-        pass
+    def update_landing_queue(self):
+        
+        avioes_aterrar = ['AC1','AM2','AC3','AC4','AM5']
 
-    def update_take_off_queue():
-        pass
+        fila_de_aterragem = 'Fila de Aterragem:'
+
+        for aviao in avioes_aterrar:
+
+            fila_de_aterragem += ' '+aviao
+
+        self.replacer(1,1,fila_de_aterragem)
+
+    def update_take_off_queue(self):
+
+        avioes_descolar = ['AC1','AM2','AC3','AC4','AM5']
+
+        fila_de_descolagem = 'Fila de Descolagem:'
+        
+        for aviao in avioes_descolar:
+
+            fila_de_descolagem += ' '+aviao
+
+        self.replacer(self.height-2,1,fila_de_descolagem)
 
     def draw_map(self):
         for i in range(0,self.height):

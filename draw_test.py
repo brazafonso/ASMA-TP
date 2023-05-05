@@ -45,11 +45,9 @@ map1.set_frame()
 map1.place_airstrips()
 map1.place_stations()
 map1.place_roads()
+map1.update_landing_queue()
+map1.update_take_off_queue()
 map1.draw_map()
-
-map2 = airport_map.AirportMap(ap_map)
-
-map2.set_frame()
 
 pistas1 = []
 
@@ -190,111 +188,3 @@ map1.place_stations()
 map1.place_roads()
 
 map1.draw_map()
-
-pistas2 = []
-
-pistas2.append((airstrip.Airstrip(1,10)))
-
-pistas2.append((airstrip.Airstrip(1,21)))
-
-map2.setPistas(pistas2)
-
-map2.placePistas()
-
-gares2 = []
-
-#Primeira linha
-
-gares2.append(station.Station(5,7))
-
-gares2.append(station.Station(15,7))
-
-gares2.append(station.Station(25,7))
-
-gares2.append(station.Station(35,7))
-
-gares2.append(station.Station(45,7))
-
-gares2.append(station.Station(55,7))
-
-gares2.append(station.Station(65,7))
-
-gares2.append(station.Station(75,7))
-
-gares2.append(station.Station(85,7))
-
-gares2.append(station.Station(95,7))
-
-gares2.append(station.Station(105,7))
-
-gares2.append(station.Station(115,7))
-
-gares2.append(station.Station(125,7))
-
-gares2.append(station.Station(135,7))
-
-#Segunda linha
-
-gares2.append(station.Station(5,18))
-
-gares2.append(station.Station(15,18))
-
-gares2.append(station.Station(25,18))
-
-gares2.append(station.Station(35,18))
-
-gares2.append(station.Station(45,18))
-
-gares2.append(station.Station(55,18))
-
-gares2.append(station.Station(65,18))
-
-gares2.append(station.Station(75,18))
-
-gares2.append(station.Station(85,18))
-
-gares2.append(station.Station(95,18))
-
-gares2.append(station.Station(105,18))
-
-gares2.append(station.Station(115,18))
-
-gares2.append(station.Station(125,18))
-
-gares2.append(station.Station(135,18))
-
-#Terceira linha
-
-gares2.append(station.Station(5,29))
-
-gares2.append(station.Station(15,29))
-
-gares2.append(station.Station(25,29))
-
-gares2.append(station.Station(35,29))
-
-gares2.append(station.Station(45,29))
-
-gares2.append(station.Station(55,29))
-
-gares2.append(station.Station(65,29))
-
-gares2.append(station.Station(75,29))
-
-gares2.append(station.Station(85,29))
-
-gares2.append(station.Station(95,29))
-
-gares2.append(station.Station(105,29))
-
-gares2.append(station.Station(115,29))
-
-gares2.append(station.Station(125,29))
-
-gares2.append(station.Station(135,29))
-
-map2.setGares(gares2)
-
-map2.placeGares()
-
-map2.drawMap()

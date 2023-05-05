@@ -145,7 +145,7 @@ class StationManagerListener(CyclicBehaviour):
 
 
                 elif type == 'available airstrip':
-                    airstrip_pos, plane_id = package.body
+                    airstrip, plane_id = package.body
                     print('Station manager: available airstrip.')
                     # Set station as available
                     for station in self.get('airport_map').stations:
@@ -154,7 +154,7 @@ class StationManagerListener(CyclicBehaviour):
                             station.state = 0
                     
                             # Send inform to plane
-                            package = Package('available airstrip', airstrip_pos)
+                            package = Package('available airstrip', airstrip)
                             
                             msg = Message(to=str(plane_id))
                             msg.set_metadata("performative", "inform")

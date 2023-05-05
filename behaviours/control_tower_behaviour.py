@@ -151,7 +151,7 @@ class ControlTowerTakeOffHandler(CyclicBehaviour):
                               print('Control tower:','Sending airstrip for takeoff')
                               self.agent.take_off_queue.pop(0)
                               self.get('airport_map').reserve_airstrip(airstrip.id,plane)
-                              package = Package('available airstrip',(airstrip.pos,plane.id))
+                              package = Package('available airstrip',(airstrip,plane.id))
                               station_manager = self.get('station_manager')
                               if station_manager:
                                     msg = Message(to=self.get('station_manager'))

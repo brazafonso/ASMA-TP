@@ -1,6 +1,6 @@
 import jsonpickle
 from spade.message import Message
-from spade.behaviour import CyclicBehaviour
+from spade.behaviour import PeriodicBehaviour
 
-class DrawAirportBehaviour(CyclicBehaviour):
+class DrawAirportBehaviour(PeriodicBehaviour):
     pass

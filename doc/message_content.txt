@@ -12,8 +12,8 @@ Aterrar:
 Descolar:
 6: Request : idAvião (jid) -> pedir para descolar ; type='takeoff request'
 7: Query-IF : serialize(Posição,Aviao) -> posição da gare para escolher pista mais próxima ; type='takeoff request'
-8: Inform : serialize(Posição, Aviao) -> posição da pista + id avião ; type='available airstrip'
-9: Inform: serialize(Posição) -> posição da pista ; type='available airstrip'
+8: Inform : serialize(Pista, Aviao) -> posição da pista + id avião ; type='available airstrip'
+9: Inform: serialize(Pista) -> posição da pista ; type='available airstrip'
 10: Inform: idAvião (jid) -> avisar que descolou ; type='took off'
 
 Fila cheia
@@ -27,3 +27,14 @@ Aviao ja n esta a espera:
 6: Inform: serialize(station.id) -> informa que aviao ja nao vai ocupar gare; type='cancel arrival'
 
 ------------------
+
+Troca de informação entre Torre de Controlo e Gestor de Dashboards
+
+1: Request : serialize('') -> pede informação de estado à Torre de Controlo  ; type='airport status request'
+2: Inform : serialize((Lista Pistas,Lista Gares,Queue de Aterragem,Queue de Descolagem)) -> envia a informação necessária ao Gestor de Dashboards; type='airport status report' 
+
+------------------
+
+Envio de informação periódica entre Gestor de Gares e Torre de Controlo 
+
+1: Inform : serialize(Lista Gares) -> envia a informação necessária à Torre de Controlo; type='station status report' 

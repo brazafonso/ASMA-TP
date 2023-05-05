@@ -319,6 +319,12 @@ class AirportMap():
 
         self.replacer(self.height-2,1,fila_de_descolagem)
 
+    def update_airstrips():
+        pass
+
+    def update_stations():
+        pass
+
     def draw_map(self):
         for i in range(0,self.height):
             print(self.map_draw[i])

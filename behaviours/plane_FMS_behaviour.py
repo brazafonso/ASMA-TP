@@ -186,7 +186,6 @@ class PlaneListenTakeoffBehavior(State):
         print('Plane in PlaneListenTakeoffBehavior')
         msg = await self.receive(timeout=60)
 
-
         if msg:
             performative = msg.get_metadata('performative')
 
@@ -205,10 +204,10 @@ class PlaneListenTakeoffBehavior(State):
                         
                     if type == 'available airstrip':
 
-                        posicao = package.body
+                        pista = package.body
 
                         print(f'Permição consedida ao avião {self.agent.jid} para descolar \
-                            na pista localizada na posição X:{posicao.x},Y:{posicao.y}')
+                            na pista localizada na posição X:{pista.pos.x},Y:{pista.pos.y}')
 
                         #TODO Preciso de saber distâncias para fazer o sleep dinâmico. Neste caso o station manager pode 
                         # mandar também a posição da gare

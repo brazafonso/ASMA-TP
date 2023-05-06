@@ -33,16 +33,16 @@ class PlaneRequestLandingBehaviour(State):
         self.agent.write_log(f'Plane State {self.agent.plane.state}')
         if not self.agent.plane.state:
             self.set_next_state(STATE_THREE)
-
-        package = Package('landing request',self.agent.plane)
-        msg = Message(to=self.get('control_tower'))
-        msg.set_metadata("performative", "request")
-        msg.body = jsonpickle.encode(package)
-        
-        await self.send(msg)
-        
-        self.agent.write_log('Landing request sent')
-        self.set_next_state(STATE_TWO)
+        else:
+            package = Package('landing request',self.agent.plane)
+            msg = Message(to=self.get('control_tower'))
+            msg.set_metadata("performative", "request")
+            msg.body = jsonpickle.encode(package)
+            
+            await self.send(msg)
+            
+            self.agent.write_log('Landing request sent')
+            self.set_next_state(STATE_TWO)
         
 class PlaneListenLandingBehaviour(State):
 

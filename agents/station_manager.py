@@ -14,3 +14,9 @@ class StationManagerAgent(agent.Agent):
         self.add_behaviour(StationManagerListener())
         self.add_behaviour(StationManagerClearOldReservationsBehaviour(period=1))
         self.add_behaviour(StationManagerStatusSender(period=2))
+
+
+    def write_log(self,message):
+        '''Escreve os logs no ficheiro especificado, ou no stdout por default'''
+        if self.get('logs'):
+            self.get('logs_file').write(message+'\n')

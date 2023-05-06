@@ -17,7 +17,7 @@ class StationManagerListener(CyclicBehaviour):
         for airstrip in available_airstrips:
             # Check if this airstrip is in the pending arrivals
             airstrip_available = True
-            for pending_airstrip_id, _ in self.agent.pending_arrivals.values():
+            for pending_airstrip_id, _,_ in self.agent.pending_arrivals.values():
                 if pending_airstrip_id == airstrip.id:
                     airstrip_available = False
                     break
@@ -76,7 +76,7 @@ class StationManagerListener(CyclicBehaviour):
         # - Request to leave station
         # - Inform to inform that airstrip is available (allow request to leave station)
         if msg:
-            print('Station Manager: ','Got message')
+            self.agent.write_log('Station Manager: Got message')
             performative = msg.get_metadata('performative')
             if performative == 'query-if':
                 # Check if station is available
@@ -98,9 +98,9 @@ class StationManagerListener(CyclicBehaviour):
                             msg.body = jsonpickle.encode(package)
 
                             await self.send(msg)
-                            print('Station manager: available station sent!')
+                            self.agent.write_log('Station manager: available station sent!')
                     else:
-                        print('Station manager: no available station.')
+                        self.agent.write_log('Station manager: no available station.')
                         # TODO: Handle falta de gares
 
             elif performative == 'request':
@@ -109,11 +109,11 @@ class StationManagerListener(CyclicBehaviour):
                 package = jsonpickle.decode(msg.body)
                 type = package.message
                 if type == 'takeoff request':
-                    print('Station manager: Take off request received.')
+                    self.agent.write_log('Station manager: Take off request received.')
                     plane_jid = package.body
                     # Check if plane is in station
                     for station in self.get('airport_map').stations:
-                        print('Station manager: Checking if plane is in station')
+                        self.agent.write_log('Station manager: Checking if plane is in station')
                         if station.state == 1 and station.plane is not None and station.plane.id == plane_jid:
                             # Send query-if to control tower
                             package = Package('takeoff request', (station.pos,station.plane))
@@ -124,7 +124,7 @@ class StationManagerListener(CyclicBehaviour):
                                 msg.body = jsonpickle.encode(package)
 
                                 await self.send(msg)
-                                print('Station manager: takeoff request sent to control tower!')
+                                self.agent.write_log('Station manager: takeoff request sent to control tower!')
                                 break
 
             elif performative == 'inform':
@@ -134,10 +134,10 @@ class StationManagerListener(CyclicBehaviour):
                 type = package.message
 
                 if type == 'confirm pending arrival':
-                    print('Station manager: confirmation of pending arrival.')
+                    self.agent.write_log('Station manager: confirmation of pending arrival.')
                     station_id = package.body
                     if station_id in self.agent.pending_arrivals:
-                        print('Station manager: reserving station')
+                        self.agent.write_log('Station manager: reserving station')
                         _,_,plane = self.agent.pending_arrivals[station_id]
                         result = self.get('airport_map').reserve_station(station_id,plane)
                         if result :
@@ -146,7 +146,7 @@ class StationManagerListener(CyclicBehaviour):
 
                 elif type == 'available airstrip':
                     airstrip, plane_id = package.body
-                    print('Station manager: available airstrip.')
+                    self.agent.write_log('Station manager: available airstrip.')
                     # Set station as available
                     for station in self.get('airport_map').stations:
                         if station.plane is not None and station.plane.id == plane_id:
@@ -161,13 +161,13 @@ class StationManagerListener(CyclicBehaviour):
                             msg.body = jsonpickle.encode(package)
 
                             await self.send(msg)
-                            print('Station manager: available airstrip sent to plane!')
+                            self.agent.write_log('Station manager: available airstrip sent to plane!')
 
                             break
                         
                 elif type == 'cancel arrival':
                     plane = package.body
-                    print('Station manager: Plane not arriving.')
+                    self.agent.write_log('Station manager: Plane not arriving.')
                     for station_id in self.agent.pending_arrivals:
                         _, _,p = self.agent.pending_arrivals[station_id]
                         if plane.id == p.id:
@@ -184,14 +184,14 @@ class StationManagerClearOldReservationsBehaviour(PeriodicBehaviour):
             _, timestamp,_ = self.agent.pending_arrivals[station_id]
             if current_time - timestamp > 15: # TODO: Definir...
                 del self.agent.pending_arrivals[station_id]
-                print('Station manager: cleared old reservation, station id: ' + str(station_id))
+                self.agent.write_log('Station manager: cleared old reservation, station id: ' + str(station_id))
 
 
 class StationManagerStatusSender(PeriodicBehaviour):
     '''Periodicamente envia o estado das gares para a torre de controlo'''
 
     async def run(self):
-        print('Station manager: Sending stations status.')
+        self.agent.write_log('Station manager: Sending stations status.')
 
         airport_map = self.get('airport_map')
         stations = airport_map.stations

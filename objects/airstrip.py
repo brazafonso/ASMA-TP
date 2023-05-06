@@ -18,10 +18,13 @@ class Airstrip():
         return self.pos.y
 
     def __str__(self) -> str:
-        return f'''Strip {self.id}:
-        - vacancy : {self.state}
-        - plane   : {self.plane}
+        str = f'''Strip {self.id}:
+        - vacancy : {self.state}'''
+        str+='''
+        - plane   : + ''' + f'{self.plane.id}' if self.plane else ''
+        str +='''
         - pos     : {self.pos}'''
+        return str
 
 
 

@@ -18,6 +18,16 @@ class AirportMap():
         self.scrape_airport_map()
 
 
+    def get_divided_stations(self):
+        '''Retorna as gares divididas por tipo'''
+        stations = {}
+        for station in self.stations:
+            type = station.type
+            if type not in stations:
+                stations[type] = []
+            stations[type].append(station)
+        return stations
+
     def available_airstrips(self):
         '''Devolve a lista das pistas disponiveis'''
         available = []
@@ -329,7 +339,7 @@ class AirportMap():
 
         fila_de_descolagem = 'Fila de Descolagem:'
         
-        for plane,_ in take_off_queue:
+        for _,plane,_ in take_off_queue:
 
             if (plane.type == 'goods'):
 

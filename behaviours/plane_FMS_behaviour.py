@@ -19,18 +19,18 @@ start_time = datetime.datetime.now()
 class PlaneFSMBehaviour(FSMBehaviour):
 
     async def on_start(self):
-        print(f'{self.agent.name} começou o seu comportamento!')
+        self.agent.write_log(f'{self.agent.name} começou o seu comportamento!')
 
     async def on_end(self):
-        print(f'{self.agent.name} acabou o seu comportamento!')
+        self.agent.write_log(f'{self.agent.name} acabou o seu comportamento!')
         await self.agent.stop()
 
 class PlaneRequestLandingBehaviour(State):
 
     async def run(self):
-        print('Plane in PlaneRequestLandingBehaviour')
+        self.agent.write_log('Plane in PlaneRequestLandingBehaviour')
         #O agente Avião muda o estado de pedir para descolar se já estiver estacionado numa gare
-        
+        self.agent.write_log(f'Plane State {self.agent.plane.state}')
         if not self.agent.plane.state:
             self.set_next_state(STATE_THREE)
 
@@ -41,13 +41,13 @@ class PlaneRequestLandingBehaviour(State):
         
         await self.send(msg)
         
-        print('Landing request sent')
+        self.agent.write_log('Landing request sent')
         self.set_next_state(STATE_TWO)
         
 class PlaneListenLandingBehaviour(State):
 
     async def run(self):
-        print('Plane in PlaneListenLandingBehaviour')
+        self.agent.write_log('Plane in PlaneListenLandingBehaviour')
         #TODO decidir/ajustar tempo de timeout
         msg = await self.receive(timeout=60)
 
@@ -56,7 +56,7 @@ class PlaneListenLandingBehaviour(State):
 
             fromA = msg.sender
 
-            print(f'{self.agent.name} recebeu uma mensagem com a performativa \
+            self.agent.write_log(f'{self.agent.name} recebeu uma mensagem com a performativa \
                   {performative} do agente {fromA}')
 
             if str(fromA) == self.get('control_tower'):
@@ -78,13 +78,13 @@ class PlaneListenLandingBehaviour(State):
                             await self.send(msg)
 
 
-                            print(f'Permição consedida ao avião {self.agent.name} para aterrar \
+                            self.agent.write_log(f'Permição consedida ao avião {self.agent.name} para aterrar \
                                 na pista {pista.id} e para estacionar na gare {gare.id}')
 
                             time_now = datetime.datetime.now()
 
                             #TODO: Verificar tempo de inicio de converçações com a torre de controlo
-                            print('Plane: ','Landing')
+                            self.agent.write_log('Plane: Landing')
                             while((time_now-start_time).seconds<20):
 
                                 time_now = datetime.datetime.now()
@@ -116,7 +116,7 @@ class PlaneListenLandingBehaviour(State):
 
                         else:
 
-                            print(f'Tipo da mensagem {type} inesperada \
+                            self.agent.write_log(f'Tipo da mensagem {type} inesperada \
                             agente {self.agent.jid} vai abandonar o aeroporto!')
                         
                             self.kill()      
@@ -124,28 +124,28 @@ class PlaneListenLandingBehaviour(State):
                 #TODO definir a performative de abandonar o aeroporto
                 elif performative =='refuse':
 
-                    print(f'Agente {self.agent.jid} vai abandonar o aeroporto, porque \
+                    self.agent.write_log(f'Agente {self.agent.jid} vai abandonar o aeroporto, porque \
                           recebeu uma mensagem com a performative refuse do aeroporto!')
                     
                     self.kill()
                 
                 else:
                     
-                    print(f'Performative {performative} inesperada \
+                    self.agent.write_log(f'Performative {performative} inesperada \
                           agente {self.agent.jid} vai abandonar o aeroporto!')
                     
                     self.kill()
                 
             else:
 
-                print(f'Mensagem recibida do agente {fromA} ao tentar aterrar \
+                self.agent.write_log(f'Mensagem recibida do agente {fromA} ao tentar aterrar \
                       agente {self.agent.jid} vai abandonar o aeroporto!')
                 
                 self.kill()
 
         else:
             
-            print(f'O agente {self.agent.jid} não recebeu mensagem de resposta da \
+            self.agent.write_log(f'O agente {self.agent.jid} não recebeu mensagem de resposta da \
                   Torre de Controlo.')
             package = Package('give up landing',self.agent.plane)
             msg = Message(to=self.get('control_tower'))
@@ -159,7 +159,7 @@ class PlaneListenLandingBehaviour(State):
 class PlaneRequestTakeoffBehaviour(State):
 
     async def run(self):
-        print('Plane in PlaneRequestTakeoffBehaviour')
+        self.agent.write_log('Plane in PlaneRequestTakeoffBehaviour')
 
         #TODO faz mais sentido definir quando se cria o Avião mas depois não temos a 
         # certeza se passamos da data com as esperas que introduzimos. Pode ser dicutido
@@ -169,7 +169,7 @@ class PlaneRequestTakeoffBehaviour(State):
         data_descolagem = data_agora + datetime.timedelta(seconds = offset)
         self.agent.plane.flight.set_take_off_date(data_descolagem)
 
-        print('Plane: ',f'waiting for {(data_descolagem-data_agora).seconds} seconds')
+        self.agent.write_log(f'Plane: waiting for {(data_descolagem-data_agora).seconds} seconds')
 
         while((data_descolagem-data_agora).seconds>1):
             data_agora = datetime.datetime.now()
@@ -188,7 +188,7 @@ class PlaneRequestTakeoffBehaviour(State):
 class PlaneListenTakeoffBehavior(State):
 
     async def run(self):
-        print('Plane in PlaneListenTakeoffBehavior')
+        self.agent.write_log('Plane in PlaneListenTakeoffBehavior')
         msg = await self.receive(timeout=60)
 
         if msg:
@@ -196,7 +196,7 @@ class PlaneListenTakeoffBehavior(State):
 
             fromA = msg.sender
 
-            print(f'{self.agent.name} recebou uma mensagem com a performativa \
+            self.agent.write_log(f'{self.agent.name} recebou uma mensagem com a performativa \
                     {performative} do agente {fromA}')
 
             if str(fromA) == self.get('station_manager'):
@@ -211,7 +211,7 @@ class PlaneListenTakeoffBehavior(State):
 
                         pista = package.body
 
-                        print(f'Permição consedida ao avião {self.agent.jid} para descolar \
+                        self.agent.write_log(f'Permição consedida ao avião {self.agent.jid} para descolar \
                             na pista localizada na posição X:{pista.pos.x},Y:{pista.pos.y}')
 
                         #TODO Preciso de saber distâncias para fazer o sleep dinâmico. Neste caso o station manager pode 
@@ -238,27 +238,27 @@ class PlaneListenTakeoffBehavior(State):
 
                     else:
 
-                        print(f'Tipo da mensagem {type} inesperada \
+                        self.agent.write_log(f'Tipo da mensagem {type} inesperada \
                                 agente {self.agent.jid} vai abandonar o aeroporto!')
                         
                         self.kill()
 
                 else:
                                 
-                    print(f'Performative {performative} inesperada \
+                    self.agent.write_log(f'Performative {performative} inesperada \
                         agente {self.agent.jid} vai abandonar o aeroporto!')
                     
                     self.kill()
                         
             else:
 
-                print(f'Mensagem recibida do agente {fromA} ao tentar levantar \
+                self.agent.write_log(f'Mensagem recibida do agente {fromA} ao tentar levantar \
                     agente {self.agent.jid} vai abandonar o aeroporto!')
                 
                 self.kill()
         else:
 
-            print(f'O agente {self.agent.jid} não recebeu mensagem de resposta do \
+            self.agent.write_log(f'O agente {self.agent.jid} não recebeu mensagem de resposta do \
                   Gestor de Gares.')
             self.set_next_state(STATE_THREE)
 

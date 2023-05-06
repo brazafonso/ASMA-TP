@@ -18,3 +18,9 @@ class Dashboard_Manager(Agent):
         #Set Behaviors
         draw = DrawAirportBehaviour(period=self.period)
         self.add_behaviour(draw)
+
+
+    def write_log(self,message):
+        '''Escreve os logs no ficheiro especificado, ou no stdout por default'''
+        if self.get('logs'):
+            self.get('logs_file').write(message+'\n')

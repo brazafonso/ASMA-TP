@@ -30,7 +30,7 @@ class DrawAirportBehaviour(PeriodicBehaviour):
 
                 type = package.message
                 if type == 'airport status report':
-                    print('Dashboard: Updating and drawing map')
+                    self.agent.write_log('Dashboard: Updating and drawing map')
                     airstrips,stations,landing_queue,take_off_queue = package.body
 
                     self.agent.get('airport_map').map_update_airstrips(airstrips)

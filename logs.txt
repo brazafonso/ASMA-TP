@@ -1,0 +1,2101 @@
+Control Tower: Checking landing requests
+Control Tower: Checking take off requests
+Station manager: Sending stations status.
+Control Tower: Got message
+Control Tower: Stations status report
+Control Tower: Updating stations status.
+Control Tower: Got message
+Control Tower: Airport status request
+Control Tower: Sending airport status.
+
+         _______________
+        | Landing Queue |
+            ---------
+
+         ________________
+        | Take off Queue |
+            ----------
+
+         ___________
+        | Airstrips |
+           -------
+Strip 0:
+        - vacancy : 0
+        - pos     : {self.pos}
+Strip 1:
+        - vacancy : 0
+        - pos     : {self.pos}
+
+         __________
+        | Stations |
+            ----
+Station 0:
+        - type    : people
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+Station 1:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 2:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 3:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 4:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 5:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 6:
+        - type    : comercial
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 7:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 8:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 9:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 10:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 11:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 12:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 13:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 14:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 15:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 16:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 17:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 18:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 19:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 20:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 21:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 22:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 23:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 24:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 25:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 26:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 27:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 28:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 29:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 30:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 31:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 32:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 33:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 34:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 35:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 36:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 37:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 38:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 39:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 40:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 41:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 42:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 43:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 44:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 45:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 46:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 47:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 48:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 49:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 50:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 51:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 52:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 53:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 54:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 55:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+
+Dashboard: Updating and drawing map
+plane0 começou o seu comportamento!
+Plane in PlaneRequestLandingBehaviour
+Plane State False
+Landing request sent
+Plane in PlaneListenLandingBehaviour
+Control Tower: Got message
+Control Tower: Landing request received
+Control Tower: Checking take off requests
+Control Tower: Checking landing requests
+Control tower:Sending requests to station manager
+Control tower:landing request sent
+Station manager: Sending stations status.
+Station Manager: Got message
+Station manager: available station sent!
+Control Tower: Got message
+Control Tower: Stations status report
+Control Tower: Updating stations status.
+Control Tower: Got message
+Control Tower: Station available
+Control Tower: Taking care of landing procedure
+Control Tower: Reserving station
+Control Tower: Confirming plane plane0@desktop-vr2ptu2 still alive
+Station Manager: Got message
+Station manager: confirmation of pending arrival.
+Station manager: reserving station
+plane0 recebeu uma mensagem com a performativa                   inform do agente control_tower@desktop-vr2ptu2
+Permição consedida ao avião plane0 para aterrar                                 na pista 1 e para estacionar na gare 28
+Plane: Landing
+Control Tower: Got message
+Control Tower: Landing happening
+Control Tower: Got message
+Control Tower: Airport status request
+Control Tower: Sending airport status.
+
+         _______________
+        | Landing Queue |
+            ---------
+
+         ________________
+        | Take off Queue |
+            ----------
+
+         ___________
+        | Airstrips |
+           -------
+Strip 0:
+        - vacancy : 0
+        - pos     : {self.pos}
+Strip 1:
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+
+         __________
+        | Stations |
+            ----
+Station 0:
+        - type    : people
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+Station 1:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 2:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 3:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 4:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 5:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 6:
+        - type    : comercial
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 7:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 8:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 9:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 10:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 11:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 12:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 13:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 14:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 15:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 16:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 17:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 18:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 19:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 20:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 21:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 22:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 23:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 24:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 25:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 26:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 27:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 28:
+        - type    : people
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+Station 29:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 30:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 31:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 32:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 33:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 34:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 35:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 36:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 37:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 38:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 39:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 40:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 41:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 42:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 43:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 44:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 45:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 46:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 47:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 48:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 49:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 50:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 51:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 52:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 53:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 54:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 55:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+
+Dashboard: Updating and drawing map
+Station manager: Sending stations status.
+Control Tower: Checking take off requests
+Control Tower: Checking landing requests
+Control Tower: Got message
+Control Tower: Stations status report
+Control Tower: Updating stations status.
+Control Tower: Got message
+Control Tower: Airport status request
+Control Tower: Sending airport status.
+
+         _______________
+        | Landing Queue |
+            ---------
+
+         ________________
+        | Take off Queue |
+            ----------
+
+         ___________
+        | Airstrips |
+           -------
+Strip 0:
+        - vacancy : 0
+        - pos     : {self.pos}
+Strip 1:
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+
+         __________
+        | Stations |
+            ----
+Station 0:
+        - type    : people
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+Station 1:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 2:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 3:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 4:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 5:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 6:
+        - type    : comercial
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 7:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 8:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 9:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 10:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 11:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 12:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 13:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 14:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 15:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 16:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 17:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 18:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 19:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 20:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 21:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 22:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 23:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 24:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 25:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 26:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 27:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 28:
+        - type    : people
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+Station 29:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 30:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 31:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 32:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 33:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 34:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 35:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 36:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 37:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 38:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 39:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 40:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 41:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 42:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 43:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 44:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 45:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 46:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 47:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 48:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 49:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 50:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 51:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 52:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 53:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 54:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 55:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+
+Dashboard: Updating and drawing map
+Station manager: Sending stations status.
+Control Tower: Got message
+Control Tower: Stations status report
+Control Tower: Updating stations status.
+Control Tower: Checking landing requests
+Control Tower: Checking take off requests
+Control Tower: Got message
+Control Tower: Airport status request
+Control Tower: Sending airport status.
+
+         _______________
+        | Landing Queue |
+            ---------
+
+         ________________
+        | Take off Queue |
+            ----------
+
+         ___________
+        | Airstrips |
+           -------
+Strip 0:
+        - vacancy : 0
+        - pos     : {self.pos}
+Strip 1:
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+
+         __________
+        | Stations |
+            ----
+Station 0:
+        - type    : people
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+Station 1:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 2:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 3:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 4:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 5:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 6:
+        - type    : comercial
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 7:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 8:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 9:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 10:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 11:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 12:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 13:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 14:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 15:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 16:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 17:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 18:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 19:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 20:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 21:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 22:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 23:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 24:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 25:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 26:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 27:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 28:
+        - type    : people
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+Station 29:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 30:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 31:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 32:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 33:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 34:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 35:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 36:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 37:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 38:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 39:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 40:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 41:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 42:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 43:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 44:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 45:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 46:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 47:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 48:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 49:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 50:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 51:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 52:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 53:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 54:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 55:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+
+Dashboard: Updating and drawing map
+Station manager: Sending stations status.
+Control Tower: Checking landing requests
+Control Tower: Checking take off requests
+Control Tower: Got message
+Control Tower: Stations status report
+Control Tower: Updating stations status.
+Control Tower: Got message
+Control Tower: Airport status request
+Control Tower: Sending airport status.
+
+         _______________
+        | Landing Queue |
+            ---------
+
+         ________________
+        | Take off Queue |
+            ----------
+
+         ___________
+        | Airstrips |
+           -------
+Strip 0:
+        - vacancy : 0
+        - pos     : {self.pos}
+Strip 1:
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+
+         __________
+        | Stations |
+            ----
+Station 0:
+        - type    : people
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+Station 1:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 2:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 3:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 4:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 5:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 6:
+        - type    : comercial
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 7:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 8:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 9:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 10:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 11:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 12:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 13:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 14:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 15:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 16:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 17:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 18:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 19:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 20:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 21:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 22:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 23:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 24:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 25:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 26:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 27:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 28:
+        - type    : people
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+Station 29:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 30:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 31:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 32:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 33:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 34:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 35:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 36:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 37:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 38:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 39:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 40:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 41:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 42:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 43:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 44:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 45:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 46:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 47:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 48:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 49:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 50:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 51:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 52:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 53:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 54:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 55:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+
+Dashboard: Updating and drawing map
+Station manager: Sending stations status.
+Control Tower: Got message
+Control Tower: Stations status report
+Control Tower: Updating stations status.
+Control Tower: Checking landing requests
+Control Tower: Checking take off requests
+Control Tower: Got message
+Control Tower: Airport status request
+Control Tower: Sending airport status.
+
+         _______________
+        | Landing Queue |
+            ---------
+
+         ________________
+        | Take off Queue |
+            ----------
+
+         ___________
+        | Airstrips |
+           -------
+Strip 0:
+        - vacancy : 0
+        - pos     : {self.pos}
+Strip 1:
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+
+         __________
+        | Stations |
+            ----
+Station 0:
+        - type    : people
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+Station 1:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 2:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 3:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 4:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 5:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 6:
+        - type    : comercial
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 7:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 8:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 9:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 10:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 11:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 12:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 13:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 14:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 15:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 16:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 17:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 18:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 19:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 20:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 21:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 22:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 23:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 24:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 25:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 26:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 27:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 28:
+        - type    : people
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+Station 29:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 30:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 31:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 32:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 33:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 34:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 35:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 36:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 37:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 38:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 39:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 40:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 41:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 42:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 43:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 44:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 45:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 46:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 47:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 48:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 49:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 50:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 51:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 52:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 53:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 54:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 55:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+
+Dashboard: Updating and drawing map
+Station manager: Sending stations status.
+Control Tower: Got message
+Control Tower: Stations status report
+Control Tower: Updating stations status.
+Control Tower: Checking take off requests
+Control Tower: Checking landing requests
+Control Tower: Got message
+Control Tower: Airport status request
+Control Tower: Sending airport status.
+
+         _______________
+        | Landing Queue |
+            ---------
+
+         ________________
+        | Take off Queue |
+            ----------
+
+         ___________
+        | Airstrips |
+           -------
+Strip 0:
+        - vacancy : 0
+        - pos     : {self.pos}
+Strip 1:
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+
+         __________
+        | Stations |
+            ----
+Station 0:
+        - type    : people
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+Station 1:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 2:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 3:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 4:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 5:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 6:
+        - type    : comercial
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 7:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 8:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 9:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 10:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 11:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 12:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 13:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 14:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 15:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 16:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 17:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 18:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 19:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 20:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 21:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 22:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 23:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 24:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 25:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 26:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 27:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 28:
+        - type    : people
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+Station 29:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 30:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 31:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 32:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 33:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 34:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 35:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 36:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 37:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 38:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 39:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 40:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 41:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 42:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 43:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 44:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 45:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 46:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 47:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 48:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 49:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 50:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 51:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 52:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 53:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 54:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 55:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+
+Dashboard: Updating and drawing map
+Station manager: Sending stations status.
+Control Tower: Checking take off requests
+Control Tower: Checking landing requests
+Control Tower: Got message
+Control Tower: Stations status report
+Control Tower: Updating stations status.
+Control Tower: Got message
+Control Tower: Airport status request
+Control Tower: Sending airport status.
+
+         _______________
+        | Landing Queue |
+            ---------
+
+         ________________
+        | Take off Queue |
+            ----------
+
+         ___________
+        | Airstrips |
+           -------
+Strip 0:
+        - vacancy : 0
+        - pos     : {self.pos}
+Strip 1:
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+
+         __________
+        | Stations |
+            ----
+Station 0:
+        - type    : people
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+Station 1:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 2:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 3:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 4:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 5:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 6:
+        - type    : comercial
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 7:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 8:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 9:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 10:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 11:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 12:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 13:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 14:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 15:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 16:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 17:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 18:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 19:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 20:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 21:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 22:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 23:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 24:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 25:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 26:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 27:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 28:
+        - type    : people
+        - vacancy : 1
+        - plane   : + plane0@desktop-vr2ptu2
+        - pos     : {self.pos}
+Station 29:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 30:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 31:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 32:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 33:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 34:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 35:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 36:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 37:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 38:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 39:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 40:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 41:
+        - type    : people
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 42:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 43:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 44:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 45:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 46:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 47:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 48:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 49:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 50:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 51:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 52:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 53:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 54:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+Station 55:
+        - type    : goods
+        - vacancy : 0
+        - pos     : {self.pos}
+

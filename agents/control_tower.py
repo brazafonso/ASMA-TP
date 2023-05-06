@@ -63,3 +63,9 @@ class ControlTowerAgent(agent.Agent):
         for station in airport_map.stations:
             status += f'{str(station)}\n'
         return status
+    
+
+    def write_log(self,message):
+        '''Escreve os logs no ficheiro especificado, ou no stdout por default'''
+        if self.get('logs'):
+            self.get('logs_file').write(message+'\n')

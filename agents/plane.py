@@ -6,22 +6,27 @@ from behaviours import plane_FMS_behaviour
 
 class PlaneAgent(agent.Agent):
 
-
-    def __init__(self, jid: str, password: str, verify_security: bool = False,plane_speed:int=10,max_wait_in_station:int=60,max_wait_landing:int=60,max_wait_take_off:int=60,type:str='comercial'):
+    # TODO adicionar argumentos para flight
+    def __init__(self, jid: str, password: str, verify_security: bool = False,
+                 state=True,company=None,type:str='comercial',plane_speed:int=10,
+                 max_wait_in_station:int=60,max_wait_landing:int=60,
+                 max_wait_take_off:int=60):
+        
         super().__init__(jid, password, verify_security)
+        self.state = state
+        self.company = company
         self.plane_speed = plane_speed
         self.max_wait_in_station = max_wait_in_station
         self.max_wait_landing = max_wait_landing
         self.max_wait_take_off = max_wait_take_off
         self.type = type
-
-    async def setup(self):
-
         #Set Variables
         now = datetime.datetime.now()
         flight = Flight('Porto','Lisboa',now)
 
-        self.plane = Plane(id=self.jid,state=True,company='TAP',type=self.type,flight=flight)
+        self.plane = Plane(id=self.jid,state=self.state,company=self.company,type=self.type,flight=flight)
+
+    async def setup(self):
 
         STATE_ONE = 'STATE_ONE'
         STATE_TWO = 'STATE_TWO'
@@ -42,3 +47,7 @@ class PlaneAgent(agent.Agent):
         self.add_behaviour(fsm)
 
 
+    def write_log(self,message):
+        '''Escreve os logs no ficheiro especificado, ou no stdout por default'''
+        if self.get('logs'):
+            self.get('logs_file').write(message+'\n')

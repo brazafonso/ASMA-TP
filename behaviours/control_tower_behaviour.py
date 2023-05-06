@@ -6,7 +6,6 @@ from spade.message import Message
 from objects.package import Package
 
 
-
 class ControlTowerListener(CyclicBehaviour):
       '''Listener principal da torre de controlo'''
       async def run(self):
@@ -14,14 +13,14 @@ class ControlTowerListener(CyclicBehaviour):
             msg = await self.receive(timeout=10)
             # If message and content are not None
             if msg:
-                  print('Control Tower: ','Got message')
+                  self.agent.write_log('Control Tower: Got message')
                   performative = msg.get_metadata('performative')
                   source = str(msg.sender)
                   if performative == 'request' and msg.body:
                         package:Package = jsonpickle.decode(msg.body)
                         type = package.message
                         if type == 'landing request':
-                              print('Control Tower: ','Landing request received')
+                              self.agent.write_log('Control Tower: Landing request received')
                               if len(self.agent.landing_queue) < self.get('max_queue'):
                                     self.agent.landing_queue.append((package.body,None))
                               # Fila de espera cheia, recusa aterragem
@@ -31,7 +30,7 @@ class ControlTowerListener(CyclicBehaviour):
                                     await self.send(msg)
                         #  Pedido de estado de aeroporto
                         elif type == 'airport status request':
-                              print('Control Tower: ',f'Airport status request')
+                              self.agent.write_log('Control Tower: Airport status request')
                               self.set('status_requester',source)
                               self.agent.add_behaviour(ControlTowerStatusSender())
 
@@ -40,31 +39,32 @@ class ControlTowerListener(CyclicBehaviour):
                         type = package.message
                         # Gestor de gares informa que tem estacionamento disponivel
                         if type == 'available station':
-                              print('Control Tower: ','Station available')
+                              self.agent.write_log('Control Tower: Station available')
                               self.set('landing_confirmation',msg)
                               self.agent.add_behaviour(ControlTowerLandingHandler())
                         # Aviao avisa que ja aterrou
                         elif type == 'landed':
                               jid = package.body
-                              print('Control Tower: ',f'Plane {jid} landed')
+                              self.agent.write_log(f'Control Tower: Plane {jid} landed')
                               # Tornar pista livre
                               self.get('airport_map').free_airstrip(plane_id=jid)
                         # Pedido para descolagem
                         elif type == 'took off':
                               jid = package.body
-                              print('Control Tower: ',f'Plane {jid} took off')
+                              self.agent.write_log(f'Control Tower: Plane {jid} took off')
                               # Tornar pista livre
                               self.get('airport_map').free_airstrip(plane_id=jid)
-                              # TODO: apenas para teste
-                              await self.agent.stop()
+                              # atualizar numero de avioes restantes
+                              n_planes = self.get('n_planes')
+                              self.set('n_planes',n_planes - 1) 
                         # Pedido de estado do aeroporto
                         elif type == 'station status report':
-                              print('Control Tower: ',f'Stations status report')
+                              self.agent.write_log('Control Tower: Stations status report')
                               self.set('stations_status',package)
                               self.agent.add_behaviour(ControlTowerStationStatusHandler())
                         # Desistencia de aterragem
                         elif type == 'give up landing':
-                              print('Control Tower: ',f'Plane gave up landing')
+                              self.agent.write_log('Control Tower: Plane gave up landing')
                               plane = package.body
                               self.agent.pop_landing_queue(plane.id)
                               package = Package('cancel arrival',plane)
@@ -72,6 +72,9 @@ class ControlTowerListener(CyclicBehaviour):
                               msg.set_metadata("performative", "inform")
                               msg.body = jsonpickle.encode(package)
                               await self.send(msg)
+                              # atualizar numero de avioes restantes
+                              n_planes = self.get('n_planes')
+                              self.set('n_planes',n_planes - 1) 
 
 
                   elif performative == 'query-if' and msg.body:
@@ -79,16 +82,21 @@ class ControlTowerListener(CyclicBehaviour):
                         type = package.message
                         # Gestor de gares procura uma pista para um aviao poder descolar
                         if type == 'takeoff request':
-                              print('Control Tower: ','TakeOff request')
+                              self.agent.write_log('Control Tower: TakeOff request')
                               pos, plane = package.body
                               self.agent.take_off_queue.append((pos,plane,None))
+
+            # Se ja tiverem sido tratados todos os avioes, encerra graciosamente
+            if self.get('n_planes') == 0:
+                  self.agent.write_log('Control Tower: Work Done.')
+                  await self.agent.stop()
 
 
 class ControlTowerLandingHandler(OneShotBehaviour):
       '''Trata dos passos finais da aterragem'''
 
       async def run(self):
-            print('Control Tower: ','Taking care of landing procedure')
+            self.agent.write_log('Control Tower: Taking care of landing procedure')
             message = self.get('landing_confirmation')
             package = jsonpickle.decode(message.body)
             airstrip,station,plane = package.body
@@ -107,7 +115,7 @@ class ControlTowerLandingHandler(OneShotBehaviour):
                         self.get('airport_map').reserve_airstrip(airstrip.id,plane)
 
                         # Informa gestor de gares que pista ainda esta disponivel, para reservar gare
-                        print('Control Tower: ','Reserving station')
+                        self.agent.write_log('Control Tower: Reserving station')
                         package = Package('confirm pending arrival',station.id)
                         msg = Message(to=self.get('station_manager'))
                         msg.set_metadata("performative", "inform")
@@ -116,7 +124,7 @@ class ControlTowerLandingHandler(OneShotBehaviour):
 
 
                         # Informar aviao que pode aterrar
-                        print('Control Tower: ',f'Confirming plane {plane.id} still alive')
+                        self.agent.write_log(f'Control Tower: Confirming plane {plane.id} still alive')
                         package = Package('confirm landing',(airstrip,station))
                         msg = Message(to=str(plane.id))
                         msg.set_metadata("performative", "inform")
@@ -128,18 +136,21 @@ class ControlTowerLandingHandler(OneShotBehaviour):
 
                         # Cancelar reservas se aviao nao responder
                         if not msg:
-                              print('Control Tower: ','Plane not responding, canceling landing.')
+                              self.agent.write_log('Control Tower: Plane not responding, canceling landing.')
                               self.get('airport_map').free_airstrip(id=airstrip.id)
                               package = Package('cancel arrival',station.id)
                               msg = Message(to=self.get('station_manager'))
                               msg.set_metadata("performative", "inform")
                               msg.body = jsonpickle.encode(package)
                               await self.send(msg)
+                              # atualizar numero de avioes restantes
+                              n_planes = self.get('n_planes')
+                              self.set('n_planes',n_planes - 1) 
                         else:
-                              print('Control Tower: ','Landing happening')
+                              self.agent.write_log('Control Tower: Landing happening')
             # avisar gestor de gares que aviao ja nao quer aterrar
             else:
-                  print('Control Tower: ','Plane has left landing queue.')
+                  self.agent.write_log('Control Tower: Plane has left landing queue.')
                   package = Package('cancel arrival',station.id)
                   msg = Message(to=self.get('station_manager'))
                   msg.set_metadata("performative", "inform")
@@ -150,7 +161,7 @@ class ControlTowerLandingRequester(CyclicBehaviour):
       '''Requester de pedidos de aterragem à gare'''
 
       async def run(self):
-            print('Control Tower: ','Checking landing requests')
+            self.agent.write_log('Control Tower: Checking landing requests')
             if len(self.agent.landing_queue)>0:
                   plane,timestamp = self.agent.landing_queue[0]
                   current_time = time.time()
@@ -158,7 +169,7 @@ class ControlTowerLandingRequester(CyclicBehaviour):
                         self.agent.landing_queue[0] = (plane,current_time)
                         available_airstrips = self.get('airport_map').available_airstrips()
                         if available_airstrips:
-                              print('Control tower:','Sending requests to station manager')
+                              self.agent.write_log('Control tower:Sending requests to station manager')
                               package = Package('landing request',(available_airstrips,plane))
                               station_manager = self.get('station_manager')
                               if station_manager:
@@ -167,7 +178,7 @@ class ControlTowerLandingRequester(CyclicBehaviour):
                                     msg.body = jsonpickle.encode(package)
 
                                     await self.send(msg)
-                                    print('Control tower:','landing request sent')
+                                    self.agent.write_log('Control tower:landing request sent')
             # TODO: mudar para eventos
             await asyncio.sleep(2)
 
@@ -176,17 +187,17 @@ class ControlTowerTakeOffHandler(CyclicBehaviour):
       '''Handler de pedidos de descolagem'''
 
       async def run(self):
-            print('Control Tower: ','Checking take off requests')
+            self.agent.write_log('Control Tower: Checking take off requests')
             if len(self.agent.take_off_queue)>0:
                   pos,plane,timestamp = self.agent.take_off_queue[0]
                   current_time = time.time()
                   if not timestamp or timestamp < current_time - 10:
-                        print('Control tower:','Choosing airstrip for takeoff')
+                        self.agent.write_log('Control tower:Choosing airstrip for takeoff')
                         self.agent.take_off_queue[0] = (pos,plane,current_time)
                         airstrip = self.get('airport_map').closest_available_airstrip(pos)
                         # reserver pista, avisar gestor de gares e atualizar lista de espera para descolar
                         if airstrip:
-                              print('Control tower:','Sending airstrip for takeoff')
+                              self.agent.write_log('Control tower:Sending airstrip for takeoff')
                               self.agent.take_off_queue.pop(0)
                               self.get('airport_map').reserve_airstrip(airstrip.id,plane)
                               package = Package('available airstrip',(airstrip,plane.id))
@@ -205,7 +216,7 @@ class ControlTowerStatusSender(OneShotBehaviour):
       '''Enviar estado do aeroporto'''
 
       async def run(self):
-            print('Control Tower: ','Sending airport status.')
+            self.agent.write_log('Control Tower: Sending airport status.')
             
             destination = self.get('status_requester')
             airport_map = self.get('airport_map')
@@ -216,6 +227,7 @@ class ControlTowerStatusSender(OneShotBehaviour):
             msg.set_metadata("performative", "inform")
             msg.body = jsonpickle.encode(package)
             await self.send(msg)
+            self.agent.write_log(self.agent.status())
 
 
 
@@ -223,7 +235,7 @@ class ControlTowerStationStatusHandler(OneShotBehaviour):
       '''Tratar de atualizar as gares no mapa'''
 
       async def run(self):
-            print('Control Tower: ','Updating stations status.')
+            self.agent.write_log('Control Tower: Updating stations status.')
             
             status_package = self.get('stations_status')
             stations = status_package.body

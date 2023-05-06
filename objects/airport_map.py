@@ -319,11 +319,51 @@ class AirportMap():
 
         self.replacer(self.height-2,1,fila_de_descolagem)
 
-    def update_airstrips():
-        pass
+    def update_airstrips(self,airstrips):
 
-    def update_stations():
-        pass
+        for airstrip in airstrips:
+            pos = airstrip.pos
+
+            if airstrip.state == 1:
+                plane = airstrip.plane
+
+                if (plane.type == 'goods'):
+
+                    plane_str = 'AM'+plane.id
+
+                else:
+
+                    plane_str = 'AC'+plane.id
+
+                self.replacer(pos.y+1,pos.x,plane_str)
+
+            else:
+                self.replacer(pos.y+1,pos.x,''*6)
+
+
+
+    def update_stations(self,stations):
+        
+        for station in stations:
+            pos = station.pos
+
+            if station.state == 1:
+
+                plane = station.plane
+
+                if (plane.type == 'goods'):
+
+                    plane_str = '|AM|'+plane.id
+
+                else:
+
+                    plane_str = '|AC|'+plane.id
+
+                self.replacer(pos.y,pos.x,plane_str)
+
+            else:
+
+                self.replacer(pos.y,pos.x,'|xx|'+' '*3)
 
     def draw_map(self):
         for i in range(0,self.height):

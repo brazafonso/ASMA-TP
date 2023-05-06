@@ -101,6 +101,11 @@ class AirportMap():
                 reserved = True
                 break
         return reserved
+    
+
+    def update_stations(self,stations):
+        '''Atualizar estado das gares'''
+        self.stations = stations
 
 
     def scrape_airport_map(self):

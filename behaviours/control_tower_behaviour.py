@@ -1,7 +1,7 @@
 import asyncio
 import time
 import jsonpickle
-from spade.behaviour import CyclicBehaviour
+from spade.behaviour import CyclicBehaviour,OneShotBehaviour
 from spade.message import Message
 from objects.package import Package
 
@@ -43,12 +43,22 @@ class ControlTowerListener(CyclicBehaviour):
                               print('Control Tower: ',f'Plane {jid} landed')
                               # Tornar pista livre
                               self.get('airport_map').free_airstrip(plane_id=jid)
+                        # Pedido para descolagem
                         elif type == 'took off':
                               jid = package.body
                               print('Control Tower: ',f'Plane {jid} took off')
                               # Tornar pista livre
                               self.get('airport_map').free_airstrip(plane_id=jid)
                               await self.agent.stop()
+                        #  Pedido de estado de aeroporto
+                        elif type == 'airport status request':
+                              print('Control Tower: ',f'Airport status request')
+                              self.set('status_requester',source)
+                              self.agent.add_behaviour(ControlTowerStatusSender())
+                        elif type == 'station status report':
+                              print('Control Tower: ',f'Stations status report')
+                              self.set('stations_status',jsonpickle.decode(msg.body))
+                              self.agent.add_behaviour(ControlTowerStationStatusHandler())
 
                   elif performative == 'query-if' and msg.body:
                         package = jsonpickle.decode(msg.body)
@@ -161,6 +171,37 @@ class ControlTowerTakeOffHandler(CyclicBehaviour):
                                     await self.send(msg)
             # TODO: mudar para eventos
             await asyncio.sleep(2)
+
+
+class ControlTowerStatusSender(OneShotBehaviour):
+      '''Classe para enviar estado do aeroporto'''
+
+      async def run(self):
+            print('Control Tower: ','Sending airport status.')
+            
+            destination = self.get('status_requester')
+            airport_map = self.get('airport_map')
+            status = (airport_map.airstrips,airport_map.stations,self.agent.landing_queue,self.agent.take_off_queue)
+            
+            package = Package('airport status report',status)
+            msg = Message(to=destination)
+            msg.set_metadata("performative", "inform")
+            msg.body = jsonpickle.encode(package)
+            await self.send(msg)
+
+
+
+class ControlTowerStationStatusHandler(OneShotBehaviour):
+      '''Classe para tratar de atualizar as gares no mapa'''
+
+      async def run(self):
+            print('Control Tower: ','Updating stations status.')
+            
+            status_package = self.get('stations_status')
+            stations = status_package.body
+            self.get('airport_map').update_stations(stations)
+
+
 
 
 

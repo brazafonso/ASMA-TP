@@ -22,16 +22,24 @@ if __name__ == "__main__":
     USER = creds['user']
     PASSWORD = creds['password']
 
-    # airport map
-    file = open('config/airport2.json', 'r')
+    # Airport configurations
+    ## airport map
+    file = open('config/1.json', 'r')
     config = json.load(file)
     file.close()
     airport_map = AirportMap(config)
     airport_map.set_frame()
     airport_map.place_airstrips()
     airport_map.place_stations()
-    #airport_map.draw_map()
+    airport_map.draw_map()
+
+    ## airport config variables
     max_queue = config['max_queue']
+    dash_board_period = config["dash_board_period"]
+    plane_speed = config["plane_speed"]
+    max_wait_in_station = config["max_wait_in_station"]
+    max_wait_landing = config["max_wait_landing"]
+    max_wait_take_off = config["max_wait_take_off"]
     
     # Criar torre de controlo
     control_tower = ControlTowerAgent(f'control_tower@{USER}',PASSWORD)
@@ -49,14 +57,19 @@ if __name__ == "__main__":
 
     futureSM = station_manager.start()
 
-    # Criar Gestor de Dashboards
-    dashboard_manager = Dashboard_Manager(f'dashboard_manager@{USER}',PASSWORD)
-    dashboard_manager.set('airport_map',airport_map)
+    
 
-    futureDM = dashboard_manager.start()
     
     futureCT.result()
     futureSM.result()
+    
+    
+    # Criar Gestor de Dashboards
+    dashboard_manager = Dashboard_Manager(f'dashboard_manager@{USER}',PASSWORD,period=dash_board_period)
+    dashboard_manager.set('airport_map',airport_map)
+    dashboard_manager.set('control_tower',f'control_tower@{USER}')
+
+    futureDM = dashboard_manager.start()
     futureDM.result()
 
 

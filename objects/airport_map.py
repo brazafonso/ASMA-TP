@@ -118,6 +118,7 @@ class AirportMap():
         for y,line in enumerate(self.map):
             for x,space in enumerate(line):
                 if space['type'] == 'airstrip':
+                    # TODO: meter x como metade da largura do mapa, para usar sempre o ponto medio da pista
                     self.airstrips.append(Airstrip(id=airstrip_id,x=x,y=y))
                     airstrip_id += 1
                 elif space['type'] == 'station':
@@ -308,15 +309,15 @@ class AirportMap():
 
         fila_de_aterragem = 'Fila de Aterragem:'
 
-        for plane in landing_queue:
+        for plane,_ in landing_queue:
 
             if (plane.type == 'goods'):
 
-                plane_str = 'AM'+plane.id
+                plane_str = 'AM'+str(plane.id)
 
             else:
 
-                plane_str = 'AC'+plane.id
+                plane_str = 'AC'+str(plane.id)
 
             fila_de_aterragem += ' '+plane_str
 
@@ -328,21 +329,21 @@ class AirportMap():
 
         fila_de_descolagem = 'Fila de Descolagem:'
         
-        for plane in take_off_queue:
+        for plane,_ in take_off_queue:
 
             if (plane.type == 'goods'):
 
-                plane_str = 'AM'+plane.id
+                plane_str = 'AM'+str(plane.id)
 
             else:
 
-                plane_str = 'AC'+plane.id
+                plane_str = 'AC'+str(plane.id)
 
             fila_de_descolagem += ' '+plane_str
 
         self.replacer(self.height-2,1,fila_de_descolagem)
 
-    def update_airstrips(self,airstrips):
+    def map_update_airstrips(self,airstrips):
 
         self.airstrips = airstrips
 
@@ -354,11 +355,11 @@ class AirportMap():
 
                 if (plane.type == 'goods'):
 
-                    plane_str = 'AM'+plane.id
+                    plane_str = 'AM'+str(plane.id)
 
                 else:
 
-                    plane_str = 'AC'+plane.id
+                    plane_str = 'AC'+str(plane.id)
 
                 self.replacer(pos.y+1,pos.x,plane_str)
 
@@ -367,7 +368,7 @@ class AirportMap():
 
 
 
-    def update_stations(self,stations):
+    def map_update_stations(self,stations):
 
         self.stations = stations
         
@@ -380,11 +381,11 @@ class AirportMap():
 
                 if (plane.type == 'goods'):
 
-                    plane_str = '|AM|'+plane.id
+                    plane_str = '|AM|'+str(plane.id)
 
                 else:
 
-                    plane_str = '|AC|'+plane.id
+                    plane_str = '|AC|'+str(plane.id)
 
                 self.replacer(pos.y,pos.x,plane_str)
 

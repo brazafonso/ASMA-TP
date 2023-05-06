@@ -1,0 +1,20 @@
+Diagramas a desenvolver
+
+
+
+arquitetura de sistema - diagrama de classes (esperar por leilao)
+
+diagrama de estados de aviao - statechart (alexandre)
+
+Comunicação:
+
+    * fluxo de aterragem e levantar voo de um aviao, sem excessoes (alexandre)
+    * fluxo de aterragem e levantar voo de um aviao, queue cheia (goncalo)
+    * fluxo de aterragem e levantar voo de um aviao, aviao desistiu (goncalo)
+    * fluxo de pedido de estado do aeroporto (goncalo)
+    * fluxo de leilao (ruben)
+
+
+Sequencia:
+    * geral de comunicaçao de CT, GG e aviao 
+    * leilao (ruben)

@@ -5,9 +5,16 @@ from behaviours.draw_airport_behaviour import DrawAirportBehaviour
 
 class Dashboard_Manager(Agent):
 
-    def setup(self):
+    def __init__(self, jid: str, password: str, verify_security: bool = False,period:int=2):
+        super().__init__(jid, password, verify_security)
+        self.period = period
+
+
+
+
+    async def setup(self):
         #Set Variables
 
         #Set Behaviors
-        draw = DrawAirportBehaviour(period=2)
+        draw = DrawAirportBehaviour(period=self.period)
         self.add_behaviour(draw)

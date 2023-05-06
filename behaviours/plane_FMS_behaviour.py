@@ -144,9 +144,14 @@ class PlaneListenLandingBehaviour(State):
                 self.kill()
 
         else:
-
+            
             print(f'O agente {self.agent.jid} não recebeu mensagem de resposta da \
                   Torre de Controlo.')
+            package = Package('give up landing',self.agent.plane)
+            msg = Message(to=self.get('control_tower'))
+            msg.set_metadata("performative", "inform")
+            msg.body = jsonpickle.encode(package)
+            await self.send(msg)
             
             self.kill()
             

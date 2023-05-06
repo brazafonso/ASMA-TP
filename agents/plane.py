@@ -9,10 +9,6 @@ class PlaneAgent(agent.Agent):
     async def setup(self):
 
         #Set Variables
-        self.id_aviao = self.jid
-        self.estado = True
-        self.nome_companhia = 'TAP'
-        self.tipo = 'comercial' #'goods'
         now = datetime.datetime.now()
         flight = Flight('Porto','Lisboa',now)
 

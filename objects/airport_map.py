@@ -8,6 +8,8 @@ class AirportMap():
     def __init__(self,map_json):
         self.airstrips = []
         self.stations = []
+        self.landing_queue = []
+        self.take_off_queue = []
         self.name = map_json['name']
         self.width = map_json['width']
         self.height = map_json['height']
@@ -300,31 +302,49 @@ class AirportMap():
                     self.replacer(key-3,pos_gares[key][0],midline)
                     self.replacer(key-4,topline_x,topline)
 
-    def update_landing_queue(self):
-        
-        avioes_aterrar = ['AC1','AM2','AC3','AC4','AM5']
+    def update_landing_queue(self,landing_queue):
+
+        self.landing_queue = landing_queue
 
         fila_de_aterragem = 'Fila de Aterragem:'
 
-        for aviao in avioes_aterrar:
+        for plane in landing_queue:
 
-            fila_de_aterragem += ' '+aviao
+            if (plane.type == 'goods'):
+
+                plane_str = 'AM'+plane.id
+
+            else:
+
+                plane_str = 'AC'+plane.id
+
+            fila_de_aterragem += ' '+plane_str
 
         self.replacer(1,1,fila_de_aterragem)
 
-    def update_take_off_queue(self):
+    def update_take_off_queue(self,take_off_queue):
 
-        avioes_descolar = ['AC1','AM2','AC3','AC4','AM5']
+        self.take_off_queue = take_off_queue
 
         fila_de_descolagem = 'Fila de Descolagem:'
         
-        for aviao in avioes_descolar:
+        for plane in take_off_queue:
 
-            fila_de_descolagem += ' '+aviao
+            if (plane.type == 'goods'):
+
+                plane_str = 'AM'+plane.id
+
+            else:
+
+                plane_str = 'AC'+plane.id
+
+            fila_de_descolagem += ' '+plane_str
 
         self.replacer(self.height-2,1,fila_de_descolagem)
 
     def update_airstrips(self,airstrips):
+
+        self.airstrips = airstrips
 
         for airstrip in airstrips:
             pos = airstrip.pos
@@ -348,6 +368,8 @@ class AirportMap():
 
 
     def update_stations(self,stations):
+
+        self.stations = stations
         
         for station in stations:
             pos = station.pos
@@ -373,6 +395,3 @@ class AirportMap():
     def draw_map(self):
         for i in range(0,self.height):
             print(self.map_draw[i])
-        
-
-        

@@ -4,6 +4,7 @@
 from spade import agent, quit_spade
 from agents.control_tower import ControlTowerAgent
 from agents.station_manager import StationManagerAgent
+from agents.dashboard_manager import Dashboard_Manager
 from agents.plane import PlaneAgent
 from objects.airport_map import AirportMap
 import time
@@ -48,8 +49,16 @@ if __name__ == "__main__":
 
     futureSM = station_manager.start()
 
+    # Criar Gestor de Dashboards
+    dashboard_manager = Dashboard_Manager(f'dashboard_manager@{USER}',PASSWORD)
+    dashboard_manager.set('airport_map',airport_map)
+
+    futureDM = dashboard_manager.start()
+    
     futureCT.result()
     futureSM.result()
+    futureDM.result()
+
 
 
     # Criar aviao
@@ -74,6 +83,9 @@ if __name__ == "__main__":
 
     station_manager.stop()
     print("Station Manager stopped")
+
+    dashboard_manager.stop()
+    print("Dashboard Manager stopped")
 
     plane1.stop()
 

@@ -32,7 +32,7 @@ Aviao ja n esta a espera:
 Aviao desiste de esperar:
 2: Query-IF : serialize((Lista de Pistas disponíveis, Avião)) -> pede gare mais próxima da pista para o avião ; type='landing request'
 3: Inform : serialize(Avião) -> aviao avisa que vai aterrar noutro aeroport; type='give up landing'
-4: Inform : serialize(Avião) -> torre de controlo avisa que aviao ja nao vai aterrar; type='give up landing'
+4: Inform : serialize(Avião) -> torre de controlo avisa que aviao ja nao vai aterrar; type='cancel arrival'
 
 ------------------
 

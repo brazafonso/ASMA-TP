@@ -164,6 +164,16 @@ class StationManagerListener(CyclicBehaviour):
                             print('Station manager: available airstrip sent to plane!')
 
                             break
+                        
+                elif type == 'cancel arrival':
+                    plane = package.body
+                    print('Station manager: Plane not arriving.')
+                    for station_id in self.agent.pending_arrivals:
+                        _, _,p = self.agent.pending_arrivals[station_id]
+                        if plane.id == p.id:
+                            del self.agent.pending_arrivals[station_id]
+
+
 
 
 class StationManagerClearOldReservationsBehaviour(PeriodicBehaviour):

@@ -45,15 +45,15 @@ map1.set_frame()
 map1.place_airstrips()
 map1.place_stations()
 map1.place_roads()
-map1.update_landing_queue()
-map1.update_take_off_queue()
+#map1.update_landing_queue()
+#map1.update_take_off_queue()
 map1.draw_map()
 
 pistas1 = []
 
-pistas1.append(airstrip.Airstrip(1,1,10))
+pistas1.append(airstrip.Airstrip(1,72,12))
 
-pistas1.append(airstrip.Airstrip(2,1,25))
+pistas1.append(airstrip.Airstrip(2,72,27))
 
 map1.airstrips = pistas1
 

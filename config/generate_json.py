@@ -25,7 +25,10 @@ def addStations(stationlist):
 
 def createAirportconfig1(filename,name,width,height):
 
-    airstrip_list = [(1,10),(1,25)]
+    mid_width = int(width/2)
+
+    #airstrip_list = [(1,10),(1,25)]
+    airstrip_list = [(mid_width,12),(mid_width,27)]
 
     station_list = [(5,7,14,10,'comercial'),(5,18,14,10,'goods'),(5,22,14,10,'comercial'),(5,33,14,10,'goods')]
 

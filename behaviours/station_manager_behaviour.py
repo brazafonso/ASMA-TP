@@ -154,7 +154,7 @@ class StationManagerListener(CyclicBehaviour):
                             station.state = 0
                     
                             # Send inform to plane
-                            package = Package('available airstrip', airstrip)
+                            package = Package('available airstrip', (airstrip,station))
                             
                             msg = Message(to=str(plane_id))
                             msg.set_metadata("performative", "inform")

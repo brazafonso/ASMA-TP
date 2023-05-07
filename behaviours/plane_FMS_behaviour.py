@@ -1,7 +1,7 @@
 import asyncio
 import jsonpickle
 import random
-import time
+import math
 import datetime
 from objects.package import Package
 from spade.agent import Agent
@@ -67,7 +67,7 @@ class PlaneListenLandingBehaviour(State):
                         type = package.message
                         
                         if type == 'confirm landing':
-                            pista, gare = package.body
+                            airstrip, station = package.body
                             
                             # Confirmar à torre de controlo que ainda esta a espera
                             package = Package('still waiting',self.agent.jid)
@@ -79,7 +79,7 @@ class PlaneListenLandingBehaviour(State):
 
 
                             self.agent.write_log(f'Permição consedida ao avião {self.agent.name} para aterrar \
-                                na pista {pista.id} e para estacionar na gare {gare.id}')
+                                na pista {airstrip.id} e para estacionar na gare {station.id}')
 
                             time_now = datetime.datetime.now()
 
@@ -92,8 +92,16 @@ class PlaneListenLandingBehaviour(State):
                                 await asyncio.sleep(0.5)
 
                             #TODO: Verificar o tempo passado na pista de aterragem
+
+                            # Neste momento vai demorar cerca de 7 segundos a aterrar 
+
+                            speed = self.plane_speed
+
+                            distance = airstrip.get_pos_x()
+
+                            time = distance / speed
                             
-                            await asyncio.sleep(3)
+                            await asyncio.sleep(time)
                             
                             #Envio de mensagem à torre de controlo para indicar o fim do uso da pista
 
@@ -105,10 +113,18 @@ class PlaneListenLandingBehaviour(State):
                             await self.send(msg)                            
 
                             #TODO: Preciso de ter informação sobre a distância do avião à gare para fazer isto dinâmico
+
+                            airstrip_pos = (airstrip.get_pos_x(),airstrip.get_pos_y())
+
+                            station_pos = (station.get_pos_x(),station.get_pos_y())
+
+                            distance_airstirp_station = math.sqrt(math.pow((station_pos[0]-airstrip_pos[0]),2) + math.pow(station_pos[1]-airstrip_pos[1]))
+
+                            park_time = distance_airstirp_station / speed
                             
                             #TODO: Verificar tempo de viagem até à gare
 
-                            await asyncio.sleep(5)
+                            await asyncio.sleep(park_time)
 
                             #TODO: Avisar a Gare? 
 
@@ -209,10 +225,10 @@ class PlaneListenTakeoffBehavior(State):
                         
                     if type == 'available airstrip':
 
-                        pista = package.body
+                        airstrip, station = package.body
 
                         self.agent.write_log(f'Permição consedida ao avião {self.agent.jid} para descolar \
-                            na pista localizada na posição X:{pista.pos.x},Y:{pista.pos.y}')
+                            na pista localizada na posição X:{airstrip.pos.x},Y:{airstrip.pos.y}')
 
                         #TODO Preciso de saber distâncias para fazer o sleep dinâmico. Neste caso o station manager pode 
                         # mandar também a posição da gare
@@ -221,11 +237,25 @@ class PlaneListenTakeoffBehavior(State):
 
                         #Tempo Gare -> Pista
 
-                        await asyncio.sleep(5)
+                        airstrip_pos = (airstrip.get_pos_x(),airstrip.get_pos_y())
+
+                        station_pos = (station.get_pos_x(),station.get_pos_y())
+
+                        distance_airstirp_station = math.sqrt(math.pow((station_pos[0]-airstrip_pos[0]),2) + math.pow(station_pos[1]-airstrip_pos[1]))
+
+                        unpark_time = distance_airstirp_station / speed
+
+                        await asyncio.sleep(unpark_time)
 
                         #Tempo Pista -> Ar
 
-                        await asyncio.sleep(5)
+                        speed = self.plane_speed
+
+                        distance = airstrip.get_pos_x()
+
+                        time = distance / speed
+                        
+                        await asyncio.sleep(time)
 
                         package = Package('took off',self.agent.jid)
                         msg = Message(to=self.get('control_tower'))

@@ -1,3 +1,4 @@
+import re
 from objects.airstrip import Airstrip
 from objects.station import Station
 from objects.position import Position
@@ -206,8 +207,8 @@ class AirportMap():
         bottomline = '‾'*(self.width-2)
 
         for i in self.airstrips:
-            x = i.get_pos_x()
-            y = i.get_pos_y()
+            x = 1 #i.get_pos_x()
+            y = i.get_pos_y()-2
             self.replacer(y,x,topline)
             self.replacer(y+2,x,midline)
             self.replacer(y+4,x,bottomline)
@@ -257,7 +258,7 @@ class AirportMap():
 
             for posr in pos_roads:
 
-                if (posr[1] - key == 3):
+                if (posr[1] - key == 5):
 
                     topline = ''
 
@@ -285,7 +286,7 @@ class AirportMap():
                     self.replacer(key+2,pos_gares[key][0],midline)
                     self.replacer(key+3,bottomline_x,bottomline)
 
-                elif (key - posr[1] == 8):
+                elif (key - posr[1] == 6):
 
                     bottomline = ''
 
@@ -315,6 +316,10 @@ class AirportMap():
 
     def update_landing_queue(self,landing_queue):
 
+        plane_id_match = re.finditer(r'(\d+)',plane.id)
+
+        plane_id = plane_id_match[0].groups()[0]
+
         self.landing_queue = landing_queue
 
         fila_de_aterragem = 'Fila de Aterragem:'
@@ -323,17 +328,21 @@ class AirportMap():
 
             if (plane.type == 'goods'):
 
-                plane_str = 'AM'+str(plane.id)
+                plane_str = 'AM'+str(plane_id)
 
             else:
 
-                plane_str = 'AC'+str(plane.id)
+                plane_str = 'AC'+str(plane_id)
 
             fila_de_aterragem += ' '+plane_str
 
         self.replacer(1,1,fila_de_aterragem)
 
     def update_take_off_queue(self,take_off_queue):
+
+        plane_id_match = re.finditer(r'(\d+)',plane.id)
+
+        plane_id = plane_id_match[0].groups()[0]
 
         self.take_off_queue = take_off_queue
 
@@ -343,17 +352,21 @@ class AirportMap():
 
             if (plane.type == 'goods'):
 
-                plane_str = 'AM'+str(plane.id)
+                plane_str = 'AM'+str(plane_id)
 
             else:
 
-                plane_str = 'AC'+str(plane.id)
+                plane_str = 'AC'+str(plane_id)
 
             fila_de_descolagem += ' '+plane_str
 
         self.replacer(self.height-2,1,fila_de_descolagem)
 
     def map_update_airstrips(self,airstrips):
+
+        plane_id_match = re.finditer(r'(\d+)',plane.id)
+
+        plane_id = plane_id_match[0].groups()[0]
 
         self.airstrips = airstrips
 
@@ -365,11 +378,11 @@ class AirportMap():
 
                 if (plane.type == 'goods'):
 
-                    plane_str = 'AM'+str(plane.id)
+                    plane_str = 'AM'+str(plane_id)
 
                 else:
 
-                    plane_str = 'AC'+str(plane.id)
+                    plane_str = 'AC'+str(plane_id)
 
                 self.replacer(pos.y+1,pos.x,plane_str)
 
@@ -379,6 +392,10 @@ class AirportMap():
 
 
     def map_update_stations(self,stations):
+
+        plane_id_match = re.finditer(r'(\d+)',plane.id)
+
+        plane_id = plane_id_match[0].groups()[0]
 
         self.stations = stations
         
@@ -391,11 +408,11 @@ class AirportMap():
 
                 if (plane.type == 'goods'):
 
-                    plane_str = '|AM|'+str(plane.id)
+                    plane_str = '|AM|'+str(plane_id)
 
                 else:
 
-                    plane_str = '|AC|'+str(plane.id)
+                    plane_str = '|AC|'+str(plane_id)
 
                 self.replacer(pos.y,pos.x,plane_str)
 

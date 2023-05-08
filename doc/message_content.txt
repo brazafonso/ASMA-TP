@@ -14,7 +14,7 @@ Descolar:
 6: Request : idAvião (jid) -> pedir para descolar ; type='takeoff request'
 7: Query-IF : serialize(Posição,Aviao) -> posição da gare para escolher pista mais próxima ; type='takeoff request'
 8: Inform : serialize(Pista, Aviao) -> posição da pista + id avião ; type='available airstrip'
-9: Inform: serialize(Pista,Gare) -> posição da pista ; type='available airstrip'
+9: Inform: serialize(Pista,Gare) -> posição da pista e posição da gare; type='available airstrip'
 10: Inform: idAvião (jid) -> avisar que descolou ; type='took off'
 
 

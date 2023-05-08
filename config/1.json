@@ -1,5 +1,12 @@
 {
     "name":"Aeroporto Francisco Sá Carneiro",
+    "max_queue" : 5,
+    "max_planes" : 2,
+    "dash_board_period" : 2,
+    "plane_speed" : 10,
+    "max_wait_in_station": 2,
+    "max_wait_landing": 60,
+    "max_wait_take_off": 60,
     "width":145,
     "height":37,
     "map":[

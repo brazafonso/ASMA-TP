@@ -4,6 +4,11 @@ from behaviours.control_tower_behaviour import *
 
 class ControlTowerAgent(agent.Agent):
 
+
+    def __init__(self, jid: str, password: str, verify_security: bool = False,check_frequency:int= 2,min_request_handle_time:int=10):
+         super().__init__(jid, password, verify_security)
+         self.check_frequency = check_frequency
+         self.min_request_handle = min_request_handle_time
     
     # Agent setup
     async def setup(self):
@@ -11,8 +16,8 @@ class ControlTowerAgent(agent.Agent):
         self.landing_queue = []
         self.take_off_queue = []
         self.add_behaviour(ControlTowerListener())
-        self.add_behaviour(ControlTowerLandingRequester())
-        self.add_behaviour(ControlTowerTakeOffHandler())
+        self.add_behaviour(ControlTowerLandingRequester(period=self.check_frequency))
+        self.add_behaviour(ControlTowerTakeOffHandler(period=self.check_frequency))
 
 
 

@@ -4,6 +4,7 @@ from objects.station import Station
 from objects.position import Position
 
 import threading
+import os
 
 class AirportMap():
     '''Classe representante do mapa do aeroporto'''
@@ -178,8 +179,10 @@ class AirportMap():
                     airstrip_id += 1
                 elif space['type'] == 'station':
                     type=space['purpose']
+                    airline_name=space['airline_name']
+                    base_value=space['base_value']
                     station_id += 1
-                    stations_to_append.append(Station(id=station_id,type=type,x=x,y=y))
+                    stations_to_append.append(Station(station_id, type, x, y, base_value, airline_name))
 
         with self.__stations_lock:
             self.__stations.extend(stations_to_append)
@@ -488,5 +491,7 @@ class AirportMap():
                 self.replacer(pos.y,pos.x,'|xx|'+' '*3)
 
     def draw_map(self):
+        # Clear screen before drawing
+        # os.system('cls' if os.name == 'nt' else 'clear')
         for i in range(0,self.height):
             print(self.map_draw[i])

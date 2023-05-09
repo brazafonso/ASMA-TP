@@ -25,7 +25,7 @@ class Airline:
         self.lock = threading.Lock()
     
     def get_simple_object(self):
-        return Airline(self.jid, self.name, self.type, self.budget)
+        return Airline(self.jid, self.name, self.type, self.budget, self.costs)
 
     def update(self, airline):
         with self.lock:

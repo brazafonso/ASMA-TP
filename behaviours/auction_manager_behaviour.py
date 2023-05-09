@@ -5,13 +5,9 @@ from objects.auction import Auction
 
 import jsonpickle
 
-# TODO: Periodic behaviour to update station owners (result of auctions)
-#       - here check if the winners have enough money to buy the station
-#       - if not, the station is not sold and the next highest bid is chosen
-#       - increment budgets over time
-#       - send accept/reject proposal to airlines
-
 class AuctionManagerCleanerBehaviour(PeriodicBehaviour):
+
+    # TODO: Increase budget of airline per number of stations
     
     async def run(self):
         check_bids = [] # (station.id, airline.jid, bid)

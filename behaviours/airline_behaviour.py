@@ -119,8 +119,6 @@ class AirlineBiddingBehaviour(PeriodicBehaviour):
                 # Check if costs are bigger than budget, if so, sell...
                 if self.agent.airline.costs > balance_after_bids:
                     return Bid(self.airline.jid, Bid.SELL, station.base_value, station)
-                
-                # TODO: More selling options..
 
         return None
 

@@ -15,29 +15,29 @@ class StationManagerListener(CyclicBehaviour):
         closest_airstrip = None
         closest_station = None
         min_distance = None
-        for airstrip in available_airstrips:
-            # Check if this airstrip is in the pending arrivals
-            airstrip_available = True
-            with self.agent.pending_arrivals_lock:
+        with self.agent.pending_arrivals_lock:
+            for airstrip in available_airstrips:
+                # Check if this airstrip is in the pending arrivals
+                airstrip_available = True
                 for pending_airstrip_id, _,_ in self.agent.pending_arrivals.values():
                     if pending_airstrip_id == airstrip.id:
                         airstrip_available = False
                         break
-            
-            # Check closest station to this airstrip
-            if airstrip_available:
-                for station in stations:
-                    if station.id not in self.agent.pending_arrivals and station.state == 0 and station.type == plane.type:
-                        if closest_station is None:
-                            closest_airstrip = airstrip
-                            closest_station = station
-                            min_distance = airstrip.pos.distance(station.pos)
-                        else:
-                            distance = airstrip.pos.distance(station.pos)
-                            if distance < min_distance:
+                    
+                # Check closest station to this airstrip
+                if airstrip_available:
+                    for station in stations:
+                        if station.id not in self.agent.pending_arrivals and station.state == 0 and station.type == plane.type:
+                            if closest_station is None:
                                 closest_airstrip = airstrip
                                 closest_station = station
-                                min_distance = distance
+                                min_distance = airstrip.pos.distance(station.pos)
+                            else:
+                                distance = airstrip.pos.distance(station.pos)
+                                if distance < min_distance:
+                                    closest_airstrip = airstrip
+                                    closest_station = station
+                                    min_distance = distance
         
         # If the values are still None, retry
         if closest_airstrip is None or closest_station is None:

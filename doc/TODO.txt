@@ -10,7 +10,7 @@ TODO:
 [
     TAP:
     {
-        type: 'goods'/people (...),
+        type: 'goods'/comercial (...),
         budget: 1000,
         costs: 100
         strategy: {

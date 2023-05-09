@@ -1,0 +1,27 @@
+TODO:
+
+
+- config (adicionar):
+--------
+- station base value
+- airline name
+
+- airlines:
+[
+    TAP:
+    {
+        type: 'goods'/people (...),
+        budget: 1000,
+        costs: 100
+        strategy: {
+            parallel_bids: 2,
+
+            relative_max_bid: 0.25 (% máxima do budget a colocar numa bid),
+
+            relative_max_increment: 0.1 (% máxima a incrementar ao valor base),
+
+            ...
+        }
+    },
+    ...
+]

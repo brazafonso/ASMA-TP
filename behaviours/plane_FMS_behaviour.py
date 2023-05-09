@@ -49,7 +49,7 @@ class PlaneListenLandingBehaviour(State):
     async def run(self):
         self.agent.write_log('Plane in PlaneListenLandingBehaviour')
         #TODO decidir/ajustar tempo de timeout
-        msg = await self.receive(timeout=60)
+        msg = await self.receive(timeout=self.agent.max_wait_in_station)
 
         if msg:
             performative = msg.get_metadata('performative')
@@ -95,7 +95,7 @@ class PlaneListenLandingBehaviour(State):
 
                             # Neste momento vai demorar cerca de 7 segundos a aterrar 
 
-                            speed = self.plane_speed
+                            speed = self.agent.plane_speed
 
                             distance = airstrip.get_pos_x()
 
@@ -118,7 +118,7 @@ class PlaneListenLandingBehaviour(State):
 
                             station_pos = (station.get_pos_x(),station.get_pos_y())
 
-                            distance_airstirp_station = math.sqrt(math.pow((station_pos[0]-airstrip_pos[0]),2) + math.pow(station_pos[1]-airstrip_pos[1]))
+                            distance_airstirp_station = math.sqrt(math.pow((station_pos[0]-airstrip_pos[0]),2) + math.pow((station_pos[1]-airstrip_pos[1]),2))
 
                             park_time = distance_airstirp_station / speed
                             
@@ -205,7 +205,7 @@ class PlaneListenTakeoffBehavior(State):
 
     async def run(self):
         self.agent.write_log('Plane in PlaneListenTakeoffBehavior')
-        msg = await self.receive(timeout=60)
+        msg = await self.receive(timeout=self.agent.max_wait_take_off)
 
         if msg:
             performative = msg.get_metadata('performative')
@@ -237,19 +237,19 @@ class PlaneListenTakeoffBehavior(State):
 
                         #Tempo Gare -> Pista
 
+                        speed = self.agent.plane_speed
+                        
                         airstrip_pos = (airstrip.get_pos_x(),airstrip.get_pos_y())
 
                         station_pos = (station.get_pos_x(),station.get_pos_y())
 
-                        distance_airstirp_station = math.sqrt(math.pow((station_pos[0]-airstrip_pos[0]),2) + math.pow(station_pos[1]-airstrip_pos[1]))
+                        distance_airstirp_station = math.sqrt(math.pow((station_pos[0]-airstrip_pos[0]),2) + math.pow((station_pos[1]-airstrip_pos[1]),2))
 
                         unpark_time = distance_airstirp_station / speed
 
                         await asyncio.sleep(unpark_time)
 
                         #Tempo Pista -> Ar
-
-                        speed = self.plane_speed
 
                         distance = airstrip.get_pos_x()
 

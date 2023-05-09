@@ -21,9 +21,9 @@ class Airstrip():
         str = f'''Strip {self.id}:
         - vacancy : {self.state}'''
         str+='''
-        - plane   : + ''' + f'{self.plane.id}' if self.plane else ''
+        - plane   : ''' + f'{self.plane.id}' if self.plane else ''
         str +='''
-        - pos     : {self.pos}'''
+        - pos     : ''' + f'{self.pos}'
         return str
 
 

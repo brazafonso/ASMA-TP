@@ -316,15 +316,15 @@ class AirportMap():
 
     def update_landing_queue(self,landing_queue):
 
-        plane_id_match = re.finditer(r'(\d+)',plane.id)
-
-        plane_id = plane_id_match[0].groups()[0]
-
         self.landing_queue = landing_queue
 
         fila_de_aterragem = 'Fila de Aterragem:'
 
-        for plane,_ in landing_queue:
+        for plane,_ in self.landing_queue:
+        
+            plane_id_match = re.findall(r'(\d+)',str(plane.id))
+               
+            plane_id = plane_id_match[0]        
 
             if (plane.type == 'goods'):
 
@@ -340,15 +340,16 @@ class AirportMap():
 
     def update_take_off_queue(self,take_off_queue):
 
-        plane_id_match = re.finditer(r'(\d+)',plane.id)
-
-        plane_id = plane_id_match[0].groups()[0]
-
         self.take_off_queue = take_off_queue
 
         fila_de_descolagem = 'Fila de Descolagem:'
         
-        for _,plane,_ in take_off_queue:
+        for _,plane,_ in self.take_off_queue:
+
+            plane_id_match = re.findall(r'(\d+)',str(plane.id))
+                
+            plane_id = plane_id_match[0]
+
 
             if (plane.type == 'goods'):
 
@@ -364,17 +365,19 @@ class AirportMap():
 
     def map_update_airstrips(self,airstrips):
 
-        plane_id_match = re.finditer(r'(\d+)',plane.id)
-
-        plane_id = plane_id_match[0].groups()[0]
-
         self.airstrips = airstrips
 
-        for airstrip in airstrips:
+        for airstrip in self.airstrips:
             pos = airstrip.pos
 
             if airstrip.state == 1:
+                print(airstrip)
+
                 plane = airstrip.plane
+
+                plane_id_match = re.findall(r'(\d+)',str(plane.id))
+
+                plane_id = plane_id_match[0]
 
                 if (plane.type == 'goods'):
 
@@ -384,27 +387,29 @@ class AirportMap():
 
                     plane_str = 'AC'+str(plane_id)
 
-                self.replacer(pos.y+1,pos.x,plane_str)
+                self.replacer(pos.y-1,self.width-7,plane_str)
 
             else:
-                self.replacer(pos.y+1,pos.x,''*6)
+                self.replacer(pos.y-1,self.width-7,' '*6)
 
 
 
     def map_update_stations(self,stations):
 
-        plane_id_match = re.finditer(r'(\d+)',plane.id)
-
-        plane_id = plane_id_match[0].groups()[0]
-
         self.stations = stations
         
-        for station in stations:
+        for station in self.stations:
+            
             pos = station.pos
 
             if station.state == 1:
 
+                print(station)
+
                 plane = station.plane
+
+                plane_id_match = re.findall(r'(\d+)',str(plane.id))
+                plane_id = plane_id_match[0]
 
                 if (plane.type == 'goods'):
 

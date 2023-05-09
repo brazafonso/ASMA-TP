@@ -9,8 +9,6 @@ class AirportMap():
     '''Classe representante do mapa do aeroporto'''
     
     def __init__(self,map_json):
-        # TODO: Add locks and do not allow direct access to the lists!!
-        self.airstrips = []
         self.landing_queue = []
         self.take_off_queue = []
         self.name = map_json['name']
@@ -20,14 +18,19 @@ class AirportMap():
         self.map_draw = [[' ' for _ in range(self.width)] for _ in range(self.height)]
         self.scrape_airport_map()
 
+        self.__airstrips = []
+        self.__airstrips_lock = threading.Lock()
+
         self.__stations = []
         self.__stations_lock = threading.Lock()
 
     def get_stations(self):
-        return [station.get_copy() for station in self.__stations]
+        with self.__stations_lock:
+            return [station.get_copy() for station in self.__stations]
     
     def get_airstrips(self):
-        return [airstrip.get_copy() for airstrip in self.airstrips]
+        with self.__airstrips_lock:
+            return [airstrip.get_copy() for airstrip in self.__airstrips]
 
     def get_divided_stations(self):
         '''Retorna as gares divididas por tipo'''
@@ -46,58 +49,63 @@ class AirportMap():
     def available_airstrips(self):
         '''Devolve a lista das pistas disponiveis'''
         available = []
-        for airstrip in self.airstrips:
-            if airstrip.state == 0:
-                available.append(airstrip)
-        return available
+        with self.__airstrips_lock:
+            for airstrip in self.__airstrips:
+                if airstrip.state == 0:
+                    available.append(airstrip)
+            return available
     
     def available_airstrip(self,id):
         '''Devolve se uma pista esta disponivel'''
         available = False
-        for airstrip in self.airstrips:
-            if airstrip.id == id:
-                available = airstrip.state == 0
-        return available
+        with self.__airstrips_lock:
+            for airstrip in self.__airstrips:
+                if airstrip.id == id:
+                    available = airstrip.state == 0
+            return available
     
     def closest_available_airstrip(self,pos:Position):
         '''Devolve a pista mais proxima disponivel'''
         closest = None
         distance = None
-        for airstrip in self.airstrips:
-            if airstrip.state == 0:
-                if closest:
-                    if pos.distance(airstrip.pos) < distance:
+        with self.__airstrips_lock:
+            for airstrip in self.__airstrips:
+                if airstrip.state == 0:
+                    if closest:
+                        if pos.distance(airstrip.pos) < distance:
+                            closest = airstrip
+                            distance = pos.distance(airstrip.pos) 
+                    else:
                         closest = airstrip
-                        distance = pos.distance(airstrip.pos) 
-                else:
-                    closest = airstrip
-                    distance = pos.distance(airstrip.pos)
-        return closest
+                        distance = pos.distance(airstrip.pos)
+            return closest
     
     def free_airstrip(self,id=None,plane_id=None):
         '''Torna uma pista livre'''
-        if id:
-            for airstrip in self.airstrips:
-                if airstrip.id == id:
-                    airstrip.state = 0
-                    airstrip.plane = None
-                    break
-
-        elif plane_id:
-            for airstrip in self.airstrips:
-                if airstrip.state == 1:
-                    if airstrip.plane.id == plane_id:
+        with self.__airstrips_lock:
+            if id:
+                for airstrip in self.__airstrips:
+                    if airstrip.id == id:
                         airstrip.state = 0
                         airstrip.plane = None
                         break
 
+            elif plane_id:
+                for airstrip in self.__airstrips:
+                    if airstrip.state == 1:
+                        if airstrip.plane.id == plane_id:
+                            airstrip.state = 0
+                            airstrip.plane = None
+                            break
+
     def reserve_airstrip(self,id,plane):
         '''Torna uma pista ocupada'''
-        for airstrip in self.airstrips:
-            if airstrip.id == id:
-                airstrip.state = 1
-                airstrip.plane = plane
-                break
+        with self.__airstrips_lock:
+            for airstrip in self.__airstrips:
+                if airstrip.id == id:
+                    airstrip.state = 1
+                    airstrip.plane = plane
+                    break
 
     
     def isPlaneInStation(self, plane_jid):
@@ -152,11 +160,12 @@ class AirportMap():
         station_id = 0
 
         stations_to_append = []
+        airstrips_to_append = []
         for y,line in enumerate(self.map):
             for x,space in enumerate(line):
                 if space['type'] == 'airstrip':
                     # TODO: meter x como metade da largura do mapa, para usar sempre o ponto medio da pista
-                    self.airstrips.append(Airstrip(id=airstrip_id,x=x,y=y))
+                    airstrips_to_append.append(Airstrip(id=airstrip_id,x=x,y=y))
                     airstrip_id += 1
                 elif space['type'] == 'station':
                     type=space['purpose']
@@ -165,6 +174,8 @@ class AirportMap():
 
         with self.__stations_lock:
             self.__stations.extend(stations_to_append)
+        with self.__airstrips_lock:
+            self.__airstrips.extend(airstrips_to_append)
 
 
     def replacer(self,line,index,newstring):
@@ -236,20 +247,22 @@ class AirportMap():
 
         bottomline = '‾'*(self.width-2)
 
-        for i in self.airstrips:
-            x = 1 #i.get_pos_x()
-            y = i.get_pos_y()-2
-            self.replacer(y,x,topline)
-            self.replacer(y+2,x,midline)
-            self.replacer(y+4,x,bottomline)
+        with self.__airstrips_lock:
+            for i in self.__airstrips:
+                x = 1 #i.get_pos_x()
+                y = i.get_pos_y()-2
+                self.replacer(y,x,topline)
+                self.replacer(y+2,x,midline)
+                self.replacer(y+4,x,bottomline)
 
     def place_roads(self):
 
         # Lista de tuplos (posicao_x,posicao_y) das pistas do aeroporto
         pos_roads = []
 
-        for i in self.airstrips:
-            pos_roads.append((i.get_pos_x(),i.get_pos_y()))
+        with self.__airstrips_lock:
+            for i in self.__airstrips:
+                pos_roads.append((i.get_pos_x(),i.get_pos_y()))
 
         # Dicionario onde as chaves são a posicao_y das gares e o valor será uma lista com a posicao_x
         # das gares com essa coordenada y 
@@ -394,11 +407,16 @@ class AirportMap():
 
         self.replacer(self.height-2,1,fila_de_descolagem)
 
+    def update_airstrips(self, airstrips):
+        with self.__airstrips_lock:
+            self.__airstrips = airstrips
+
     def map_update_airstrips(self,airstrips):
 
-        self.airstrips = airstrips
+        self.update_airstrips(airstrips)
+        airstrips = self.get_airstrips()
 
-        for airstrip in self.airstrips:
+        for airstrip in airstrips:
             pos = airstrip.pos
 
             if airstrip.state == 1:

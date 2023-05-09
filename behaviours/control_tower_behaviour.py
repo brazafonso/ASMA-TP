@@ -253,8 +253,9 @@ class ControlTowerStatusSender(OneShotBehaviour):
             self.agent.write_log('Control Tower: Sending airport status.')
             
             destination = self.get('status_requester')
-            airport_map = self.get('airport_map')
-            status = (airport_map.airstrips,airport_map.stations,self.agent.landing_queue,self.agent.take_off_queue)
+            airstrips = self.get('airport_map').get_airstrips()
+            stations = self.get('airport_map').get_stations()
+            status = (airstrips,stations,self.agent.landing_queue,self.agent.take_off_queue)
             
             package = Package('airport status report',status)
             msg = Message(to=destination)

@@ -9,6 +9,7 @@ class AirportMap():
     '''Classe representante do mapa do aeroporto'''
     
     def __init__(self,map_json):
+        # TODO: Add locks and do not allow direct access to the lists!!
         self.airstrips = []
         self.landing_queue = []
         self.take_off_queue = []
@@ -24,6 +25,9 @@ class AirportMap():
 
     def get_stations(self):
         return [station.get_copy() for station in self.__stations]
+    
+    def get_airstrips(self):
+        return [airstrip.get_copy() for airstrip in self.airstrips]
 
     def get_divided_stations(self):
         '''Retorna as gares divididas por tipo'''

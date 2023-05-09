@@ -34,7 +34,8 @@ class ControlTowerAgent(agent.Agent):
         status = ''
         landing_queue = self.landing_queue
         take_off_queue = self.take_off_queue
-        airport_map:AirportMap = self.get('airport_map') 
+        airstrips = self.get('airport_map').get_airstrips()
+        stations = self.get('airport_map').get_stations() 
 
         status += '''
          _______________
@@ -57,7 +58,7 @@ class ControlTowerAgent(agent.Agent):
         | Airstrips |
            -------
 '''
-        for strip in airport_map.airstrips:
+        for strip in airstrips:
             status += f'{str(strip)}\n'
 
         status += '''
@@ -65,7 +66,7 @@ class ControlTowerAgent(agent.Agent):
         | Stations |
             ----
 '''
-        for station in airport_map.stations:
+        for station in stations:
             status += f'{str(station)}\n'
         return status
     

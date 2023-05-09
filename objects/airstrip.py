@@ -26,6 +26,6 @@ class Airstrip():
         - pos     : ''' + f'{self.pos}'
         return str
 
-
-
+    def get_copy(self):
+        return Airstrip(self.id, self.pos.x, self.pos.y)
     

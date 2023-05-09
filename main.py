@@ -4,12 +4,14 @@
 import os
 import sys
 from spade import agent, quit_spade
+from agents.airline import AirlineAgent
 from agents.control_tower import ControlTowerAgent
 from agents.station_manager import StationManagerAgent
 from agents.dashboard_manager import Dashboard_Manager
 from agents.plane import PlaneAgent
 from agents.auction_manager import AuctionManagerAgent
 from objects.airport_map import AirportMap
+from objects.airline import Airline
 import time
 import random
 import json
@@ -24,7 +26,7 @@ plane_speed = 10
 max_wait_in_station = 60
 max_wait_landing = 60
 max_wait_take_off = 60
-companies = []
+airlines_list = []
 
 def parse_arguments()->argparse.Namespace:
     """Process arguments from stdin"""
@@ -43,9 +45,11 @@ def parse_arguments()->argparse.Namespace:
 
 def get_airline_name():
     '''Escolhe aleatoriamente uma empresa da lista de empresas'''
+    global airlines_list
+
     airline_name = None
-    if companies:
-        airline_name = companies[random.randint(0,len(companies)-1)]
+    if airlines_list:
+        airline_name = airlines_list[random.randint(0,len(airlines_list)-1)]
     return airline_name
 
 def get_plane_type():
@@ -153,8 +157,9 @@ if __name__ == "__main__":
                     max_wait_landing = config["max_wait_landing"]
                 if 'max_wait_take_off' in config:
                     max_wait_take_off = config["max_wait_take_off"]
-                if 'companies' in config:
-                    max_wait_take_off = config["companies"]
+                if 'airlines' in config:
+                    airlines_conf = config["airlines"]
+                    airlines_list = list(airlines_conf.keys())
 
                 # Criar avioes (devido aos que começam nas gares)
                 n_planes = random.randint(1,max_planes-1)
@@ -189,17 +194,46 @@ if __name__ == "__main__":
 
                 futureSM = station_manager.start()
 
-                # TODO: Start airlines and auction manager: where?
+                time.sleep(0.1) # TODO: Testing delays...
+
+                # Start auction manager
                 auction_manager = AuctionManagerAgent(AM,PASSWORD)
                 auction_manager.set('logs',args.logs)
                 auction_manager.set('logs_file',args.logs_file)
                 
                 futureAM = auction_manager.start()
 
+                time.sleep(0.1) # TODO: Testing delays...
+
+                # Start airline agents
+                future_airlines = []
+                for airline_name in airlines_list:
+                    airline_jid = ('airline_'+str(airline_name)+'@'+USER).lower()
+                    type = airlines_conf[airline_name]["type"]
+                    budget = airlines_conf[airline_name]["budget"]
+                    costs = airlines_conf[airline_name]["costs"]
+                    strategy = airlines_conf[airline_name]["strategy"]
+                    airline_obj = Airline(airline_jid, airline_name, type, budget, costs, strategy)
+                    
+                    airline_agent = AirlineAgent(airline_jid, PASSWORD, airline=airline_obj)
+                    airline_agent.set('auction_manager',AM)
+                    airline_agent.set('logs',args.logs)
+                    airline_agent.set('logs_file',args.logs_file)
+
+                    future_airlines.append(airline_agent.start())
+
+                    break # TODO: Test only one airline
+
+                # TODO: Add delays between airline/auction manager...subscribe is not captured
+                #       Actually, this is not the only message to be dropped..maybe add delays between all agents
+
                             
                 futureCT.result()
                 futureSM.result()
                 futureAM.result()
+
+                for future in future_airlines:
+                    future.result()
                 
                 # Criar Gestor de Dashboards
                 dashboard_manager = Dashboard_Manager(f'dashboard_manager@{USER}',PASSWORD,period=dash_board_period)

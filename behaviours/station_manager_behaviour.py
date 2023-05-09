@@ -8,7 +8,7 @@ import time
 class StationManagerListener(CyclicBehaviour):
     '''Listener principal do station manager'''
 
-    def choose_airstrip(self, available_airstrips, plane, retries=1):
+    def choose_airstrip(self, stations, available_airstrips, plane, retries=1):
         if retries == 0:
             return None, None
         
@@ -24,8 +24,9 @@ class StationManagerListener(CyclicBehaviour):
                         airstrip_available = False
                         break
             
+            # Check closest station to this airstrip
             if airstrip_available:
-                for station in self.get('airport_map').stations:
+                for station in stations:
                     if station.id not in self.agent.pending_arrivals and station.state == 0 and station.type == plane.type:
                         if closest_station is None:
                             closest_airstrip = airstrip
@@ -40,7 +41,7 @@ class StationManagerListener(CyclicBehaviour):
         
         # If the values are still None, retry
         if closest_airstrip is None or closest_station is None:
-            return self.choose_airstrip(available_airstrips, plane, retries-1)
+            return self.choose_airstrip(stations, available_airstrips, plane, retries-1)
 
         # Make the reservation
         key = closest_station.id
@@ -51,7 +52,7 @@ class StationManagerListener(CyclicBehaviour):
 
         # If the key already existed, the value is an old reservation, so we try again
         if val[0] != def_val[0] or val[1] != def_val[1]:
-            return self.choose_airstrip(available_airstrips, plane, retries-1)
+            return self.choose_airstrip(stations, available_airstrips, plane, retries-1)
         
         # If the key didn't exist, we have a new reservation
         # We still need to check if the airstrip is still available
@@ -67,7 +68,7 @@ class StationManagerListener(CyclicBehaviour):
             
                 if not airstrip_available:
                     del self.agent.pending_arrivals[key]
-                    return self.choose_airstrip(available_airstrips, plane, retries-1)
+                    return self.choose_airstrip(stations, available_airstrips, plane, retries-1)
                 else:
                     return closest_airstrip, closest_station
 
@@ -91,7 +92,8 @@ class StationManagerListener(CyclicBehaviour):
                 if type == 'landing request':
                     available_airstrips, plane = package.body
 
-                    closest_airstrip, closest_station = self.choose_airstrip(available_airstrips, plane, retries=10)
+                    stations = self.get('airport_map').get_stations()
+                    closest_airstrip, closest_station = self.choose_airstrip(stations, available_airstrips, plane, retries=10)
 
                     if closest_station is not None and closest_airstrip is not None:
                         package = Package('available station',(closest_airstrip, closest_station,plane))
@@ -115,21 +117,19 @@ class StationManagerListener(CyclicBehaviour):
                 if type == 'takeoff request':
                     self.agent.write_log('Station manager: Take off request received.')
                     plane_jid = package.body
-                    # Check if plane is in station
-                    for station in self.get('airport_map').stations:
-                        self.agent.write_log('Station manager: Checking if plane is in station')
-                        if station.state == 1 and station.plane is not None and station.plane.id == plane_jid:
-                            # Send query-if to control tower
-                            package = Package('takeoff request', (station.pos,station.plane))
-                            control_tower = self.get('control_tower')
-                            if control_tower:
-                                msg = Message(to=control_tower)
-                                msg.set_metadata("performative", "query-if")
-                                msg.body = jsonpickle.encode(package)
+                    
+                    # Check if plane is in station, if yes, send query-if to control tower
+                    if self.get('airport_map').isPlaneInStation(plane_jid):
+                        # Send query-if to control tower
+                        package = Package('takeoff request', (station.pos,station.plane))
+                        control_tower = self.get('control_tower')
+                        if control_tower:
+                            msg = Message(to=control_tower)
+                            msg.set_metadata("performative", "query-if")
+                            msg.body = jsonpickle.encode(package)
 
-                                await self.send(msg)
-                                self.agent.write_log('Station manager: takeoff request sent to control tower!')
-                                break
+                            await self.send(msg)
+                            self.agent.write_log('Station manager: takeoff request sent to control tower!')
 
             elif performative == 'inform':
                 # Inform that airstrip is available
@@ -192,10 +192,7 @@ class StationManagerStatusSender(PeriodicBehaviour):
     async def run(self):
         self.agent.write_log('Station manager: Sending stations status.')
 
-        airport_map = self.get('airport_map')
-        stations = airport_map.stations
-
-        package = Package('station status report',stations)
+        package = Package('station status report', self.get('airport_map').get_stations())
         msg = Message(to=self.get('control_tower'))
         msg.set_metadata("performative", "inform")
         msg.body = jsonpickle.encode(package)

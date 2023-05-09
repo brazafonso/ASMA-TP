@@ -9,6 +9,45 @@
     "max_wait_take_off": 60,
     "width":145,
     "height":37,
+    "airlines":
+        {
+            "TAP":
+                {
+                    "type": "commercial",
+                    "budget": 2000,
+                    "costs": 500,
+                    "strategy":
+                        {
+                            "parallel_bids": 2,
+                            "relative_max_bid": 0.2,
+                            "relative_max_increment": 0.1
+                        }
+                },
+            "Ryanair":
+                {
+                    "type": "commercial",
+                    "budget": 1000,
+                    "costs": 100,
+                    "strategy":
+                        {
+                            "parallel_bids": 1,
+                            "relative_max_bid": 0.4,
+                            "relative_max_increment": 0.1
+                        }
+                },
+            "FedEx":
+                {
+                    "type": "goods",
+                    "budget": 10000,
+                    "costs": 1500,
+                    "strategy":
+                        {
+                            "parallel_bids": 5,
+                            "relative_max_bid": 0.05,
+                            "relative_max_increment": 0.2
+                        }
+                }
+    },
     "map":[
         [
             {
@@ -3087,199 +3126,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"empty"
-            },
-            {
-                "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"TAP",
                 "purpose":"comercial"
             },
             {
@@ -3311,8 +3159,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"TAP",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -3343,8 +3192,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"TAP",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -3375,8 +3225,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"TAP",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -3407,8 +3258,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"TAP",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -3439,8 +3291,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"TAP",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -3471,8 +3324,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"TAP",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -3503,8 +3357,207 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"TAP",
+                "purpose":"comercial"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"station",
+                "base_value":500,
+                "airline_name":"TAP",
+                "purpose":"comercial"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"station",
+                "base_value":500,
+                "airline_name":"TAP",
+                "purpose":"comercial"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"station",
+                "base_value":500,
+                "airline_name":"TAP",
+                "purpose":"comercial"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"station",
+                "base_value":500,
+                "airline_name":"TAP",
+                "purpose":"comercial"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"station",
+                "base_value":500,
+                "airline_name":"TAP",
+                "purpose":"comercial"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"empty"
+            },
+            {
+                "type":"station",
+                "base_value":500,
+                "airline_name":"TAP",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -7922,7 +7975,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"TAP",
                 "purpose":"goods"
             },
             {
@@ -7954,7 +8008,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"TAP",
                 "purpose":"goods"
             },
             {
@@ -7986,7 +8041,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"TAP",
                 "purpose":"goods"
             },
             {
@@ -8018,7 +8074,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"TAP",
                 "purpose":"goods"
             },
             {
@@ -8050,7 +8107,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"TAP",
                 "purpose":"goods"
             },
             {
@@ -8082,7 +8140,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"TAP",
                 "purpose":"goods"
             },
             {
@@ -8114,7 +8173,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"TAP",
                 "purpose":"goods"
             },
             {
@@ -8146,7 +8206,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"TAP",
                 "purpose":"goods"
             },
             {
@@ -8178,7 +8239,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"TAP",
                 "purpose":"goods"
             },
             {
@@ -8210,7 +8272,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"TAP",
                 "purpose":"goods"
             },
             {
@@ -8242,7 +8305,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"TAP",
                 "purpose":"goods"
             },
             {
@@ -8274,7 +8338,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"TAP",
                 "purpose":"goods"
             },
             {
@@ -8306,7 +8371,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"TAP",
                 "purpose":"goods"
             },
             {
@@ -8338,7 +8404,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"TAP",
                 "purpose":"goods"
             },
             {
@@ -9698,8 +9765,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"TAP",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -9730,8 +9798,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"TAP",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -9762,8 +9831,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"Ryanair",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -9794,8 +9864,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"Ryanair",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -9826,8 +9897,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"Ryanair",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -9858,8 +9930,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"Ryanair",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -9890,8 +9963,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"Ryanair",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -9922,8 +9996,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"Ryanair",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -9954,8 +10029,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"Ryanair",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -9986,8 +10062,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"Ryanair",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -10018,8 +10095,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"Ryanair",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -10050,8 +10128,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"Ryanair",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -10082,8 +10161,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"FedEx",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -10114,8 +10194,9 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
-                "purpose":"people"
+                "base_value":500,
+                "airline_name":"FedEx",
+                "purpose":"comercial"
             },
             {
                 "type":"empty"
@@ -14533,7 +14614,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"FedEx",
                 "purpose":"goods"
             },
             {
@@ -14565,7 +14647,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"FedEx",
                 "purpose":"goods"
             },
             {
@@ -14597,7 +14680,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"FedEx",
                 "purpose":"goods"
             },
             {
@@ -14629,7 +14713,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"FedEx",
                 "purpose":"goods"
             },
             {
@@ -14661,7 +14746,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"FedEx",
                 "purpose":"goods"
             },
             {
@@ -14693,7 +14779,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"FedEx",
                 "purpose":"goods"
             },
             {
@@ -14725,7 +14812,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"FedEx",
                 "purpose":"goods"
             },
             {
@@ -14757,7 +14845,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"FedEx",
                 "purpose":"goods"
             },
             {
@@ -14789,7 +14878,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"FedEx",
                 "purpose":"goods"
             },
             {
@@ -14821,7 +14911,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"FedEx",
                 "purpose":"goods"
             },
             {
@@ -14853,7 +14944,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"FedEx",
                 "purpose":"goods"
             },
             {
@@ -14885,7 +14977,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"FedEx",
                 "purpose":"goods"
             },
             {
@@ -14917,7 +15010,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"FedEx",
                 "purpose":"goods"
             },
             {
@@ -14949,7 +15043,8 @@
             },
             {
                 "type":"station",
-                "airline_name":"1",
+                "base_value":500,
+                "airline_name":"FedEx",
                 "purpose":"goods"
             },
             {

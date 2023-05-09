@@ -1,6 +1,7 @@
 from spade import agent
 from behaviours.station_manager_behaviour import *
 
+import threading
 
 
 class StationManagerAgent(agent.Agent):
@@ -10,6 +11,7 @@ class StationManagerAgent(agent.Agent):
         
         # "Station ID" : ("Airstrip ID", timestamp)
         self.pending_arrivals = {}
+        self.pending_arrivals_lock = threading.Lock()
 
         self.add_behaviour(StationManagerListener())
         self.add_behaviour(StationManagerClearOldReservationsBehaviour(period=1))

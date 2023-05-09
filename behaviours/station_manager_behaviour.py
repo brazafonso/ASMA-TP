@@ -17,10 +17,11 @@ class StationManagerListener(CyclicBehaviour):
         for airstrip in available_airstrips:
             # Check if this airstrip is in the pending arrivals
             airstrip_available = True
-            for pending_airstrip_id, _,_ in self.agent.pending_arrivals.values():
-                if pending_airstrip_id == airstrip.id:
-                    airstrip_available = False
-                    break
+            with self.agent.pending_arrivals_lock:
+                for pending_airstrip_id, _,_ in self.agent.pending_arrivals.values():
+                    if pending_airstrip_id == airstrip.id:
+                        airstrip_available = False
+                        break
             
             if airstrip_available:
                 for station in self.get('airport_map').stations:
@@ -44,7 +45,8 @@ class StationManagerListener(CyclicBehaviour):
         key = closest_station.id
         val = (closest_airstrip.id, time.time(),plane)
 
-        def_val = self.agent.pending_arrivals.setdefault(key, val)
+        with self.agent.pending_arrivals_lock:
+            def_val = self.agent.pending_arrivals.setdefault(key, val)
 
         # If the key already existed, the value is an old reservation, so we try again
         if val[0] != def_val[0] or val[1] != def_val[1]:
@@ -55,17 +57,18 @@ class StationManagerListener(CyclicBehaviour):
         # This is used to keep the pending arrivals consistent
         else:
             airstrip_available = True
-            for pending_station in self.agent.pending_arrivals:
-                if pending_station != closest_station.id:
-                    if self.agent.pending_arrivals[pending_station][0] == closest_airstrip.id:
-                        airstrip_available = False
-                        break
+            with self.agent.pending_arrivals_lock:
+                for pending_station in self.agent.pending_arrivals:
+                    if pending_station != closest_station.id:
+                        if self.agent.pending_arrivals[pending_station][0] == closest_airstrip.id:
+                            airstrip_available = False
+                            break
             
-            if not airstrip_available:
-                del self.agent.pending_arrivals[key]
-                return await self.choose_airstrip(available_airstrips, plane, retries-1)
-            else:
-                return closest_airstrip, closest_station
+                if not airstrip_available:
+                    del self.agent.pending_arrivals[key]
+                    return await self.choose_airstrip(available_airstrips, plane, retries-1)
+                else:
+                    return closest_airstrip, closest_station
 
     async def run(self):
         # Get message
@@ -181,11 +184,12 @@ class StationManagerClearOldReservationsBehaviour(PeriodicBehaviour):
     async def run(self):
         # Clear old reservations
         current_time = time.time()
-        for station_id in self.agent.pending_arrivals:
-            _, timestamp,_ = self.agent.pending_arrivals[station_id]
-            if current_time - timestamp > 15: # TODO: Definir...
-                del self.agent.pending_arrivals[station_id]
-                self.agent.write_log('Station manager: cleared old reservation, station id: ' + str(station_id))
+        with self.agent.pending_arrivals_lock:
+            for station_id in self.agent.pending_arrivals:
+                _, timestamp,_ = self.agent.pending_arrivals[station_id]
+                if current_time - timestamp > 15: # TODO: Definir...
+                    del self.agent.pending_arrivals[station_id]
+                    self.agent.write_log('Station manager: cleared old reservation, station id: ' + str(station_id))
 
 
 class StationManagerStatusSender(PeriodicBehaviour):

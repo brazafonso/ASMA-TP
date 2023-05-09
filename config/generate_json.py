@@ -19,7 +19,7 @@ def addStations(stationlist):
 
         for i in range(number):
 
-            map_config['map'][pos_y][pos_x+i*spacing] = {"type":"station","company":"1","purpose":station_type}
+            map_config['map'][pos_y][pos_x+i*spacing] = {"type":"station","airline_name":"1","purpose":station_type}
 
 
 

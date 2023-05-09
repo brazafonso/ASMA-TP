@@ -9,20 +9,22 @@ class AirportMap():
     '''Classe representante do mapa do aeroporto'''
     
     def __init__(self,map_json):
-        self.landing_queue = []
-        self.take_off_queue = []
         self.name = map_json['name']
         self.width = map_json['width']
         self.height = map_json['height']
         self.map = map_json['map']
         self.map_draw = [[' ' for _ in range(self.width)] for _ in range(self.height)]
-        self.scrape_airport_map()
 
+        self.landing_queue = []
+        self.take_off_queue = []
+        
         self.__airstrips = []
         self.__airstrips_lock = threading.Lock()
 
         self.__stations = []
         self.__stations_lock = threading.Lock()
+        
+        self.scrape_airport_map()
 
     def get_stations(self):
         with self.__stations_lock:

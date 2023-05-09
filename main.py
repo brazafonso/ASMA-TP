@@ -40,12 +40,12 @@ def parse_arguments()->argparse.Namespace:
     parser.add_argument('-lf','--logs_file'      ,type=argparse.FileType('w',encoding='utf-8')  ,default=sys.stdout                                         ,help='File for logging.')
     return parser.parse_args()
 
-def get_company():
+def get_airline_name():
     '''Escolhe aleatoriamente uma empresa da lista de empresas'''
-    company = None
+    airline_name = None
     if companies:
-        company = companies[random.randint(0,len(companies)-1)]
-    return company
+        airline_name = companies[random.randint(0,len(companies)-1)]
+    return airline_name
 
 def get_plane_type():
     '''Escolhe aleatoriamente um tipo de aviao'''
@@ -69,8 +69,8 @@ def create_plane_agents(n_planes,control_tower,station_manager,airport_map:Airpo
             max = int(max_ground_planes/n_types)
             assigned = 0
             for station in dict:
-                company = station.airline_name
-                plane_agent = PlaneAgent(f'plane{plane_id}@{USER}',PASSWORD,state=False,company=company,
+                airline_name = station.airline_name
+                plane_agent = PlaneAgent(f'plane{plane_id}@{USER}',PASSWORD,state=False,airline_name=airline_name,
                                    type=type,plane_speed=plane_speed,max_wait_in_station=max_wait_in_station,
                                    max_wait_landing=max_wait_landing,max_wait_take_off=max_wait_take_off)
                 plane_agent.set('id',plane_id)
@@ -90,9 +90,9 @@ def create_plane_agents(n_planes,control_tower,station_manager,airport_map:Airpo
     # Criar avioes no ar
     n_planes -= len(planes_ground)
     for _ in range(0,n_planes):
-        company = get_company()
+        airline_name = get_airline_name()
         type = get_plane_type()
-        plane_agent = PlaneAgent(f'plane{plane_id}@{USER}',PASSWORD,state=True,company=company,
+        plane_agent = PlaneAgent(f'plane{plane_id}@{USER}',PASSWORD,state=True,airline_name=airline_name,
                                    type=type,plane_speed=plane_speed,max_wait_in_station=max_wait_in_station,
                                    max_wait_landing=max_wait_landing,max_wait_take_off=max_wait_take_off)
         plane_agent.set('id',plane_id)

@@ -20,7 +20,7 @@
         [{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"}],
         [{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"}],
         [{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"}],
-        [{"type":"empty"},{"type":"empty"},{"type":"station","company" : "1","purpose": "comercial"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"}],
+        [{"type":"empty"},{"type":"empty"},{"type":"station","airline_name" : "1","purpose": "comercial"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"}],
         [{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"},{"type":"empty"}]
     ]
 }

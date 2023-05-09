@@ -9,7 +9,7 @@ class StationManagerAgent(agent.Agent):
     async def setup(self):
         print(f'Station manager starting id : {self.jid}')
         
-        # "Station ID" : ("Airstrip ID", timestamp)
+        # "Station ID" : ("Airstrip ID", timestamp, plane)
         self.pending_arrivals = {}
         self.pending_arrivals_lock = threading.Lock()
 

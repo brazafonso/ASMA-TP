@@ -24,7 +24,7 @@
     * gare comercial ou de bens, da empresa 1 : 
         {
         "type":"station",
-        "company":"1",
+        "airline_name":"1",
         "purpose": ("comercial" | "goods")
         }
 

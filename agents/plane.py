@@ -8,13 +8,13 @@ class PlaneAgent(agent.Agent):
 
     # TODO adicionar argumentos para flight
     def __init__(self, jid: str, password: str, verify_security: bool = False,
-                 state=True,company=None,type:str='comercial',plane_speed:int=10,
+                 state=True,airline_name=None,type:str='comercial',plane_speed:int=10,
                  max_wait_in_station:int=60,max_wait_landing:int=60,
                  max_wait_take_off:int=60):
         
         super().__init__(jid, password, verify_security)
         self.state = state
-        self.company = company
+        self.airline_name = airline_name
         self.plane_speed = plane_speed
         self.max_wait_in_station = max_wait_in_station
         self.max_wait_landing = max_wait_landing
@@ -24,7 +24,7 @@ class PlaneAgent(agent.Agent):
         now = datetime.datetime.now()
         flight = Flight('Porto','Lisboa',now)
 
-        self.plane = Plane(id=self.jid,state=self.state,company=self.company,type=self.type,flight=flight)
+        self.plane = Plane(id=self.jid,state=self.state,airline_name=self.airline_name,type=self.type,flight=flight)
 
     async def setup(self):
 

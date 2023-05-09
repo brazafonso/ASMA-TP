@@ -5,9 +5,9 @@ class Plane:
     '''Classe para representar aviao'''
 
     
-    def __init__(self,id,state,company,type,flight:Flight):
+    def __init__(self,id,state,airline_name,type,flight:Flight):
         self.id = id
         self.state = state
-        self.company = company
+        self.airline_name = airline_name
         self.type = type
         self.flight = flight

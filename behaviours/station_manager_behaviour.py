@@ -8,9 +8,10 @@ import time
 class StationManagerListener(CyclicBehaviour):
     '''Listener principal do station manager'''
 
-    async def choose_airstrip(self, available_airstrips, plane, retries=1):
+    def choose_airstrip(self, available_airstrips, plane, retries=1):
         if retries == 0:
             return None, None
+        
         closest_airstrip = None
         closest_station = None
         min_distance = None
@@ -39,18 +40,18 @@ class StationManagerListener(CyclicBehaviour):
         
         # If the values are still None, retry
         if closest_airstrip is None or closest_station is None:
-            return await self.choose_airstrip(available_airstrips, plane, retries-1)
+            return self.choose_airstrip(available_airstrips, plane, retries-1)
 
         # Make the reservation
         key = closest_station.id
-        val = (closest_airstrip.id, time.time(),plane)
+        val = (closest_airstrip.id, time.time(), plane)
 
         with self.agent.pending_arrivals_lock:
             def_val = self.agent.pending_arrivals.setdefault(key, val)
 
         # If the key already existed, the value is an old reservation, so we try again
         if val[0] != def_val[0] or val[1] != def_val[1]:
-            return await self.choose_airstrip(available_airstrips, plane, retries-1)
+            return self.choose_airstrip(available_airstrips, plane, retries-1)
         
         # If the key didn't exist, we have a new reservation
         # We still need to check if the airstrip is still available
@@ -66,7 +67,7 @@ class StationManagerListener(CyclicBehaviour):
             
                 if not airstrip_available:
                     del self.agent.pending_arrivals[key]
-                    return await self.choose_airstrip(available_airstrips, plane, retries-1)
+                    return self.choose_airstrip(available_airstrips, plane, retries-1)
                 else:
                     return closest_airstrip, closest_station
 
@@ -90,8 +91,7 @@ class StationManagerListener(CyclicBehaviour):
                 if type == 'landing request':
                     available_airstrips, plane = package.body
 
-                    # TODO: OneShotBehaviour or not await/async?
-                    closest_airstrip, closest_station = await self.choose_airstrip(available_airstrips, plane, retries=10)
+                    closest_airstrip, closest_station = self.choose_airstrip(available_airstrips, plane, retries=10)
 
                     if closest_station is not None and closest_airstrip is not None:
                         package = Package('available station',(closest_airstrip, closest_station,plane))
@@ -178,8 +178,6 @@ class StationManagerListener(CyclicBehaviour):
                             del self.agent.pending_arrivals[station_id]
 
 
-
-# TODO: Lock pending arrivals...error because its being iterated in choose airstrip function
 class StationManagerClearOldReservationsBehaviour(PeriodicBehaviour):
     async def run(self):
         # Clear old reservations
@@ -187,7 +185,7 @@ class StationManagerClearOldReservationsBehaviour(PeriodicBehaviour):
         with self.agent.pending_arrivals_lock:
             for station_id in self.agent.pending_arrivals:
                 _, timestamp,_ = self.agent.pending_arrivals[station_id]
-                if current_time - timestamp > 15: # TODO: Definir...
+                if current_time - timestamp > 15:                           # TODO: Definir...
                     del self.agent.pending_arrivals[station_id]
                     self.agent.write_log('Station manager: cleared old reservation, station id: ' + str(station_id))
 

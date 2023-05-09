@@ -8,6 +8,7 @@ from agents.control_tower import ControlTowerAgent
 from agents.station_manager import StationManagerAgent
 from agents.dashboard_manager import Dashboard_Manager
 from agents.plane import PlaneAgent
+from agents.auction_manager import AuctionManagerAgent
 from objects.airport_map import AirportMap
 import time
 import random
@@ -130,6 +131,7 @@ if __name__ == "__main__":
             if 'map' in config:
                 CT = f'control_tower@{USER}'
                 SM = f'station_manager@{USER}'
+                AM = f'auction_manager@{USER}'
 
                 ## airport map
                 airport_map = AirportMap(config)
@@ -187,10 +189,17 @@ if __name__ == "__main__":
 
                 futureSM = station_manager.start()
 
+                # TODO: Start airlines and auction manager: where?
+                auction_manager = AuctionManagerAgent(AM,PASSWORD)
+                auction_manager.set('logs',args.logs)
+                auction_manager.set('logs_file',args.logs_file)
+                
+                futureAM = auction_manager.start()
+
                             
                 futureCT.result()
                 futureSM.result()
-                
+                futureAM.result()
                 
                 # Criar Gestor de Dashboards
                 dashboard_manager = Dashboard_Manager(f'dashboard_manager@{USER}',PASSWORD,period=dash_board_period)
@@ -201,9 +210,6 @@ if __name__ == "__main__":
 
                 futureDM = dashboard_manager.start()
                 futureDM.result()
-
-                # TODO: Start airlines and auction manager: where?
-
 
                 futureP = []
                 # Iniciar agentes aviao no chao

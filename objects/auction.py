@@ -1,0 +1,60 @@
+import threading
+import time
+
+class Auction:
+    """Auction for a station"""
+
+    OPEN = 'open'
+    CLOSED = 'closed'
+
+    def __init__(self, base_value, station):
+        self.base_value = base_value
+        self.station = station
+        self.end_time = time.time() + 30 # TODO: Adjust auction duration
+        self.bids = []
+        self.winning_bid = None
+        self.state = Auction.OPEN
+
+        # Create thread to handle auction and results
+        # The thread must be run when the end_time is reached
+        self.thread = threading.Thread(target=self.run)
+        self.thread.start()
+
+        # Lock the bid list
+        self.lock = threading.Lock()
+    
+    def is_over(self):
+        return self.state == Auction.CLOSED
+    
+    def add_bid(self, bid):
+        if not self.is_over():
+            if bid.value >= self.base_value:
+                with self.lock:
+                    self.bids.append(bid)
+                    return True
+        return False
+    
+    def next_winner(self):
+        if self.winning_bid:
+            with self.lock:
+                self.bids.remove(self.winning_bid)
+                self.winning_bid = max(self.bids, key=lambda bid: bid.price)
+
+
+    def run(self):
+        print("Auction for station {} started.".format(self.station.id))
+
+        # Sleep until end_time
+        while time.time() < self.end_time:
+            time.sleep(1)
+        
+        print("Auction for station {} ended. Choosing the winner...".format(self.station.id))
+
+        # Choose the winner
+        with self.lock:
+            if self.bids:
+                self.winning_bid = max(self.bids, key=lambda bid: bid.price)    
+                self.state = Auction.CLOSED
+                print("Auction for station {} ended. Winner: {}".format(self.station.id, self.winning_bid.station.id))
+            else:
+                print("Auction for station {} ended. No bids.".format(self.station.id))

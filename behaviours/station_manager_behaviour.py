@@ -87,6 +87,7 @@ class StationManagerListener(CyclicBehaviour):
                 if type == 'landing request':
                     available_airstrips, plane = package.body
 
+                    # TODO: OneShotBehaviour or not await/async?
                     closest_airstrip, closest_station = await self.choose_airstrip(available_airstrips, plane, retries=10)
 
                     if closest_station is not None and closest_airstrip is not None:
@@ -175,7 +176,7 @@ class StationManagerListener(CyclicBehaviour):
 
 
 
-
+# TODO: Lock pending arrivals...error because its being iterated in choose airstrip function
 class StationManagerClearOldReservationsBehaviour(PeriodicBehaviour):
     async def run(self):
         # Clear old reservations

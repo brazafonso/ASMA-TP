@@ -15,8 +15,11 @@ class AirportMap():
         self.map = map_json['map']
         self.map_draw = [[' ' for _ in range(self.width)] for _ in range(self.height)]
 
-        self.landing_queue = []
-        self.take_off_queue = []
+        self.__landing_queue = []
+        self.__landing_queue_lock = threading.Lock()
+        
+        self.__take_off_queue = []
+        self.__take_off_queue_lock = threading.Lock()
         
         self.__airstrips = []
         self.__airstrips_lock = threading.Lock()
@@ -362,52 +365,54 @@ class AirportMap():
 
     def update_landing_queue(self,landing_queue):
 
-        self.landing_queue = landing_queue
+        with self.__landing_queue_lock:
+            self.__landing_queue = landing_queue
 
-        fila_de_aterragem = 'Fila de Aterragem:'
+            fila_de_aterragem = 'Fila de Aterragem:'
 
-        for plane,_ in self.landing_queue:
-        
-            plane_id_match = re.findall(r'(\d+)',str(plane.id))
-               
-            plane_id = plane_id_match[0]        
+            for plane,_ in self.__landing_queue:
+            
+                plane_id_match = re.findall(r'(\d+)',str(plane.id))
 
-            if (plane.type == 'goods'):
+                plane_id = plane_id_match[0]        
 
-                plane_str = 'AM'+str(plane_id)
+                if (plane.type == 'goods'):
 
-            else:
+                    plane_str = 'AM'+str(plane_id)
 
-                plane_str = 'AC'+str(plane_id)
+                else:
 
-            fila_de_aterragem += ' '+plane_str
+                    plane_str = 'AC'+str(plane_id)
 
-        self.replacer(1,1,fila_de_aterragem)
+                fila_de_aterragem += ' '+plane_str
+
+            self.replacer(1,1,fila_de_aterragem)
 
     def update_take_off_queue(self,take_off_queue):
 
-        self.take_off_queue = take_off_queue
+        with self.__take_off_queue_lock:
+            self.__take_off_queue = take_off_queue
 
-        fila_de_descolagem = 'Fila de Descolagem:'
-        
-        for _,plane,_ in self.take_off_queue:
+            fila_de_descolagem = 'Fila de Descolagem:'
 
-            plane_id_match = re.findall(r'(\d+)',str(plane.id))
-                
-            plane_id = plane_id_match[0]
+            for _,plane,_ in self.__take_off_queue:
+
+                plane_id_match = re.findall(r'(\d+)',str(plane.id))
+
+                plane_id = plane_id_match[0]
 
 
-            if (plane.type == 'goods'):
+                if (plane.type == 'goods'):
 
-                plane_str = 'AM'+str(plane_id)
+                    plane_str = 'AM'+str(plane_id)
 
-            else:
+                else:
 
-                plane_str = 'AC'+str(plane_id)
+                    plane_str = 'AC'+str(plane_id)
 
-            fila_de_descolagem += ' '+plane_str
+                fila_de_descolagem += ' '+plane_str
 
-        self.replacer(self.height-2,1,fila_de_descolagem)
+            self.replacer(self.height-2,1,fila_de_descolagem)
 
     def update_airstrips(self, airstrips):
         with self.__airstrips_lock:

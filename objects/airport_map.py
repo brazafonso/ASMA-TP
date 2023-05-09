@@ -36,6 +36,10 @@ class AirportMap():
     def get_airstrips(self):
         with self.__airstrips_lock:
             return [airstrip.get_copy() for airstrip in self.__airstrips]
+    
+    def get_num_stations(self):
+        with self.__stations_lock:
+            return len(self.__stations)
 
     def get_divided_stations(self):
         '''Retorna as gares divididas por tipo'''

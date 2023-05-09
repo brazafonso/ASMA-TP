@@ -60,7 +60,7 @@ def create_plane_agents(n_planes,control_tower,station_manager,airport_map:Airpo
     planes_air = []
     plane_id = 0
     stations_dic = airport_map.get_divided_stations()
-    n_stations = len(airport_map.stations)
+    n_stations = airport_map.get_num_stations()
     n_types = len(stations_dic)
     max_ground_planes = random.randint(0,min(n_planes,n_stations))
     # Criar avioes em gares
@@ -164,7 +164,7 @@ if __name__ == "__main__":
                 airport_map.place_airstrips()
                 airport_map.place_stations()
                 airport_map.place_roads()
-                airport_map.map_update_stations(airport_map.stations)
+                airport_map.map_update_stations(airport_map.get_stations())
                 airport_map.draw_map()
                 
                 # Criar torre de controlo

@@ -69,7 +69,7 @@ def create_plane_agents(n_planes,control_tower,station_manager,airport_map:Airpo
             max = int(max_ground_planes/n_types)
             assigned = 0
             for station in dict:
-                company = station.company
+                company = station.airline_name
                 plane_agent = PlaneAgent(f'plane{plane_id}@{USER}',PASSWORD,state=False,company=company,
                                    type=type,plane_speed=plane_speed,max_wait_in_station=max_wait_in_station,
                                    max_wait_landing=max_wait_landing,max_wait_take_off=max_wait_take_off)
@@ -202,6 +202,7 @@ if __name__ == "__main__":
                 futureDM = dashboard_manager.start()
                 futureDM.result()
 
+                # TODO: Start airlines and auction manager: where?
 
 
                 futureP = []

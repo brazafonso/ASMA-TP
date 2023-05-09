@@ -185,7 +185,7 @@ class ControlTowerLandingRequester(PeriodicBehaviour):
             '''Escolhe o pedido de aterragem mais urgente para tratar'''
             # (plane, timestamp)
             chosen = (0,None,None)
-            for i,plane,timestamp in enumerate(self.agent.landing_queue):
+            for i, (plane,timestamp) in enumerate(self.agent.landing_queue):
                   # iniciar
                   if not chosen[1]:
                         chosen = (i,plane,timestamp)

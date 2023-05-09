@@ -8,7 +8,7 @@ class ControlTowerAgent(agent.Agent):
     def __init__(self, jid: str, password: str, verify_security: bool = False,check_frequency:int= 2,min_request_handle_time:int=10):
          super().__init__(jid, password, verify_security)
          self.check_frequency = check_frequency
-         self.min_request_handle = min_request_handle_time
+         self.min_request_handle_time = min_request_handle_time
     
     # Agent setup
     async def setup(self):

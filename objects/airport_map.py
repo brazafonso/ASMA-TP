@@ -96,6 +96,14 @@ class AirportMap():
                 break
 
     
+    def isPlaneInStation(self, plane_jid):
+        with self.__stations_lock:
+            for station in self.__stations:
+                if station.plane:
+                    if station.plane.id == plane_jid:
+                        return True
+            return False
+
     def free_station(self,id=None,plane_id=None):
         '''Torna uma gare livre'''
         with self.__stations_lock:

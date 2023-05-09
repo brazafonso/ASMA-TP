@@ -151,24 +151,20 @@ class StationManagerListener(CyclicBehaviour):
                 elif type == 'available airstrip':
                     airstrip, plane_id = package.body
                     self.agent.write_log('Station manager: available airstrip.')
-                    # Set station as available
-                    for station in self.get('airport_map').stations:
-                        if station.plane is not None and station.plane.id == plane_id:
-                            station.plane = None
-                            station.state = 0
+
+                    # Set station as available, return the new station
+                    station = self.get('airport_map').free_station(plane_id=plane_id)
+
+                    # Send inform to plane
+                    package = Package('available airstrip', (airstrip,station))
                     
-                            # Send inform to plane
-                            package = Package('available airstrip', (airstrip,station))
-                            
-                            msg = Message(to=str(plane_id))
-                            msg.set_metadata("performative", "inform")
-                            msg.body = jsonpickle.encode(package)
+                    msg = Message(to=str(plane_id))
+                    msg.set_metadata("performative", "inform")
+                    msg.body = jsonpickle.encode(package)
+                    
+                    await self.send(msg)
+                    self.agent.write_log('Station manager: available airstrip sent to plane!')
 
-                            await self.send(msg)
-                            self.agent.write_log('Station manager: available airstrip sent to plane!')
-
-                            break
-                        
                 elif type == 'cancel arrival':
                     plane = package.body
                     self.agent.write_log('Station manager: Plane not arriving.')

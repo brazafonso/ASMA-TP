@@ -3,12 +3,13 @@ from objects.airstrip import Airstrip
 from objects.station import Station
 from objects.position import Position
 
+import threading
+
 class AirportMap():
     '''Classe representante do mapa do aeroporto'''
     
     def __init__(self,map_json):
         self.airstrips = []
-        self.stations = []
         self.landing_queue = []
         self.take_off_queue = []
         self.name = map_json['name']
@@ -18,16 +19,25 @@ class AirportMap():
         self.map_draw = [[' ' for _ in range(self.width)] for _ in range(self.height)]
         self.scrape_airport_map()
 
+        self.__stations = []
+        self.__stations_lock = threading.Lock()
+
+    def get_stations(self):
+        return [station.get_copy() for station in self.__stations]
 
     def get_divided_stations(self):
         '''Retorna as gares divididas por tipo'''
-        stations = {}
-        for station in self.stations:
+        stations_ret = {}
+
+        # Deep copy list of stations
+        stations_copy = self.get_stations()
+        for station in stations_copy:
             type = station.type
-            if type not in stations:
-                stations[type] = []
-            stations[type].append(station)
-        return stations
+            if type not in stations_ret:
+                stations_ret[type] = []
+            stations_ret[type].append(station)
+
+        return stations_ret
 
     def available_airstrips(self):
         '''Devolve a lista das pistas disponiveis'''
@@ -88,37 +98,40 @@ class AirportMap():
     
     def free_station(self,id=None,plane_id=None):
         '''Torna uma gare livre'''
-        if id:
-            for station in self.stations:
-                if station.id == id:
-                    station.state = 0
-                    station.plane = None
-                    break
-
-        elif plane_id:
-            for station in self.stations:
-                if station.state == 1:
-                    if station.plane.id == plane_id:
+        with self.__stations_lock:
+            if id:
+                for station in self.__stations:
+                    if station.id == id:
                         station.state = 0
                         station.plane = None
-                        break
+                        return station
+
+            elif plane_id:
+                for station in self.__stations:
+                    if station.state == 1:
+                        if station.plane.id == plane_id:
+                            station.state = 0
+                            station.plane = None
+                            return station
 
 
     def reserve_station(self,id,plane):
         '''Torna uma gare ocupada'''
         reserved = False
-        for station in self.stations:
-            if station.id == id:
-                station.state = 1
-                station.plane = plane
-                reserved = True
-                break
-        return reserved
+        with self.__stations_lock:
+            for station in self.__stations:
+                if station.id == id:
+                    station.state = 1
+                    station.plane = plane
+                    reserved = True
+                    break
+            return reserved
     
 
     def update_stations(self,stations):
         '''Atualizar estado das gares'''
-        self.stations = stations
+        with self.__stations_lock:
+            self.__stations = stations
 
 
     def scrape_airport_map(self):
@@ -126,6 +139,7 @@ class AirportMap():
         airstrip_id = 0
         station_id = 0
 
+        stations_to_append = []
         for y,line in enumerate(self.map):
             for x,space in enumerate(line):
                 if space['type'] == 'airstrip':
@@ -134,8 +148,11 @@ class AirportMap():
                     airstrip_id += 1
                 elif space['type'] == 'station':
                     type=space['purpose']
-                    self.stations.append(Station(id=station_id,type=type,x=x,y=y))
                     station_id += 1
+                    stations_to_append.append(Station(id=station_id,type=type,x=x,y=y))
+
+        with self.__stations_lock:
+            self.__stations.extend(stations_to_append)
 
 
     def replacer(self,line,index,newstring):
@@ -178,12 +195,13 @@ class AirportMap():
         topline = '_/\_'
 
         bottomline = '|xx|'
-
-        for i in self.stations:
-            x = i.get_pos_x()
-            y = i.get_pos_y()
-            self.replacer(y-1,x,topline)
-            self.replacer(y,x,bottomline)
+        
+        with self.__stations_lock:
+            for i in self.__stations:
+                x = i.get_pos_x()
+                y = i.get_pos_y()
+                self.replacer(y-1,x,topline)
+                self.replacer(y,x,bottomline)
 
     def place_airstrips(self):
         topline = '_'*(self.width-2)
@@ -227,30 +245,31 @@ class AirportMap():
 
         posxlist = []
         
-        for i in range(len(self.stations)):
-            if (i == 0):
-                lasty = self.stations[0].get_pos_y()
-                posxlist.append(self.stations[0].get_pos_x())
-            elif (i == (len(self.stations) - 1)):
-                lasty = self.stations[i-1].get_pos_y()
-                y = self.stations[i].get_pos_y()
-                if(lasty == y):
-                    posxlist.append(self.stations[i].get_pos_x())
-                    pos_gares[lasty] = posxlist
+        with self.__stations_lock:
+            for i in range(len(self.__stations)):
+                if (i == 0):
+                    lasty = self.__stations[0].get_pos_y()
+                    posxlist.append(self.__stations[0].get_pos_x())
+                elif (i == (len(self.__stations) - 1)):
+                    lasty = self.__stations[i-1].get_pos_y()
+                    y = self.__stations[i].get_pos_y()
+                    if(lasty == y):
+                        posxlist.append(self.__stations[i].get_pos_x())
+                        pos_gares[lasty] = posxlist
+                    else:
+                        pos_gares[lasty] = posxlist
+                        posxlist = []
+                        posxlist.append(self.__stations[i].get_pos_x())
+                        pos_gares[y] = posxlist
                 else:
-                    pos_gares[lasty] = posxlist
-                    posxlist = []
-                    posxlist.append(self.stations[i].get_pos_x())
-                    pos_gares[y] = posxlist
-            else:
-                lasty = self.stations[i-1].get_pos_y()
-                y = self.stations[i].get_pos_y()
-                if(lasty == y):
-                    posxlist.append(self.stations[i].get_pos_x())
-                else:
-                    pos_gares[lasty] = posxlist
-                    posxlist = []
-                    posxlist.append(self.stations[i].get_pos_x())
+                    lasty = self.__stations[i-1].get_pos_y()
+                    y = self.__stations[i].get_pos_y()
+                    if(lasty == y):
+                        posxlist.append(self.__stations[i].get_pos_x())
+                    else:
+                        pos_gares[lasty] = posxlist
+                        posxlist = []
+                        posxlist.append(self.__stations[i].get_pos_x())
 
         for i,key in enumerate(pos_gares):
 
@@ -396,9 +415,11 @@ class AirportMap():
 
     def map_update_stations(self,stations):
 
-        self.stations = stations
+        self.update_stations(stations)
+
+        stations = self.get_stations()
         
-        for station in self.stations:
+        for station in stations:
             
             pos = station.pos
 

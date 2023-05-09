@@ -35,4 +35,6 @@ class Station():
     def isEqual(self, station):
         return self.id == station.id
 
+    def get_copy(self):
+        return Station(self.id, self.type, self.pos.x, self.pos.y, self.airline_name)
     

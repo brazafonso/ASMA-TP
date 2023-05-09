@@ -67,7 +67,7 @@ class AuctionManagerCleanerBehaviour(PeriodicBehaviour):
 class AuctionManagerNotifyAirlines(PeriodicBehaviour):
     async def run(self):
         with self.agent.notify_success_bid_lock:
-            for bid_status in self.notify_success_bid:
+            for bid_status in self.agent.notify_success_bid:
                 # Send message to airlines
                 pkg = Package("bid status", (bid_status[1], bid_status[2])) # (success, bid)
                 msg = Message(to=bid_status[0])

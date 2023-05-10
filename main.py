@@ -198,6 +198,7 @@ if __name__ == "__main__":
 
                 # Start auction manager
                 auction_manager = AuctionManagerAgent(AM,PASSWORD)
+                auction_manager.set('airport_map',airport_map)
                 auction_manager.set('logs',args.logs)
                 auction_manager.set('logs_file',args.logs_file)
                 

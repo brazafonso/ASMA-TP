@@ -59,6 +59,13 @@ class AuctionManagerCleanerBehaviour(PeriodicBehaviour):
                 station = self.agent.stations[station_id][0]
                 station.airline_name = airline_name
                 self.agent.stations[station_id] = (station, None)
+            
+            # Update station ownwers in AirportMap object
+            stations = []
+            for station, auction in self.agent.stations.values():
+                stations.append(station.get_copy())
+
+            self.get('airport_map').update_stations(stations)
 
 class AuctionManagerNotifyAirlines(PeriodicBehaviour):
     async def run(self):

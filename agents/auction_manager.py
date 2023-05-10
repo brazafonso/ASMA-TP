@@ -8,8 +8,13 @@ class AuctionManagerAgent(agent.Agent):
         self.write_log("AuctionManagerAgent started at {}".format(self.jid))
 
         # station.id : (station, Auction)
-        self.stations = {} # TODO: Pass/Create list of initial stations
+        self.stations = {}
         self.stations_lock = threading.Lock()
+
+        # Populate stations
+        stations_list = self.get('airport_map').get_stations()
+        for station in stations_list:
+            self.stations[station.id] = (station, None)
 
         self.airlines = {} # {airline.jid : airline}
         self.airlines_lock = threading.Lock()

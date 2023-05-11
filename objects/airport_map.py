@@ -10,6 +10,7 @@ class AirportMap():
     '''Classe representante do mapa do aeroporto'''
     
     def __init__(self,map_json):
+        self.map_json = map_json
         self.name = map_json['name']
         self.width = map_json['width']
         self.height = map_json['height']
@@ -29,7 +30,38 @@ class AirportMap():
         self.__stations_lock = threading.Lock()
         
         self.scrape_airport_map()
+    
+    def get_copy(self):
+        '''Construtor a partir de uma copia'''
+        new_airport_map = AirportMap(self.get_json())
 
+        new_airport_map.__landing_queue = self.get_landing_queue()
+        new_airport_map.__take_off_queue = self.get_take_off_queue()
+        new_airport_map.__airstrips = self.get_airstrips()
+        new_airport_map.__stations = self.get_stations()
+        
+        return new_airport_map
+
+    def get_json(self):
+        new_map_json = {}
+        for key in self.map_json:
+            new_map_json[key] = self.map_json[key]
+        return new_map_json
+
+    def get_landing_queue(self):
+        with self.__landing_queue_lock:
+            new_landing_queue = []
+            for plane, timestamp in self.__landing_queue:
+                new_landing_queue.append((plane.get_copy(), timestamp))
+            return new_landing_queue
+    
+    def get_take_off_queue(self):
+        with self.__take_off_queue_lock:
+            new_take_off_queue = []
+            for pos, plane, timestamp in self.__take_off_queue:
+                new_take_off_queue.append((pos, plane.get_copy(), timestamp))
+            return new_take_off_queue
+        
     def get_stations(self):
         with self.__stations_lock:
             return [station.get_copy() for station in self.__stations]

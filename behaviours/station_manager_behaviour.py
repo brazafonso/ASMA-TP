@@ -172,6 +172,11 @@ class StationManagerListener(CyclicBehaviour):
                         _, _,p = self.agent.pending_arrivals[station_id]
                         if plane.id == p.id:
                             del self.agent.pending_arrivals[station_id]
+                
+                elif type == 'station status report':
+                    stations = package.body
+                    self.agent.write_log('Station manager: Updating stations status.')
+                    self.get('airport_map').update_stations(stations)
 
 
 class StationManagerClearOldReservationsBehaviour(PeriodicBehaviour):

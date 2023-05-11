@@ -184,7 +184,7 @@ if __name__ == "__main__":
                 
                 # Criar torre de controlo
                 control_tower = ControlTowerAgent(CT,PASSWORD)
-                control_tower.set('airport_map',airport_map)
+                control_tower.set('airport_map',airport_map.get_copy())
                 control_tower.set('max_queue',max_queue)
                 control_tower.set('n_planes',n_planes)
                 control_tower.set('station_manager',SM)
@@ -195,7 +195,7 @@ if __name__ == "__main__":
 
                 # Criar station manager
                 station_manager = StationManagerAgent(SM,PASSWORD)
-                station_manager.set('airport_map',airport_map)
+                station_manager.set('airport_map',airport_map.get_copy())
                 station_manager.set('control_tower',CT)
                 station_manager.set('logs',args.logs)
                 station_manager.set('logs_file',args.logs_file)
@@ -206,7 +206,8 @@ if __name__ == "__main__":
 
                 # Start auction manager
                 auction_manager = AuctionManagerAgent(AM,PASSWORD)
-                auction_manager.set('airport_map',airport_map)
+                auction_manager.set('airport_map',airport_map.get_copy())
+                auction_manager.set('station_manager',SM)
                 auction_manager.set('logs',args.logs)
                 auction_manager.set('logs_file',args.logs_file)
                 

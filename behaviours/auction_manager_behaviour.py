@@ -82,7 +82,7 @@ class AuctionManagerUpdateAirlinesBehaviour(PeriodicBehaviour):
             
             stations_of_type = [] # [(auction_state, station))]
             with self.agent.stations_lock:
-                for station, auction in self.agent.stations.items():
+                for station, auction in self.agent.stations.values():
                     if station.type == airline_type:
                         auction_state = None
                         if auction and not auction.is_over():
@@ -150,3 +150,17 @@ class AuctionManagerListenerBehaviour(CyclicBehaviour):
 
         else:
             self.agent.write_log("Auction Manager Behaviour: No message received")
+
+
+class AuctionManagerStatusSender(PeriodicBehaviour):
+    '''Periodicamente envia o estado das gares para o station manager'''
+
+    async def run(self):
+        self.agent.write_log('Auction manager: Sending stations status to station manager.')
+
+        package = Package('station status report', self.get('airport_map').get_stations())
+        msg = Message(to=self.get('station_manager'))
+        msg.set_metadata("performative", "inform")
+        msg.body = jsonpickle.encode(package)
+
+        await self.send(msg)

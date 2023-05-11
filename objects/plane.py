@@ -11,3 +11,6 @@ class Plane:
         self.airline_name = airline_name
         self.type = type
         self.flight = flight
+
+    def get_copy(self):
+        return Plane(self.id,self.state,self.airline_name,self.type,self.flight.get_copy())

@@ -82,7 +82,7 @@ class AuctionManagerUpdateAirlinesBehaviour(PeriodicBehaviour):
             
             stations_of_type = [] # [(auction_state, station))]
             with self.agent.stations_lock:
-                for station, auction in self.agent.stations.items():
+                for station, auction in self.agent.stations.values():
                     if station.type == airline_type:
                         auction_state = None
                         if auction and not auction.is_over():

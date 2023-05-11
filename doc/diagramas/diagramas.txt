@@ -18,3 +18,9 @@ Comunicação:
 Sequencia:
     * geral de comunicaçao de CT, GG e aviao 
     * leilao (ruben)
+
+
+Rúben (TODO):
+- d. comunicação leilão
+- d. sequencia leilão
+- d. funcionamento interno airline/AM

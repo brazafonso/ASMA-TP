@@ -67,18 +67,6 @@ class AuctionManagerCleanerBehaviour(PeriodicBehaviour):
 
             self.get('airport_map').update_stations(stations)
 
-class AuctionManagerNotifyAirlines(PeriodicBehaviour):
-    async def run(self):
-        with self.agent.notify_success_bid_lock:
-            for bid_status in self.agent.notify_success_bid:
-                # Send message to airlines
-                pkg = Package("bid status", (bid_status[1], bid_status[2])) # (success, bid)
-                msg = Message(to=bid_status[0])
-                msg.set_metadata("performative", "inform")
-                msg.body = jsonpickle.encode(pkg)
-
-                await self.send(msg)
-
 class AuctionManagerUpdateAirlinesBehaviour(PeriodicBehaviour):
     """Atualização das bids das diferentes airlines pelas stations disponíveis."""
 
@@ -142,9 +130,13 @@ class AuctionManagerListenerBehaviour(CyclicBehaviour):
                             if station_id in self.agent.stations:
                                 if self.agent.stations[station_id][1]:
                                     if bid.is_buy():
-                                        bid_success = self.agent.stations[station_id][1].add_bid(bid) 
-                                        with self.agent.notify_success_bid_lock:
-                                            self.agent.notify_success_bid.append((msg.sender, bid_success, bid))
+                                        bid_success = self.agent.stations[station_id][1].add_bid(bid)
+                                        pkg = Package("bid status", (bid_success, bid))
+                                        msg = Message(to=msg.sender)
+                                        msg.set_metadata("performative", "inform")
+                                        msg.body = jsonpickle.encode(pkg)
+
+                                        await self.send(msg)
                                 
                                 # Check if bid is to sell and auction is None
                                 elif bid.is_sell():

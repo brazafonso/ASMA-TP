@@ -26,6 +26,8 @@ plane_speed = 10
 max_wait_in_station = 60
 max_wait_landing = 60
 max_wait_take_off = 60
+origin='Porto'
+destination='Lisboa'
 airlines_list = []
 
 def parse_arguments()->argparse.Namespace:
@@ -77,7 +79,8 @@ def create_plane_agents(n_planes,control_tower,station_manager,airport_map:Airpo
                 airline_name = station.airline_name
                 plane_agent = PlaneAgent(f'plane{plane_id}@{USER}',PASSWORD,state=False,airline_name=airline_name,
                                    type=type,plane_speed=plane_speed,max_wait_in_station=max_wait_in_station,
-                                   max_wait_landing=max_wait_landing,max_wait_take_off=max_wait_take_off)
+                                   max_wait_landing=max_wait_landing,max_wait_take_off=max_wait_take_off,
+                                   origin=origin,destination=destination)
                 plane_agent.set('id',plane_id)
                 plane_agent.set('control_tower',control_tower)
                 plane_agent.set('station_manager',station_manager)
@@ -99,7 +102,8 @@ def create_plane_agents(n_planes,control_tower,station_manager,airport_map:Airpo
         type = get_plane_type()
         plane_agent = PlaneAgent(f'plane{plane_id}@{USER}',PASSWORD,state=True,airline_name=airline_name,
                                    type=type,plane_speed=plane_speed,max_wait_in_station=max_wait_in_station,
-                                   max_wait_landing=max_wait_landing,max_wait_take_off=max_wait_take_off)
+                                   max_wait_landing=max_wait_landing,max_wait_take_off=max_wait_take_off,
+                                   origin=origin,destination=destination)
         plane_agent.set('id',plane_id)
         plane_agent.set('control_tower',control_tower)
         plane_agent.set('station_manager',station_manager)
@@ -157,6 +161,10 @@ if __name__ == "__main__":
                     max_wait_landing = config["max_wait_landing"]
                 if 'max_wait_take_off' in config:
                     max_wait_take_off = config["max_wait_take_off"]
+                if 'origin' in config:
+                    origin = config["origin"]
+                if 'destination' in config:
+                    destination = config["destination"]
                 if 'airlines' in config:
                     airlines_conf = config["airlines"]
                     airlines_list = list(airlines_conf.keys())

@@ -6,23 +6,22 @@ from behaviours import plane_FMS_behaviour
 
 class PlaneAgent(agent.Agent):
 
-    # TODO adicionar argumentos para flight
     def __init__(self, jid: str, password: str, verify_security: bool = False,
                  state=True,airline_name=None,type:str='comercial',plane_speed:int=10,
                  max_wait_in_station:int=60,max_wait_landing:int=60,
-                 max_wait_take_off:int=60):
+                 max_wait_take_off:int=60,origin:str='Porto',destination:str='Lisboa'):
         
         super().__init__(jid, password, verify_security)
         self.state = state
         self.airline_name = airline_name
+        self.type = type
         self.plane_speed = plane_speed
         self.max_wait_in_station = max_wait_in_station
         self.max_wait_landing = max_wait_landing
         self.max_wait_take_off = max_wait_take_off
-        self.type = type
         #Set Variables
         now = datetime.datetime.now()
-        flight = Flight('Porto','Lisboa',now)
+        flight = Flight(origin,destination,now)
 
         self.plane = Plane(id=self.jid,state=self.state,airline_name=self.airline_name,type=self.type,flight=flight)
 

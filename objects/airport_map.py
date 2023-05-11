@@ -322,17 +322,17 @@ class AirportMap():
 
                         if ind == len(pos_gares[key])-1: 
 
-                            topline += '/  \\'
+                            topline += '|  |' #'/  \\'
 
                         else:
 
                             between_space = (pos_gares[key][ind+1] - elem) - 4
 
-                            topline += '/  \\'+'_'*between_space
+                            topline += '|  |'+'_'*between_space #'/  \\'+'_'*between_space
 
-                    midline = '\\'+'_'*(int(road_width/2) - 1)+' '*4+'_'*(int(road_width/2) - 1)+'/'
+                    midline = '|'+'_'*(int(road_width/2) - 1)+' '*4+'_'*(int(road_width/2) - 1)+'|'#'\\'+'_'*(int(road_width/2) - 1)+' '*4+'_'*(int(road_width/2) - 1)+'/'
 
-                    bottomline = '\  /'
+                    bottomline = '|  |' #'\  /'
 
                     mid_diff = int(self.width/2) - int(road_width/2)
 

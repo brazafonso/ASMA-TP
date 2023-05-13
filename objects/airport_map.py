@@ -408,7 +408,7 @@ class AirportMap():
         with self.__landing_queue_lock:
             self.__landing_queue = landing_queue
 
-            self.replacer(1,1,' '*self.width-2)
+            self.replacer(1,1,' '*(self.width-2))
 
             fila_de_aterragem = 'Fila de Aterragem:'
 
@@ -435,7 +435,7 @@ class AirportMap():
         with self.__take_off_queue_lock:
             self.__take_off_queue = take_off_queue
 
-            self.replacer(self.height-2,1,' '*self.width-2)
+            self.replacer(self.height-2,1,' '*(self.width-2))
 
             fila_de_descolagem = 'Fila de Descolagem:'
 

@@ -237,14 +237,12 @@ if __name__ == "__main__":
                         airline_agent.set('logs_file',args.logs_file)
 
                         future_airlines.append(airline_agent.start())
-                        #     break # TODO: Test only one airline
+                        
+                    
+                    futureAM.result()
 
-                        # # TODO: Add delays between airline/auction manager...subscribe is not captured
-                        # #       Actually, this is not the only message to be dropped..maybe add delays between all agents
-                        futureAM.result()
-
-                        for future in future_airlines:
-                            future.result()
+                    for future in future_airlines:
+                        future.result()
 
                 
 

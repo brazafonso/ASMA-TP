@@ -35,6 +35,7 @@ class DrawAirportBehaviour(PeriodicBehaviour):
 
                     self.agent.get('airport_map').map_update_airstrips(airstrips)
                     self.agent.get('airport_map').map_update_stations(stations)
+                    
                     self.agent.get('airport_map').update_landing_queue(landing_queue)
                     self.agent.get('airport_map').update_take_off_queue(take_off_queue)
 

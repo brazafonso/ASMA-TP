@@ -27,5 +27,8 @@ class Airstrip():
         return str
 
     def get_copy(self):
-        return Airstrip(self.id, self.pos.x, self.pos.y)
+        airstrip = Airstrip(self.id, self.pos.x, self.pos.y)
+        airstrip.state = self.state
+        airstrip.plane = self.plane
+        return airstrip
     

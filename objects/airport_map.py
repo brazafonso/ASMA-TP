@@ -155,8 +155,8 @@ class AirportMap():
             for station in self.__stations:
                 if station.plane:
                     if station.plane.id == plane_jid:
-                        return True
-            return False
+                        return station.get_copy()
+            return None
 
     def free_station(self,id=None,plane_id=None):
         '''Torna uma gare livre'''

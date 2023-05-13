@@ -56,7 +56,8 @@ class ControlTowerListener(CyclicBehaviour):
                               self.get('airport_map').free_airstrip(plane_id=jid)
                               # atualizar numero de avioes restantes
                               n_planes = self.get('n_planes')
-                              self.set('n_planes',n_planes - 1) 
+                              self.set('n_planes',n_planes - 1)
+                              self.agent.write_log(f'Control Tower: Plane dealt with')
                         # Pedido de estado do aeroporto
                         elif type == 'station status report':
                               self.agent.write_log('Control Tower: Stations status report')
@@ -75,6 +76,7 @@ class ControlTowerListener(CyclicBehaviour):
                               # atualizar numero de avioes restantes
                               n_planes = self.get('n_planes')
                               self.set('n_planes',n_planes - 1) 
+                              self.agent.write_log(f'Control Tower: Plane dealt with')
 
 
                   elif performative == 'query-if' and msg.body:
@@ -86,10 +88,11 @@ class ControlTowerListener(CyclicBehaviour):
                               pos, plane = package.body
                               self.agent.take_off_queue.append((pos,plane,None))
 
-            # Se ja tiverem sido tratados todos os avioes, encerra graciosamente
-            if self.get('n_planes') == 0:
-                  self.agent.write_log('Control Tower: Work Done.')
-                  await self.agent.stop()
+            # # Se ja tiverem sido tratados todos os avioes, encerra graciosamente
+            # if self.get('n_planes') == 0:
+            #       print('Ending')
+            #       self.agent.write_log('Control Tower: Work Done.')
+            #       await self.agent.stop()
 
 
 class ControlTowerLandingHandler(OneShotBehaviour):
@@ -146,6 +149,7 @@ class ControlTowerLandingHandler(OneShotBehaviour):
                               # atualizar numero de avioes restantes
                               n_planes = self.get('n_planes')
                               self.set('n_planes',n_planes - 1) 
+                              self.agent.write_log(f'Control Tower: Plane dealt with')
                         else:
                               self.agent.write_log('Control Tower: Landing happening')
             # avisar gestor de gares que aviao ja nao quer aterrar
@@ -232,7 +236,7 @@ class ControlTowerTakeOffHandler(PeriodicBehaviour):
             '''Escolhe o pedido de descolagem mais urgente para tratar'''
             # (i,pos,plane, timestamp)
             chosen = (0,None,None,None)
-            for i,pos,plane,timestamp in enumerate(self.agent.take_off_queue):
+            for i,(pos,plane,timestamp) in enumerate(self.agent.take_off_queue):
                   # iniciar
                   if not chosen[1]:
                         chosen = (i,pos,plane,timestamp)

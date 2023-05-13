@@ -34,5 +34,8 @@ class Station():
         return self.id == station.id
 
     def get_copy(self):
-        return Station(self.id, self.type, self.pos.x, self.pos.y, self.base_value, self.airline_name)
+        station = Station(self.id, self.type, self.pos.x, self.pos.y, self.base_value, self.airline_name)
+        station.plane = self.plane
+        station.state = self.state
+        return station
     

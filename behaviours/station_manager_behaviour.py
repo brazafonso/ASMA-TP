@@ -117,9 +117,9 @@ class StationManagerListener(CyclicBehaviour):
                 if type == 'takeoff request':
                     self.agent.write_log('Station manager: Take off request received.')
                     plane_jid = package.body
-                    
+                    station = self.get('airport_map').isPlaneInStation(plane_jid)
                     # Check if plane is in station, if yes, send query-if to control tower
-                    if self.get('airport_map').isPlaneInStation(plane_jid):
+                    if station:
                         # Send query-if to control tower
                         package = Package('takeoff request', (station.pos,station.plane))
                         control_tower = self.get('control_tower')
@@ -140,21 +140,22 @@ class StationManagerListener(CyclicBehaviour):
                 if type == 'confirm pending arrival':
                     self.agent.write_log('Station manager: confirmation of pending arrival.')
                     station_id = package.body
-                    if station_id in self.agent.pending_arrivals:
-                        self.agent.write_log('Station manager: reserving station')
-                        _,_,plane = self.agent.pending_arrivals[station_id]
-                        result = self.get('airport_map').reserve_station(station_id,plane)
-                        if result :
-                            del self.agent.pending_arrivals[station_id]
+                    with self.agent.pending_arrivals_lock:
+                        if station_id in self.agent.pending_arrivals:
+                            self.agent.write_log('Station manager: reserving station')
+                            _,_,plane = self.agent.pending_arrivals[station_id]
+                            result = self.get('airport_map').reserve_station(station_id,plane)
+                            if result :
+                                del self.agent.pending_arrivals[station_id]
 
 
                 elif type == 'available airstrip':
                     airstrip, plane_id = package.body
                     self.agent.write_log('Station manager: available airstrip.')
-
+                    print("teste1",plane_id)
                     # Set station as available, return the new station
                     station = self.get('airport_map').free_station(plane_id=plane_id)
-
+                    print("teste2",station)
                     # Send inform to plane
                     package = Package('available airstrip', (airstrip,station))
                     
@@ -168,15 +169,20 @@ class StationManagerListener(CyclicBehaviour):
                 elif type == 'cancel arrival':
                     plane = package.body
                     self.agent.write_log('Station manager: Plane not arriving.')
-                    for station_id in self.agent.pending_arrivals:
-                        _, _,p = self.agent.pending_arrivals[station_id]
-                        if plane.id == p.id:
-                            del self.agent.pending_arrivals[station_id]
+                    self.delete_arrival(plane)
                 
                 elif type == 'station status report':
                     stations = package.body
                     self.agent.write_log('Station manager: Updating stations status.')
                     self.get('airport_map').update_stations(stations)
+
+
+    def delete_arrival(self,plane):
+        with self.agent.pending_arrivals_lock:
+            for station_id in self.agent.pending_arrivals:
+                _, _,p = self.agent.pending_arrivals[station_id]
+                if plane.id == p.id:
+                    del self.agent.pending_arrivals[station_id]
 
 
 class StationManagerClearOldReservationsBehaviour(PeriodicBehaviour):

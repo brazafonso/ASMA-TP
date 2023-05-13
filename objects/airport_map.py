@@ -14,6 +14,7 @@ class AirportMap():
         self.name = map_json['name']
         self.width = map_json['width']
         self.height = map_json['height']
+        self.max_queue = map_json['max_queue']
         self.map = map_json['map']
         self.map_draw = [[' ' for _ in range(self.width)] for _ in range(self.height)]
 
@@ -432,6 +433,8 @@ class AirportMap():
         with self.__take_off_queue_lock:
             self.__take_off_queue = take_off_queue
 
+            fila_de_descolagem_list = [self.max_queue]
+
             fila_de_descolagem = 'Fila de Descolagem:'
 
             for _,plane,_ in self.__take_off_queue:
@@ -448,6 +451,8 @@ class AirportMap():
                 else:
 
                     plane_str = 'AC'+str(plane_id)
+
+                fila_de_descolagem_list
 
                 fila_de_descolagem += ' '+plane_str
 

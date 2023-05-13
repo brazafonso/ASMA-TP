@@ -1,5 +1,3 @@
-# TODO: Needs to be used by the other objects
-
 import threading
 
 class Airline:

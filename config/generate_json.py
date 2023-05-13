@@ -47,7 +47,33 @@ def createAirportconfig1(filename,name,width,height):
     with open(filename,"w") as outfile:
         outfile.write(json_object)
 
-createAirportconfig1('config/1.json','Aeroporto Francisco Sá Carneiro',145,37)
+#createAirportconfig1('config/1.json','Aeroporto Francisco Sá Carneiro',145,37)
+
+def createAirportconfig2(filename,name,width,height):
+
+    mid_width = int(width/2)
+
+    #airstrip_list = [(1,10),(1,25)]
+    airstrip_list = [(mid_width,12),(mid_width,27)]
+
+    station_list = [(5,7,2,10,'comercial'),(5,18,2,10,'goods'),(5,22,2,10,'comercial'),(5,33,2,10,'goods')]
+
+    map_config['name'] = name
+    map_config['width'] = width
+    map_config['height'] = height
+    
+    map_config['map'] = [[{"type":"empty"} for _ in range(width)] for _ in range(height)]
+
+    addAirstrips(airstrip_list)
+
+    addStations(station_list)
+
+    json_object = json.dumps(map_config, ensure_ascii=False, indent=4, separators=(',',':'))
+
+    with open(filename,"w") as outfile:
+        outfile.write(json_object)
+
+createAirportconfig2('config/teste.json','Aeroporto de Teste',45,37)
 
 
 

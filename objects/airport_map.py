@@ -408,6 +408,8 @@ class AirportMap():
         with self.__landing_queue_lock:
             self.__landing_queue = landing_queue
 
+            self.replacer(1,1,' '*self.width-2)
+
             fila_de_aterragem = 'Fila de Aterragem:'
 
             for plane,_ in self.__landing_queue:
@@ -433,7 +435,7 @@ class AirportMap():
         with self.__take_off_queue_lock:
             self.__take_off_queue = take_off_queue
 
-            fila_de_descolagem_list = [self.max_queue]
+            self.replacer(self.height-2,1,' '*self.width-2)
 
             fila_de_descolagem = 'Fila de Descolagem:'
 
@@ -451,8 +453,6 @@ class AirportMap():
                 else:
 
                     plane_str = 'AC'+str(plane_id)
-
-                fila_de_descolagem_list
 
                 fila_de_descolagem += ' '+plane_str
 

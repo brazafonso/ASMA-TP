@@ -210,9 +210,9 @@ if __name__ == "__main__":
                 futureSM.result()
 
                 if args.auction:
-                    time.sleep(0.1) # TODO: Testing delays...
+                    print('Auction functionality activated...')
 
-                    # # Start auction manager
+                    # Start auction manager
                     auction_manager = AuctionManagerAgent(AM,PASSWORD)
                     auction_manager.set('airport_map',airport_map.get_copy())
                     auction_manager.set('station_manager',SM)
@@ -221,9 +221,7 @@ if __name__ == "__main__":
                     
                     futureAM = auction_manager.start()
 
-                    # time.sleep(0.1) # TODO: Testing delays...
-
-                    # # Start airline agents
+                    # Start airline agents
                     future_airlines = []
                     for airline_name in airlines_list:
                         airline_jid = ('airline_'+str(airline_name)+'@'+USER).lower()

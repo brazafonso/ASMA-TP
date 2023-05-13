@@ -115,9 +115,18 @@ class AuctionManagerListenerBehaviour(CyclicBehaviour):
                 if type == 'subscribe auction':
                     simple_airline = pkg.body
                     with self.agent.airlines_lock:
-                        self.agent.airlines[simple_airline.jid] = simple_airline
+                        if simple_airline.jid not in self.agent.airlines:
+                            self.agent.airlines[simple_airline.jid] = simple_airline
+                            self.agent.write_log("Auction Manager Behaviour: Airline {} subscribed".format(msg.sender))
+
+                            # Send message to airline
+                            pkg = Package("confirm subscription", None)
+                            msg = Message(to=simple_airline.jid)
+                            msg.set_metadata("performative", "inform")
+                            msg.body = jsonpickle.encode(pkg)
+
+                            await self.send(msg)
                     
-                    self.agent.write_log("Auction Manager Behaviour: Airline {} subscribed".format(msg.sender))
 
             elif performative == 'propose':
                 type = pkg.message

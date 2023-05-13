@@ -21,13 +21,17 @@ class AirlineSubscribeToAuctionManager(OneShotBehaviour):
 
 class AirlineListenerBehaviour(CyclicBehaviour):
     async def run(self):
+
+        # Check if subscribed to the auction manager
+        if not self.agent.subscribed:
+            self.agent.add_behaviour(AirlineSubscribeToAuctionManager())
         
         msg = await self.receive(timeout=15)
         # Possible messages:
         # - Inform of the available stations
         # - Accept/Reject of the bids
         if msg:
-            self.agent.write_log("Auction Manager Behaviour: Got message")
+            self.agent.write_log("Airline Listener Behaviour ({}): Got message".format(self.agent.jid))
             performative = msg.get_metadata('performative')
             pkg = jsonpickle.decode(msg.body)
             type = pkg.message
@@ -46,10 +50,13 @@ class AirlineListenerBehaviour(CyclicBehaviour):
                         with self.agent.my_bids_lock:
                             if bid.station.id in self.agent.my_bids:
                                 self.agent.my_bids.remove(bid.station.id)
+                elif type == 'confirm subscription':
+                    self.agent.subscribed = True
+                    self.agent.write_log("Airline Listener Behaviour({}): Subscribed to Auction Manager".format(self.agent.jid))
 
             elif performative == 'accept-proposal':
                 if type == 'bid accepted':
-                    self.agent.write_log("Airline Listener Behaviour: Bid accepted")
+                    self.agent.write_log("Airline Listener Behaviour ({}): Bid accepted".format(self.agent.jid))
                     accepted_bid = pkg.body
                     with self.agent.my_bids_lock:
                         if accepted_bid.station.id in self.agent.my_bids:
@@ -57,7 +64,7 @@ class AirlineListenerBehaviour(CyclicBehaviour):
 
             elif performative == 'reject-proposal':
                 if type == 'bid rejected':
-                    self.agent.write_log("Airline Listener Behaviour: Bid rejected")
+                    self.agent.write_log("Airline Listener Behaviour ({}): Bid rejected".format(self.agent.jid))
                     rejected_bid = pkg.body
                     with self.agent.my_bids_lock:
                         if rejected_bid.station.id in self.agent.my_bids:
@@ -84,17 +91,17 @@ class AirlineBiddingBehaviour(PeriodicBehaviour):
 
                         # Check current bids size
                         if len(self.agent.my_bids) >= self.agent.airline.max_bids:
-                            self.agent.write_log("Airline Bidding Behaviour: Max bids reached")
+                            self.agent.write_log("Airline Bidding Behaviour ({}): Max bids reached".format(self.agent.jid))
                             return None
 
                         # Check if already bid for this station
                         elif any(bid.station.id == station.id for bid in self.agent.my_bids.values()):
-                            self.agent.write_log("Airline Bidding Behaviour: Already bid for this station")
+                            self.agent.write_log("Airline Bidding Behaviour ({}): Already bid for this station".format(self.agent.jid))
                             return None
                         
                     # Check if we have enough money
                     if balance_after_bids * self.agent.airline.relative_max_bid < station.base_value:
-                        self.agent.write_log("Airline Bidding Behaviour: Not enough money")
+                        self.agent.write_log("Airline Bidding Behaviour ({}): Not enough money".format(self.agent.jid))
                         return None
                     
                     # Generate random increment to base value
@@ -108,7 +115,7 @@ class AirlineBiddingBehaviour(PeriodicBehaviour):
                 # Do nothing
                 return None
             else:
-                self.agent.write_log("Airline Bidding Behaviour: Invalid auction state {} for station {}".format(auction_state, station.id))
+                self.agent.write_log("Airline Bidding Behaviour ({}): Invalid auction state {} for station {}".format(self.agent.jid, auction_state, station.id))
                 return None
         
         # No auction for this station
@@ -124,17 +131,17 @@ class AirlineBiddingBehaviour(PeriodicBehaviour):
 
     async def run(self):
 
-        # Check if available_stations were updated
+        # Check if available_stations were seen
         with self.agent.available_stations_lock:
-            updated = self.agent.available_stations[0]
+            seen = self.agent.available_stations[0]
             stations = self.agent.available_stations[1]
             self.agent.available_stations = (True, []) # Mark as seen
 
 
-        if not updated:
-            self.agent.write_log("Airline Bidding Behaviour: Already seen available stations")
+        if seen:
+            self.agent.write_log("Airline Bidding Behaviour ({}): Already seen available stations".format(self.agent.jid))
         else:
-            self.agent.write_log("Airline Bidding Behaviour: New available stations")
+            self.agent.write_log("Airline Bidding Behaviour ({}): New available stations".format(self.agent.jid))
 
             bids = []
             for auction_state, station in stations:
@@ -155,4 +162,4 @@ class AirlineBiddingBehaviour(PeriodicBehaviour):
                     for bid in bids:
                         self.agent.my_bids[bid[0]] = bid[1]
 
-                self.agent.write_log("Airline Bidding Behaviour: Sent bids")
+                self.agent.write_log("Airline Bidding Behaviour ({}): Sent bids".format(self.agent.jid))

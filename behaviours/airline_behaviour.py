@@ -43,13 +43,19 @@ class AirlineListenerBehaviour(CyclicBehaviour):
                     updated_stations = pkg.body[1]
                     with self.agent.available_stations_lock:
                         self.agent.available_stations = (False, updated_stations)
+                        self.agent.write_log("Airline Listener Behaviour ({}): Updated available stations".format(self.agent.jid))
+
                 elif type == 'bid status':
                     success, bid = pkg.body
                     if not success:
+                        self.agent.write_log("Airline Listener Behaviour ({}): Bid failed".format(self.agent.jid))
                         # Remove bid from my_bids
                         with self.agent.my_bids_lock:
                             if bid.station.id in self.agent.my_bids:
-                                self.agent.my_bids.remove(bid.station.id)
+                                self.agent.my_bids.remove(bid.station.id)                
+                    else:
+                        self.agent.write_log("Airline Listener Behaviour ({}): Bid successfully registered".format(self.agent.jid))
+
                 elif type == 'confirm subscription':
                     self.agent.subscribed = True
                     self.agent.write_log("Airline Listener Behaviour({}): Subscribed to Auction Manager".format(self.agent.jid))

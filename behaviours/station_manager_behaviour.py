@@ -152,10 +152,10 @@ class StationManagerListener(CyclicBehaviour):
                 elif type == 'available airstrip':
                     airstrip, plane_id = package.body
                     self.agent.write_log('Station manager: available airstrip.')
-                    print("teste1",plane_id)
+
                     # Set station as available, return the new station
                     station = self.get('airport_map').free_station(plane_id=plane_id)
-                    print("teste2",station)
+
                     # Send inform to plane
                     package = Package('available airstrip', (airstrip,station))
                     

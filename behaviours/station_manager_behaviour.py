@@ -20,7 +20,8 @@ class StationManagerListener(CyclicBehaviour):
             for airstrip in available_airstrips:
                 # Check if this airstrip is in the pending arrivals
                 airstrip_available = True
-                for pending_airstrip_id, _,_ in self.agent.pending_arrivals.values():
+                for station_id in self.agent.pending_arrivals:
+                    pending_airstrip_id, _,_ = self.agent.pending_arrivals[station_id]
                     if pending_airstrip_id == airstrip.id:
                         airstrip_available = False
                         break

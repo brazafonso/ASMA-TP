@@ -88,11 +88,11 @@ class ControlTowerListener(CyclicBehaviour):
                               pos, plane = package.body
                               self.agent.take_off_queue.append((pos,plane,None))
 
-            # # Se ja tiverem sido tratados todos os avioes, encerra graciosamente
-            # if self.get('n_planes') == 0:
-            #       print('Ending')
-            #       self.agent.write_log('Control Tower: Work Done.')
-            #       await self.agent.stop()
+            # Se ja tiverem sido tratados todos os avioes, encerra graciosamente
+            if self.get('n_planes') == 0:
+                  print('Ending')
+                  self.agent.write_log('Control Tower: Work Done.')
+                  await self.agent.stop()
 
 
 class ControlTowerLandingHandler(OneShotBehaviour):
@@ -220,7 +220,7 @@ class ControlTowerTakeOffHandler(PeriodicBehaviour):
                         # reserver pista, avisar gestor de gares e atualizar lista de espera para descolar
                         if airstrip:
                               self.agent.write_log('Control tower:Sending airstrip for takeoff')
-                              self.agent.take_off_queue.pop(0)
+                              self.agent.take_off_queue.pop(i)
                               self.get('airport_map').reserve_airstrip(airstrip.id,plane)
                               package = Package('available airstrip',(airstrip,plane.id))
                               station_manager = self.get('station_manager')

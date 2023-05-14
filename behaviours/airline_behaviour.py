@@ -24,6 +24,7 @@ class AirlineListenerBehaviour(CyclicBehaviour):
 
         # Check if subscribed to the auction manager
         if not self.agent.subscribed:
+            self.agent.write_log("Airline Listener Behaviour ({}): Trying to subscribe again to auction manager...".format(self.agent.jid))
             self.agent.add_behaviour(AirlineSubscribeToAuctionManager())
         
         msg = await self.receive(timeout=15)
@@ -52,7 +53,7 @@ class AirlineListenerBehaviour(CyclicBehaviour):
                         # Remove bid from my_bids
                         with self.agent.my_bids_lock:
                             if bid.station.id in self.agent.my_bids:
-                                self.agent.my_bids.remove(bid.station.id)                
+                                del self.agent.my_bids[bid.station.id]
                     else:
                         self.agent.write_log("Airline Listener Behaviour ({}): Bid successfully registered".format(self.agent.jid))
 
@@ -83,8 +84,8 @@ class AirlineBiddingBehaviour(PeriodicBehaviour):
         
         balance_after_bids = self.agent.airline.budget
         with self.agent.my_bids_lock:
-            for bid in self.agent.my_bids.values():
-                balance_after_bids -= bid[1].value
+            for station_id in self.agent.my_bids:
+                balance_after_bids -= self.agent.my_bids[station_id].value
         
         # There is an auction for this station
         if auction_state:
@@ -101,9 +102,11 @@ class AirlineBiddingBehaviour(PeriodicBehaviour):
                             return None
 
                         # Check if already bid for this station
-                        elif any(bid.station.id == station.id for bid in self.agent.my_bids.values()):
-                            self.agent.write_log("Airline Bidding Behaviour ({}): Already bid for this station".format(self.agent.jid))
-                            return None
+                        for station_id in self.agent.my_bids:
+                            bid = self.agent.my_bids[station_id]
+                            if bid.station.id == station.id:
+                                self.agent.write_log("Airline Bidding Behaviour ({}): Already bid for this station".format(self.agent.jid))
+                                return None
                         
                     # Check if we have enough money
                     if balance_after_bids * self.agent.airline.relative_max_bid < station.base_value:
@@ -130,9 +133,11 @@ class AirlineBiddingBehaviour(PeriodicBehaviour):
             if station.airline_name == self.agent.airline.name:
                 
                 # Check if costs are bigger than budget, if so, sell...
-                if self.agent.airline.costs > balance_after_bids:
-                    return Bid(self.airline.jid, Bid.SELL, station.base_value, station)
-
+                # Also, sell 1 each 10 times
+                if self.agent.airline.costs > self.agent.airline.budget or random.randint(0, 10) == 0:
+                    self.agent.write_log('IM SELLING!!!!!!!!!!!!')
+                    return Bid(self.agent.airline.jid, Bid.SELL, station.base_value, station)
+        
         return None
 
     async def run(self):

@@ -178,18 +178,16 @@ class StationManagerListener(CyclicBehaviour):
 
 
     async def delete_arrival(self,plane):
-        await self.agent.pending_arrivals_lock.acquire()
-        try:
+        keys_to_delete = []
+        async with self.agent.pending_arrivals_lock:
             for station_id in self.agent.pending_arrivals:
                 _, _,p = self.agent.pending_arrivals[station_id]
                 if plane.id == p.id:
-                    del self.agent.pending_arrivals[station_id]
-        except Exception:
-            pass
-        finally:
-            self.agent.pending_arrivals_lock.release()
-
-
+                    keys_to_delete.append(station_id)
+        
+            for key in keys_to_delete:
+                del self.agent.pending_arrivals[key]
+        
 class StationManagerClearOldReservationsBehaviour(PeriodicBehaviour):
     async def run(self):
         # Clear old reservations

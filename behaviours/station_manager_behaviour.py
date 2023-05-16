@@ -193,9 +193,14 @@ class StationManagerClearOldReservationsBehaviour(PeriodicBehaviour):
         # Clear old reservations
         current_time = time.time()
         async with self.agent.pending_arrivals_lock:
+            keys_to_delete = []
             for station_id in self.agent.pending_arrivals:
                 _, timestamp,_ = self.agent.pending_arrivals[station_id]
                 if current_time - timestamp > 15:                           # TODO: Definir...
+                    keys_to_delete.append(station_id)
+                    
+            for station_id in keys_to_delete:
+                if station_id in self.agent.pending_arrivals:
                     del self.agent.pending_arrivals[station_id]
                     self.agent.write_log('Station manager: cleared old reservation, station id: ' + str(station_id))
 

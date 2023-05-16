@@ -5,21 +5,23 @@ from objects.package import Package
 import jsonpickle
 import time
 
+
 class StationManagerListener(CyclicBehaviour):
     '''Listener principal do station manager'''
 
-    def choose_airstrip(self, stations, available_airstrips, plane, retries=1):
+    async def choose_airstrip(self, stations, available_airstrips, plane, retries=1):
         if retries == 0:
             return None, None
         
         closest_airstrip = None
         closest_station = None
         min_distance = None
-        with self.agent.pending_arrivals_lock:
+        async with self.agent.pending_arrivals_lock:
             for airstrip in available_airstrips:
                 # Check if this airstrip is in the pending arrivals
                 airstrip_available = True
-                for pending_airstrip_id, _,_ in self.agent.pending_arrivals.values():
+                for station_id in self.agent.pending_arrivals:
+                    pending_airstrip_id, _,_ = self.agent.pending_arrivals[station_id]
                     if pending_airstrip_id == airstrip.id:
                         airstrip_available = False
                         break
@@ -38,39 +40,37 @@ class StationManagerListener(CyclicBehaviour):
                                     closest_airstrip = airstrip
                                     closest_station = station
                                     min_distance = distance
-        
         # If the values are still None, retry
         if closest_airstrip is None or closest_station is None:
-            return self.choose_airstrip(stations, available_airstrips, plane, retries-1)
+            return await self.choose_airstrip(stations, available_airstrips, plane, retries-1)
 
         # Make the reservation
         key = closest_station.id
         val = (closest_airstrip.id, time.time(), plane)
 
-        with self.agent.pending_arrivals_lock:
+        async with self.agent.pending_arrivals_lock:
             def_val = self.agent.pending_arrivals.setdefault(key, val)
-
         # If the key already existed, the value is an old reservation, so we try again
         if val[0] != def_val[0] or val[1] != def_val[1]:
-            return self.choose_airstrip(stations, available_airstrips, plane, retries-1)
+            return await self.choose_airstrip(stations, available_airstrips, plane, retries-1)
         
         # If the key didn't exist, we have a new reservation
         # We still need to check if the airstrip is still available
         # This is used to keep the pending arrivals consistent
         else:
             airstrip_available = True
-            with self.agent.pending_arrivals_lock:
+            async with self.agent.pending_arrivals_lock:
                 for pending_station in self.agent.pending_arrivals:
                     if pending_station != closest_station.id:
                         if self.agent.pending_arrivals[pending_station][0] == closest_airstrip.id:
                             airstrip_available = False
                             break
-            
                 if not airstrip_available:
                     del self.agent.pending_arrivals[key]
-                    return self.choose_airstrip(stations, available_airstrips, plane, retries-1)
+                    return await self.choose_airstrip(stations, available_airstrips, plane, retries-1)
                 else:
                     return closest_airstrip, closest_station
+           
 
     async def run(self):
         # Get message
@@ -93,7 +93,7 @@ class StationManagerListener(CyclicBehaviour):
                     available_airstrips, plane = package.body
 
                     stations = self.get('airport_map').get_stations()
-                    closest_airstrip, closest_station = self.choose_airstrip(stations, available_airstrips, plane, retries=10)
+                    closest_airstrip, closest_station = await self.choose_airstrip(stations, available_airstrips, plane, retries=10)
 
                     if closest_station is not None and closest_airstrip is not None:
                         package = Package('available station',(closest_airstrip, closest_station,plane))
@@ -140,11 +140,11 @@ class StationManagerListener(CyclicBehaviour):
                 if type == 'confirm pending arrival':
                     self.agent.write_log('Station manager: confirmation of pending arrival.')
                     station_id = package.body
-                    with self.agent.pending_arrivals_lock:
+                    async with self.agent.pending_arrivals_lock:
                         if station_id in self.agent.pending_arrivals:
                             self.agent.write_log('Station manager: reserving station')
                             _,_,plane = self.agent.pending_arrivals[station_id]
-                            result = self.get('airport_map').reserve_station(station_id,plane)
+                            result =  self.get('airport_map').reserve_station(station_id,plane)
                             if result :
                                 del self.agent.pending_arrivals[station_id]
 
@@ -152,10 +152,10 @@ class StationManagerListener(CyclicBehaviour):
                 elif type == 'available airstrip':
                     airstrip, plane_id = package.body
                     self.agent.write_log('Station manager: available airstrip.')
-                    print("teste1",plane_id)
+
                     # Set station as available, return the new station
-                    station = self.get('airport_map').free_station(plane_id=plane_id)
-                    print("teste2",station)
+                    station =  self.get('airport_map').free_station(plane_id=plane_id)
+
                     # Send inform to plane
                     package = Package('available airstrip', (airstrip,station))
                     
@@ -169,7 +169,7 @@ class StationManagerListener(CyclicBehaviour):
                 elif type == 'cancel arrival':
                     plane = package.body
                     self.agent.write_log('Station manager: Plane not arriving.')
-                    self.delete_arrival(plane)
+                    await self.delete_arrival(plane)
                 
                 elif type == 'station status report':
                     stations = package.body
@@ -177,22 +177,30 @@ class StationManagerListener(CyclicBehaviour):
                     self.get('airport_map').update_stations(stations)
 
 
-    def delete_arrival(self,plane):
-        with self.agent.pending_arrivals_lock:
+    async def delete_arrival(self,plane):
+        keys_to_delete = []
+        async with self.agent.pending_arrivals_lock:
             for station_id in self.agent.pending_arrivals:
                 _, _,p = self.agent.pending_arrivals[station_id]
                 if plane.id == p.id:
-                    del self.agent.pending_arrivals[station_id]
-
-
+                    keys_to_delete.append(station_id)
+        
+            for key in keys_to_delete:
+                del self.agent.pending_arrivals[key]
+        
 class StationManagerClearOldReservationsBehaviour(PeriodicBehaviour):
     async def run(self):
         # Clear old reservations
         current_time = time.time()
-        with self.agent.pending_arrivals_lock:
+        async with self.agent.pending_arrivals_lock:
+            keys_to_delete = []
             for station_id in self.agent.pending_arrivals:
                 _, timestamp,_ = self.agent.pending_arrivals[station_id]
                 if current_time - timestamp > 15:                           # TODO: Definir...
+                    keys_to_delete.append(station_id)
+                    
+            for station_id in keys_to_delete:
+                if station_id in self.agent.pending_arrivals:
                     del self.agent.pending_arrivals[station_id]
                     self.agent.write_log('Station manager: cleared old reservation, station id: ' + str(station_id))
 

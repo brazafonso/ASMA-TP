@@ -12,13 +12,19 @@ class AuctionManagerCleanerBehaviour(PeriodicBehaviour):
     async def run(self):
         check_bids = [] # (station.id, airline.jid, bid)
         with self.agent.stations_lock:
-            for station, auction in self.agent.stations.values():
+            for station_id in self.agent.stations:
+                station, auction = self.agent.stations[station_id]
                 # Check if auction is over
                 if auction and auction.is_over():
-                    # Check if winner has enough money
-                    airline_winner_jid = auction.winning_bid.bidder_jid
-                    biggest_bid = auction.winning_bid
-                    check_bids.append((station.id, airline_winner_jid, biggest_bid))
+                    # Check if there is a winner
+                    if auction.winning_bid:
+                        # Check if winner has enough money
+                        airline_winner_jid = auction.winning_bid.bidder_jid
+                        biggest_bid = auction.winning_bid
+                        check_bids.append((station.id, airline_winner_jid, biggest_bid))
+                    else:
+                        # Delete auction
+                        self.agent.stations[station_id] = (station, None)
         
         update_owners = [] # (station.id, airline.name)
 
@@ -62,7 +68,8 @@ class AuctionManagerCleanerBehaviour(PeriodicBehaviour):
             
             # Update station ownwers in AirportMap object
             stations = []
-            for station, auction in self.agent.stations.values():
+            for station_id in self.agent.stations:
+                station = self.agent.stations[station_id][0]
                 stations.append(station.get_copy())
 
             self.get('airport_map').update_stations(stations)
@@ -76,13 +83,14 @@ class AuctionManagerUpdateAirlinesBehaviour(PeriodicBehaviour):
         with self.agent.airlines_lock:
             airlines = self.agent.airlines.copy()
         
-        for airline in airlines.values():
-            airline_id = airline.jid
+        for airline_id in airlines:
+            airline = airlines[airline_id]
             airline_type = airline.type
             
             stations_of_type = [] # [(auction_state, station))]
             with self.agent.stations_lock:
-                for station, auction in self.agent.stations.values():
+                for station_id in self.agent.stations:
+                    station, auction = self.agent.stations[station_id]
                     if station.type == airline_type:
                         auction_state = None
                         if auction and not auction.is_over():
@@ -115,28 +123,33 @@ class AuctionManagerListenerBehaviour(CyclicBehaviour):
                 if type == 'subscribe auction':
                     simple_airline = pkg.body
                     with self.agent.airlines_lock:
-                        self.agent.airlines[simple_airline.jid] = simple_airline
+                        if simple_airline.jid not in self.agent.airlines:
+                            self.agent.airlines[simple_airline.jid] = simple_airline
+                            self.agent.write_log("Auction Manager Behaviour: Airline {} subscribed".format(msg.sender))
+
+                            # Send message to airline
+                            pkg = Package("confirm subscription", None)
+                            msg = Message(to=simple_airline.jid)
+                            msg.set_metadata("performative", "inform")
+                            msg.body = jsonpickle.encode(pkg)
+
+                            await self.send(msg)
                     
-                    self.agent.write_log("Auction Manager Behaviour: Airline {} subscribed".format(msg.sender))
 
             elif performative == 'propose':
                 type = pkg.message
                 if type == 'bids':
                     bids = pkg.body # [(station.id, bid)]
+                    airline_jid = str(msg.sender)
                     with self.agent.stations_lock:
                         for bid_pair in bids:
                             station_id = bid_pair[0]
                             bid = bid_pair[1]
+                            bid_success = False
                             if station_id in self.agent.stations:
                                 if self.agent.stations[station_id][1]:
                                     if bid.is_buy():
                                         bid_success = self.agent.stations[station_id][1].add_bid(bid)
-                                        pkg = Package("bid status", (bid_success, bid))
-                                        msg = Message(to=msg.sender)
-                                        msg.set_metadata("performative", "inform")
-                                        msg.body = jsonpickle.encode(pkg)
-
-                                        await self.send(msg)
                                 
                                 # Check if bid is to sell and auction is None
                                 elif bid.is_sell():
@@ -145,7 +158,16 @@ class AuctionManagerListenerBehaviour(CyclicBehaviour):
                                         station = self.agent.stations[station_id][0]
                                         if station.isEqual(bid.station):
                                             # Create auction (end time is in 30 seconds)
-                                            self.agent.stations[station_id] = (station, Auction(bid.value, bid.station))
+                                            self.agent.stations[station_id] = (station, Auction(bid.value, bid.station, self.agent.get('logs'), self.agent.get('logs_file')))
+                                            bid_success = True
+                                            self.agent.write_log("Auction Manager Behaviour: Auction created for station {}".format(station_id))
+                                
+                            pkg = Package("bid status", (bid_success, bid))
+                            msg = Message(to=airline_jid)
+                            msg.set_metadata("performative", "inform")
+                            msg.body = jsonpickle.encode(pkg)
+
+                            await self.send(msg)
 
 
         else:

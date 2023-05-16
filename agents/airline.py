@@ -13,6 +13,8 @@ class AirlineAgent(agent.Agent):
     async def setup(self): # arguments passed on start()
         self.write_log(f"AirlineAgent started with jid {self.jid}")
 
+        self.subscribed = False
+
         self.available_stations = (True,[]) # (seen by bidding behaviour, [(auction_state, station)])
         self.available_stations_lock = threading.Lock()
 

@@ -7,13 +7,15 @@ class Auction:
     OPEN = 'open'
     CLOSED = 'closed'
 
-    def __init__(self, base_value, station):
+    def __init__(self, base_value, station, logs, logs_file):
         self.base_value = base_value
         self.station = station
-        self.end_time = time.time() + 30 # TODO: Adjust auction duration
+        self.end_time = time.time() + 15 # TODO: Adjust auction duration
         self.bids = []
         self.winning_bid = None
         self.state = Auction.OPEN
+        self.logs = logs
+        self.logs_file = logs_file
 
         # Create thread to handle auction and results
         # The thread must be run when the end_time is reached
@@ -42,19 +44,24 @@ class Auction:
 
 
     def run(self):
-        print("Auction for station {} started.".format(self.station.id))
+        self.write_log("Auction for station {} started.".format(self.station.id))
 
         # Sleep until end_time
         while time.time() < self.end_time:
             time.sleep(1)
         
-        print("Auction for station {} ended. Choosing the winner...".format(self.station.id))
+        self.write_log("Auction for station {} ended. Choosing the winner...".format(self.station.id))
 
         # Choose the winner
         with self.lock:
+            self.state = Auction.CLOSED
             if self.bids:
                 self.winning_bid = max(self.bids, key=lambda bid: bid.price)    
-                self.state = Auction.CLOSED
-                print("Auction for station {} ended. Winner: {}".format(self.station.id, self.winning_bid.station.id))
+                self.write_log("Auction for station {} ended. Winner: {}".format(self.station.id, self.winning_bid.station.id))
             else:
-                print("Auction for station {} ended. No bids.".format(self.station.id))
+                self.write_log("Auction for station {} ended. No bids.".format(self.station.id))
+
+    def write_log(self,message):
+        '''Escreve os logs no ficheiro especificado, ou no stdout por default'''
+        if self.logs:
+            self.logs_file.write(message+'\n')

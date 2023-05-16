@@ -9,6 +9,7 @@ class Airline:
         self.type = type
         self.budget = budget
         self.costs = costs
+        self.strategy = strategy
         
         # Unwrap strategy
         if strategy:
@@ -28,3 +29,10 @@ class Airline:
     def update(self, airline):
         with self.lock:
             self.budget = airline.budget
+
+    def __str__(self):
+        return "Airline: {} ({})".format(self.name, self.jid) + "\n" + \
+                "Budget: {}".format(self.budget) + "\n" + \
+                "Costs: {}".format(self.costs) + "\n" + \
+                "Strategy: {}".format(self.strategy if self.strategy else "None")
+    

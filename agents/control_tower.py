@@ -42,16 +42,16 @@ class ControlTowerAgent(agent.Agent):
         | Landing Queue |
             ---------
 '''
-        for plane in landing_queue:
-            status += f'{str(plane)}\n'
+        for plane,_ in landing_queue:
+            status += f'{plane.id}\n'
 
         status += '''
          ________________
         | Take off Queue |
             ----------
 '''
-        for plane in take_off_queue:
-            status += f'{str(plane)}\n'
+        for _,plane,_ in take_off_queue:
+            status += f'{plane.id}\n'
 
         status += '''
          ___________

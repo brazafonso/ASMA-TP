@@ -1,3 +1,4 @@
+import asyncio
 from spade import agent
 from behaviours.station_manager_behaviour import *
 
@@ -11,7 +12,7 @@ class StationManagerAgent(agent.Agent):
         
         # "Station ID" : ("Airstrip ID", timestamp, plane)
         self.pending_arrivals = {}
-        self.pending_arrivals_lock = threading.Lock()
+        self.pending_arrivals_lock = asyncio.Lock()
 
         self.add_behaviour(StationManagerListener())
         self.add_behaviour(StationManagerClearOldReservationsBehaviour(period=1))

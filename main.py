@@ -210,9 +210,9 @@ if __name__ == "__main__":
                 futureSM.result()
 
                 if args.auction:
-                    time.sleep(0.1) # TODO: Testing delays...
+                    print('Auction functionality activated...')
 
-                    # # Start auction manager
+                    # Start auction manager
                     auction_manager = AuctionManagerAgent(AM,PASSWORD)
                     auction_manager.set('airport_map',airport_map.get_copy())
                     auction_manager.set('station_manager',SM)
@@ -221,9 +221,7 @@ if __name__ == "__main__":
                     
                     futureAM = auction_manager.start()
 
-                    # time.sleep(0.1) # TODO: Testing delays...
-
-                    # # Start airline agents
+                    # Start airline agents
                     future_airlines = []
                     for airline_name in airlines_list:
                         airline_jid = ('airline_'+str(airline_name)+'@'+USER).lower()
@@ -239,14 +237,13 @@ if __name__ == "__main__":
                         airline_agent.set('logs_file',args.logs_file)
 
                         future_airlines.append(airline_agent.start())
-                        #     break # TODO: Test only one airline
+                        
+                        break # TODO: Test only one airline
 
-                        # # TODO: Add delays between airline/auction manager...subscribe is not captured
-                        # #       Actually, this is not the only message to be dropped..maybe add delays between all agents
-                        futureAM.result()
+                    futureAM.result()
 
-                        for future in future_airlines:
-                            future.result()
+                    for future in future_airlines:
+                        future.result()
 
                 
 

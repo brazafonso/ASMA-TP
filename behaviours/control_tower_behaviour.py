@@ -1,4 +1,5 @@
 import asyncio
+from random import Random
 import time
 import jsonpickle
 from spade.behaviour import CyclicBehaviour,OneShotBehaviour,PeriodicBehaviour
@@ -168,8 +169,10 @@ class ControlTowerRequestsHandler(PeriodicBehaviour):
             self.agent.write_log('Control Tower: Checking requests')
             min_time = self.agent.min_request_handle_time
 
-            # Tratar de pedidos de aterragem
-            if len(self.agent.landing_queue)>0:
+            type_chance = Random.randint(0,9)
+
+            # Tratar de pedidos de aterragem (70% de probabilidade de ter prioridade)
+            if len(self.agent.landing_queue)>0 and type_chance > 2:
                   plane = self.agent.landing_queue[0]
                   available_airstrips = self.get('airport_map').available_airstrips()
                   if available_airstrips:

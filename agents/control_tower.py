@@ -16,15 +16,13 @@ class ControlTowerAgent(agent.Agent):
         self.landing_queue = []
         self.take_off_queue = []
         self.add_behaviour(ControlTowerListener())
-        self.add_behaviour(ControlTowerLandingRequester(period=self.check_frequency))
-        self.add_behaviour(ControlTowerTakeOffHandler(period=self.check_frequency))
+        self.add_behaviour(ControlTowerRequestsHandler(period=self.check_frequency))
 
 
 
     def pop_landing_queue(self,plane_id):
             '''Remove o aviao da queue de aterragem'''
-            for i,landing in enumerate(self.landing_queue):
-                  plane = landing[0]
+            for i,plane in enumerate(self.landing_queue):
                   if plane.id == plane_id:
                         self.landing_queue.pop(i)
                         break
@@ -42,7 +40,7 @@ class ControlTowerAgent(agent.Agent):
         | Landing Queue |
             ---------
 '''
-        for plane,_ in landing_queue:
+        for plane in landing_queue:
             status += f'{plane.id}\n'
 
         status += '''

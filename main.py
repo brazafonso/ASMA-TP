@@ -176,13 +176,13 @@ if __name__ == "__main__":
                 print('Info:',len(ground_plane_agents),len(air_plane_agents),n_planes)
 
 
-                # # Desenha aeroporto
-                # airport_map.set_frame()
-                # airport_map.place_airstrips()
-                # airport_map.place_stations()
-                # airport_map.place_roads()
-                # airport_map.map_update_stations(airport_map.get_stations())
-                # airport_map.draw_map()
+                # Desenha aeroporto
+                airport_map.set_frame()
+                airport_map.place_airstrips()
+                airport_map.place_stations()
+                airport_map.place_roads()
+                airport_map.map_update_stations(airport_map.get_stations())
+                airport_map.draw_map()
                 
                 # Criar torre de controlo
                 control_tower = ControlTowerAgent(CT,PASSWORD)
@@ -248,15 +248,15 @@ if __name__ == "__main__":
                 
 
                             
-                # # Criar Gestor de Dashboards
-                # dashboard_manager = Dashboard_Manager(f'dashboard_manager@{USER}',PASSWORD,period=dash_board_period)
-                # dashboard_manager.set('airport_map',airport_map)
-                # dashboard_manager.set('control_tower',CT)
-                # dashboard_manager.set('logs',args.logs)
-                # dashboard_manager.set('logs_file',args.logs_file)
+                # Criar Gestor de Dashboards
+                dashboard_manager = Dashboard_Manager(f'dashboard_manager@{USER}',PASSWORD,period=dash_board_period)
+                dashboard_manager.set('airport_map',airport_map)
+                dashboard_manager.set('control_tower',CT)
+                dashboard_manager.set('logs',args.logs)
+                dashboard_manager.set('logs_file',args.logs_file)
 
-                # futureDM = dashboard_manager.start()
-                # futureDM.result()
+                futureDM = dashboard_manager.start()
+                futureDM.result()
 
                 futureP = []
                 # Iniciar agentes aviao no chao

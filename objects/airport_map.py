@@ -261,9 +261,9 @@ class AirportMap():
         bottomline = '|xx|'
         
         with self.__stations_lock:
-            for i in self.__stations:
-                x = i.get_pos_x()
-                y = i.get_pos_y()
+            for stations in self.__stations.values():
+                x = stations.get_pos_x()
+                y = stations.get_pos_y()
                 self.replacer(y-1,x,topline)
                 self.replacer(y,x,bottomline)
 
@@ -289,9 +289,9 @@ class AirportMap():
         bottomline = '‾'*(self.width-2)
 
         with self.__airstrips_lock:
-            for i in self.__airstrips:
+            for airstrip in self.__airstrips.values():
                 x = 1 #i.get_pos_x()
-                y = i.get_pos_y()-2
+                y = airstrip.get_pos_y()-2
                 self.replacer(y,x,topline)
                 self.replacer(y+2,x,midline)
                 self.replacer(y+4,x,bottomline)
@@ -302,8 +302,8 @@ class AirportMap():
         pos_roads = []
 
         with self.__airstrips_lock:
-            for i in self.__airstrips:
-                pos_roads.append((i.get_pos_x(),i.get_pos_y()))
+            for airstrip in self.__airstrips.values():
+                pos_roads.append((airstrip.get_pos_x(),airstrip.get_pos_y()))
 
         #TODO: Descomentar este código quando adicionarmos dicionarios de pistas e gares
         #TODO: Remover o código das linhas 306 até 310 e 341 até 371
@@ -311,26 +311,26 @@ class AirportMap():
 
         # Lista de tuplos (posicao_x,posicao_y) das pistas do aeroporto
 
-        #with self.__airstrips_lock:
-        #    pos_roads = []
+        with self.__airstrips_lock:
+           pos_roads = []
 
-        #    for key in airstrip_dict:
-        #        pos_roads.append((airstrip_dict[key].get_pos_x(),airstrip_dict[key].get_pos_y()))
+           for airstip in self.__airstrips.values():
+               pos_roads.append((airstip.get_pos_x(),airstip.get_pos_y()))
         
         # Dicionario onde as chaves são a posicao_y das gares e o valor será uma lista com a posicao_x
         # das gares com essa coordenada y 
 
-        #pos_gares = {}
-
-        #for key in station_dict:
-        #    y = station_dict[key].get_pos_y()
-        #    x = station_dict[key].get_pos_x()
-        #    if y not in pos_gares.keys():
-        #        pos_gares[y] = [x]
-        #    else:
-        #        temp_list = pos_gares[y]
-        #        temp_list.append(x)
-        #        pos_gares[y] = temp_list
+        pos_gares = {}
+        with self.__stations_lock:
+            for station in self.__stations.values():
+                y = station.get_pos_y()
+                x = station.get_pos_x()
+                if y not in pos_gares.keys():
+                    pos_gares[y] = [x]
+                else:
+                    temp_list = pos_gares[y]
+                    temp_list.append(x)
+                    pos_gares[y] = temp_list
 
 
 
@@ -437,7 +437,7 @@ class AirportMap():
 
             fila_de_aterragem = 'Fila de Aterragem:'
 
-            for plane,_ in self.__landing_queue:
+            for plane in self.__landing_queue:
             
                 plane_id_match = re.findall(r'(\d+)',str(plane.id))
 
@@ -492,7 +492,7 @@ class AirportMap():
         self.update_airstrips(airstrips)
         airstrips = self.get_airstrips()
 
-        for airstrip in airstrips:
+        for airstrip in airstrips.values():
             pos = airstrip.pos
 
             if airstrip.state == 1:
@@ -525,7 +525,7 @@ class AirportMap():
 
         stations = self.get_stations()
         
-        for station in stations:
+        for station in stations.values():
             
             pos = station.pos
 

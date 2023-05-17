@@ -22,7 +22,7 @@ class ControlTowerListener(CyclicBehaviour):
                         if type == 'landing request':
                               self.agent.write_log('Control Tower: Landing request received')
                               if len(self.agent.landing_queue) < self.get('max_queue'):
-                                    self.agent.landing_queue.append((package.body,None))
+                                    self.agent.landing_queue.append(package.body)
                               # Fila de espera cheia, recusa aterragem
                               else:
                                     msg = Message(to=source)
@@ -106,7 +106,7 @@ class ControlTowerLandingHandler(OneShotBehaviour):
             
             waiting = False
 
-            for p,_ in self.agent.landing_queue:
+            for p in self.agent.landing_queue:
                   if plane.id == p.id:
                         waiting = True 
                         break
@@ -161,56 +161,31 @@ class ControlTowerLandingHandler(OneShotBehaviour):
                   msg.body = jsonpickle.encode(package)
 
 
-class ControlTowerLandingRequester(PeriodicBehaviour):
-      '''Requester de pedidos de aterragem à gare'''
+class ControlTowerRequestsHandler(PeriodicBehaviour):
+      '''Handler de pedidos de aterragem e descolagem, priorizando pedidos de aterragem'''
 
       async def run(self):
-            self.agent.write_log('Control Tower: Checking landing requests')
+            self.agent.write_log('Control Tower: Checking requests')
             min_time = self.agent.min_request_handle_time
+
+            # Tratar de pedidos de aterragem
             if len(self.agent.landing_queue)>0:
-                  i,plane,timestamp = await self.choose_request()
-                  current_time = time.time()
-                  # verifica se o pedido nunca foi tratado ou ja passou mais de 10 segundos desde ultima vez
-                  if not timestamp or timestamp < current_time - min_time:
-                        self.agent.landing_queue[i] = (plane,current_time)
-                        available_airstrips = self.get('airport_map').available_airstrips()
-                        if available_airstrips:
-                              self.agent.write_log('Control tower:Sending requests to station manager')
-                              package = Package('landing request',(available_airstrips,plane))
-                              station_manager = self.get('station_manager')
-                              msg = Message(to=self.get('station_manager'))
-                              msg.set_metadata("performative", "query-if")
-                              msg.body = jsonpickle.encode(package)
+                  plane = self.agent.landing_queue[0]
+                  available_airstrips = self.get('airport_map').available_airstrips()
+                  if available_airstrips:
+                        self.agent.write_log('Control tower:Sending requests to station manager')
+                        package = Package('landing request',(available_airstrips,plane))
+                        station_manager = self.get('station_manager')
+                        msg = Message(to=self.get('station_manager'))
+                        msg.set_metadata("performative", "query-if")
+                        msg.body = jsonpickle.encode(package)
 
-                              await self.send(msg)
-                              self.agent.write_log('Control tower:landing request sent')
+                        await self.send(msg)
+                        self.agent.write_log('Control tower:landing request sent')
 
-      async def choose_request(self):
-            '''Escolhe o pedido de aterragem mais urgente para tratar'''
-            # (plane, timestamp)
-            chosen = (0,None,None)
-            for i, (plane,timestamp) in enumerate(self.agent.landing_queue):
-                  # iniciar
-                  if not chosen[1]:
-                        chosen = (i,plane,timestamp)
-                  else:
-                        # escolher aviao com timestamp mais antiga
-                        if chosen[2] and timestamp:
-                              if timestamp and timestamp > chosen[2]:
-                                    chosen = (i,plane,timestamp)
-                        elif timestamp:
-                              chosen = (i,plane,timestamp)
-            return chosen
-
-
-class ControlTowerTakeOffHandler(PeriodicBehaviour):
-      '''Handler de pedidos de descolagem'''
-
-      async def run(self):
-            self.agent.write_log('Control Tower: Checking take off requests')
-            min_time = self.agent.min_request_handle_time
-            if len(self.agent.take_off_queue)>0:
-                  i,pos,plane,timestamp = await self.choose_request()
+            # Tratar de pedidos de descolagem
+            elif len(self.agent.take_off_queue)>0:
+                  i,pos,plane,timestamp = await self.choose_take_off_request()
                   current_time = time.time()
                   # verifica se o pedido nunca foi tratado ou ja passou mais de 10 segundos desde ultima vez
                   if not timestamp or timestamp < current_time - min_time:
@@ -231,10 +206,11 @@ class ControlTowerTakeOffHandler(PeriodicBehaviour):
 
                                     await self.send(msg)
 
+            
 
-      async def choose_request(self):
+      async def choose_take_off_request(self):
             '''Escolhe o pedido de descolagem mais urgente para tratar'''
-            # (i,pos,plane, timestamp)
+            # (plane, timestamp)
             chosen = (0,None,None,None)
             for i,(pos,plane,timestamp) in enumerate(self.agent.take_off_queue):
                   # iniciar
@@ -248,6 +224,8 @@ class ControlTowerTakeOffHandler(PeriodicBehaviour):
                         elif timestamp:
                               chosen = (i,pos,plane,timestamp)
             return chosen
+
+
 
 
 class ControlTowerStatusSender(OneShotBehaviour):

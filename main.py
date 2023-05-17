@@ -76,7 +76,7 @@ def create_plane_agents(n_planes,control_tower,station_manager,airport_map:Airpo
         for type,dict in stations_dic.items():
             max = int(max_ground_planes/n_types)
             assigned = 0
-            for station in dict:
+            for station in dict.values():
                 airline_name = station.airline_name
                 plane_agent = PlaneAgent(f'plane{plane_id}@{USER}',PASSWORD,state=False,airline_name=airline_name,
                                    type=type,plane_speed=plane_speed,max_wait_in_station=max_wait_in_station,
@@ -171,18 +171,18 @@ if __name__ == "__main__":
                     airlines_list = list(airlines_conf.keys())
 
                 # Criar avioes (devido aos que começam nas gares)
-                n_planes = random.randint(1,max_planes)
+                n_planes = 20
                 ground_plane_agents,air_plane_agents,airport_map = create_plane_agents(n_planes,CT,SM,airport_map,args.logs,args.logs_file)
                 print('Info:',len(ground_plane_agents),len(air_plane_agents),n_planes)
 
 
-                # Desenha aeroporto
-                airport_map.set_frame()
-                airport_map.place_airstrips()
-                airport_map.place_stations()
-                airport_map.place_roads()
-                airport_map.map_update_stations(airport_map.get_stations())
-                airport_map.draw_map()
+                # # Desenha aeroporto
+                # airport_map.set_frame()
+                # airport_map.place_airstrips()
+                # airport_map.place_stations()
+                # airport_map.place_roads()
+                # airport_map.map_update_stations(airport_map.get_stations())
+                # airport_map.draw_map()
                 
                 # Criar torre de controlo
                 control_tower = ControlTowerAgent(CT,PASSWORD)
@@ -248,21 +248,23 @@ if __name__ == "__main__":
                 
 
                             
-                # Criar Gestor de Dashboards
-                dashboard_manager = Dashboard_Manager(f'dashboard_manager@{USER}',PASSWORD,period=dash_board_period)
-                dashboard_manager.set('airport_map',airport_map)
-                dashboard_manager.set('control_tower',CT)
-                dashboard_manager.set('logs',args.logs)
-                dashboard_manager.set('logs_file',args.logs_file)
+                # # Criar Gestor de Dashboards
+                # dashboard_manager = Dashboard_Manager(f'dashboard_manager@{USER}',PASSWORD,period=dash_board_period)
+                # dashboard_manager.set('airport_map',airport_map)
+                # dashboard_manager.set('control_tower',CT)
+                # dashboard_manager.set('logs',args.logs)
+                # dashboard_manager.set('logs_file',args.logs_file)
 
-                futureDM = dashboard_manager.start()
-                futureDM.result()
+                # futureDM = dashboard_manager.start()
+                # futureDM.result()
 
                 futureP = []
                 # Iniciar agentes aviao no chao
                 for plane in ground_plane_agents:
                     futureP.append(plane.start())
 
+
+                time.sleep(spawn_time)
                 # Iniciar agentes aviao no ar (delay de spawn)
                 for plane in air_plane_agents:
                     futureP.append(plane.start())

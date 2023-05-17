@@ -24,10 +24,10 @@ class AirportMap():
         self.__take_off_queue = []
         self.__take_off_queue_lock = threading.Lock()
         
-        self.__airstrips = []
+        self.__airstrips = {}
         self.__airstrips_lock = threading.Lock()
 
-        self.__stations = []
+        self.__stations = {}
         self.__stations_lock = threading.Lock()
         
         self.scrape_airport_map()
@@ -64,12 +64,18 @@ class AirportMap():
             return new_take_off_queue
         
     def get_stations(self):
+        stations = {}
         with self.__stations_lock:
-            return [station.get_copy() for station in self.__stations]
+            for id,station in self.__stations.items():
+                stations[id] = station.get_copy()
+        return stations
     
     def get_airstrips(self):
         with self.__airstrips_lock:
-            return [airstrip.get_copy() for airstrip in self.__airstrips]
+            airstrips = {}
+            for id,airstrip in self.__airstrips.items():
+                airstrips[id] = airstrip.get_copy()
+            return airstrips
     
     def get_num_stations(self):
         with self.__stations_lock:
@@ -81,38 +87,37 @@ class AirportMap():
 
         # Deep copy list of stations
         stations_copy = self.get_stations()
-        for station in stations_copy:
+        for key,station in stations_copy.items():
             type = station.type
             if type not in stations_ret:
-                stations_ret[type] = []
-            stations_ret[type].append(station)
+                stations_ret[type] = {}
+            stations_ret[type][key] = station
 
         return stations_ret
 
     def available_airstrips(self):
         '''Devolve a lista das pistas disponiveis'''
-        available = []
+        available = {}
         with self.__airstrips_lock:
-            for airstrip in self.__airstrips:
+            for key,airstrip in self.__airstrips.items():
                 if airstrip.state == 0:
-                    available.append(airstrip)
+                    available[key]=airstrip.get_copy()
             return available
     
     def available_airstrip(self,id):
         '''Devolve se uma pista esta disponivel'''
         available = False
         with self.__airstrips_lock:
-            for airstrip in self.__airstrips:
-                if airstrip.id == id:
-                    available = airstrip.state == 0
-            return available
+            if id in self.__airstrips:
+                available = self.__airstrips[id].state == 0
+        return available
     
     def closest_available_airstrip(self,pos:Position):
         '''Devolve a pista mais proxima disponivel'''
         closest = None
         distance = None
         with self.__airstrips_lock:
-            for airstrip in self.__airstrips:
+            for airstrip in self.__airstrips.values():
                 if airstrip.state == 0:
                     if closest:
                         if pos.distance(airstrip.pos) < distance:
@@ -127,33 +132,28 @@ class AirportMap():
         '''Torna uma pista livre'''
         with self.__airstrips_lock:
             if id:
-                for airstrip in self.__airstrips:
-                    if airstrip.id == id:
-                        airstrip.state = 0
-                        airstrip.plane = None
-                        break
+                self.__airstrips[id].state = 0
+                self.__airstrips[id].plane = None
+                return self.__airstrips[id].get_copy()
 
             elif plane_id:
-                for airstrip in self.__airstrips:
-                    if airstrip.state == 1:
+                for airstrip in self.__airstrips.values():
+                    if airstrip.plane:
                         if airstrip.plane.id == plane_id:
                             airstrip.state = 0
                             airstrip.plane = None
-                            break
+                            return airstrip.get_copy()
 
     def reserve_airstrip(self,id,plane):
         '''Torna uma pista ocupada'''
         with self.__airstrips_lock:
-            for airstrip in self.__airstrips:
-                if airstrip.id == id:
-                    airstrip.state = 1
-                    airstrip.plane = plane
-                    break
+            self.__airstrips[id].state = 1
+            self.__airstrips[id].plane = plane
 
     
     def isPlaneInStation(self, plane_jid):
         with self.__stations_lock:
-            for station in self.__stations:
+            for station in self.__stations.values():
                 if station.plane:
                     if station.plane.id == plane_jid:
                         return station.get_copy()
@@ -163,32 +163,28 @@ class AirportMap():
         '''Torna uma gare livre'''
         with self.__stations_lock:
             if id:
-                for station in self.__stations:
-                    if station.id == id:
-                        station.state = 0
-                        station.plane = None
-                        return station
+                self.__stations[id].state = 0
+                self.__stations[id].plane = None
+                return self.__stations[id].get_copy
 
             elif plane_id:
-                for station in self.__stations:
+                for station in self.__stations.values():
                     if station.state == 1:
                         if station.plane.id == plane_id:
                             station.state = 0
                             station.plane = None
-                            return station
+                            return station.get_copy()
 
 
     def reserve_station(self,id,plane):
         '''Torna uma gare ocupada'''
         reserved = False
         with self.__stations_lock:
-            for station in self.__stations:
-                if station.id == id:
-                    station.state = 1
-                    station.plane = plane
-                    reserved = True
-                    break
-            return reserved
+            if id in self.__stations:
+                reserved = True
+                self.__stations[id].state = 1
+                self.__stations[id].plane = plane
+        return reserved
     
 
     def update_stations(self,stations):
@@ -202,25 +198,25 @@ class AirportMap():
         airstrip_id = 0
         station_id = 0
 
-        stations_to_append = []
-        airstrips_to_append = []
+        stations_to_append = {}
+        airstrips_to_append = {}
         for y,line in enumerate(self.map):
             for x,space in enumerate(line):
                 if space['type'] == 'airstrip':
                     # TODO: meter x como metade da largura do mapa, para usar sempre o ponto medio da pista
-                    airstrips_to_append.append(Airstrip(id=airstrip_id,x=x,y=y))
+                    airstrips_to_append[airstrip_id] = Airstrip(id=airstrip_id,x=x,y=y)
                     airstrip_id += 1
                 elif space['type'] == 'station':
                     type=space['purpose']
                     airline_name=space['airline_name']
                     base_value=space['base_value']
+                    stations_to_append[station_id]= Station(station_id, type, x, y, base_value, airline_name)
                     station_id += 1
-                    stations_to_append.append(Station(station_id, type, x, y, base_value, airline_name))
 
         with self.__stations_lock:
-            self.__stations.extend(stations_to_append)
+            self.__stations.update(stations_to_append)
         with self.__airstrips_lock:
-            self.__airstrips.extend(airstrips_to_append)
+            self.__airstrips.update(airstrips_to_append)
 
 
     def replacer(self,line,index,newstring):
@@ -316,7 +312,7 @@ class AirportMap():
         posxlist = []
         
         with self.__stations_lock:
-            for i in range(len(self.__stations)):
+            for i,station in self.__stations.items():
                 if (i == 0):
                     lasty = self.__stations[0].get_pos_y()
                     posxlist.append(self.__stations[0].get_pos_x())

@@ -171,7 +171,7 @@ if __name__ == "__main__":
                     airlines_list = list(airlines_conf.keys())
 
                 # Criar avioes (devido aos que começam nas gares)
-                n_planes = 20
+                n_planes = random.randint(1,max_planes)
                 ground_plane_agents,air_plane_agents,airport_map = create_plane_agents(n_planes,CT,SM,airport_map,args.logs,args.logs_file)
                 print('Info:',len(ground_plane_agents),len(air_plane_agents),n_planes)
 

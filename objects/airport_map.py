@@ -305,6 +305,35 @@ class AirportMap():
             for i in self.__airstrips:
                 pos_roads.append((i.get_pos_x(),i.get_pos_y()))
 
+        #TODO: Descomentar este código quando adicionarmos dicionarios de pistas e gares
+        #TODO: Remover o código das linhas 306 até 310 e 341 até 371
+        #TODO: Verificar se o nome dos dicionários esta certo
+
+        # Lista de tuplos (posicao_x,posicao_y) das pistas do aeroporto
+
+        #with self.__airstrips_lock:
+        #    pos_roads = []
+
+        #    for key in airstrip_dict:
+        #        pos_roads.append((airstrip_dict[key].get_pos_x(),airstrip_dict[key].get_pos_y()))
+        
+        # Dicionario onde as chaves são a posicao_y das gares e o valor será uma lista com a posicao_x
+        # das gares com essa coordenada y 
+
+        #pos_gares = {}
+
+        #for key in station_dict:
+        #    y = station_dict[key].get_pos_y()
+        #    x = station_dict[key].get_pos_x()
+        #    if y not in pos_gares.keys():
+        #        pos_gares[y] = [x]
+        #    else:
+        #        temp_list = pos_gares[y]
+        #        temp_list.append(x)
+        #        pos_gares[y] = temp_list
+
+
+
         # Dicionario onde as chaves são a posicao_y das gares e o valor será uma lista com a posicao_x
         # das gares com essa coordenada y 
         pos_gares = {}

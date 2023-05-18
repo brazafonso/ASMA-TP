@@ -299,20 +299,16 @@ class AirportMap():
     def place_roads(self):
 
         # Lista de tuplos (posicao_x,posicao_y) das pistas do aeroporto
+        #pos_roads = []
+#
+        #with self.__airstrips_lock:
+        #    for airstrip in self.__airstrips.values():
+        #        pos_roads.append((airstrip.get_pos_x(),airstrip.get_pos_y()))
+
+        # Lista de tuplos (posicao_x,posicao_y) das pistas do aeroporto
         pos_roads = []
 
         with self.__airstrips_lock:
-            for airstrip in self.__airstrips.values():
-                pos_roads.append((airstrip.get_pos_x(),airstrip.get_pos_y()))
-
-        #TODO: Descomentar este código quando adicionarmos dicionarios de pistas e gares
-        #TODO: Remover o código das linhas 306 até 310 e 341 até 371
-        #TODO: Verificar se o nome dos dicionários esta certo
-
-        # Lista de tuplos (posicao_x,posicao_y) das pistas do aeroporto
-
-        with self.__airstrips_lock:
-           pos_roads = []
 
            for airstip in self.__airstrips.values():
                pos_roads.append((airstip.get_pos_x(),airstip.get_pos_y()))
@@ -336,36 +332,36 @@ class AirportMap():
 
         # Dicionario onde as chaves são a posicao_y das gares e o valor será uma lista com a posicao_x
         # das gares com essa coordenada y 
-        pos_gares = {}
-
-        posxlist = []
-        
-        with self.__stations_lock:
-            for i,station in self.__stations.items():
-                if (i == 0):
-                    lasty = self.__stations[0].get_pos_y()
-                    posxlist.append(self.__stations[0].get_pos_x())
-                elif (i == (len(self.__stations) - 1)):
-                    lasty = self.__stations[i-1].get_pos_y()
-                    y = self.__stations[i].get_pos_y()
-                    if(lasty == y):
-                        posxlist.append(self.__stations[i].get_pos_x())
-                        pos_gares[lasty] = posxlist
-                    else:
-                        pos_gares[lasty] = posxlist
-                        posxlist = []
-                        posxlist.append(self.__stations[i].get_pos_x())
-                        pos_gares[y] = posxlist
-                else:
-                    lasty = self.__stations[i-1].get_pos_y()
-                    y = self.__stations[i].get_pos_y()
-                    if(lasty == y):
-                        posxlist.append(self.__stations[i].get_pos_x())
-                    else:
-                        pos_gares[lasty] = posxlist
-                        posxlist = []
-                        posxlist.append(self.__stations[i].get_pos_x())
-
+        #pos_gares = {}
+#
+        #posxlist = []
+        #
+        #with self.__stations_lock:
+        #    for i,station in self.__stations.items():
+        #        if (i == 0):
+        #            lasty = self.__stations[0].get_pos_y()
+        #            posxlist.append(self.__stations[0].get_pos_x())
+        #        elif (i == (len(self.__stations) - 1)):
+        #            lasty = self.__stations[i-1].get_pos_y()
+        #            y = self.__stations[i].get_pos_y()
+        #            if(lasty == y):
+        #                posxlist.append(self.__stations[i].get_pos_x())
+        #                pos_gares[lasty] = posxlist
+        #            else:
+        #                pos_gares[lasty] = posxlist
+        #                posxlist = []
+        #                posxlist.append(self.__stations[i].get_pos_x())
+        #                pos_gares[y] = posxlist
+        #        else:
+        #            lasty = self.__stations[i-1].get_pos_y()
+        #            y = self.__stations[i].get_pos_y()
+        #            if(lasty == y):
+        #                posxlist.append(self.__stations[i].get_pos_x())
+        #            else:
+        #                pos_gares[lasty] = posxlist
+        #                posxlist = []
+        #                posxlist.append(self.__stations[i].get_pos_x())
+#
         road_width_list = []
 
         for i,key in enumerate(pos_gares):

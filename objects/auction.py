@@ -40,7 +40,7 @@ class Auction:
         if self.winning_bid:
             with self.lock:
                 self.bids.remove(self.winning_bid)
-                self.winning_bid = max(self.bids, key=lambda bid: bid.price)
+                self.winning_bid = max(self.bids, key=lambda bid: bid.value)
 
 
     def run(self):
@@ -56,7 +56,7 @@ class Auction:
         with self.lock:
             self.state = Auction.CLOSED
             if self.bids:
-                self.winning_bid = max(self.bids, key=lambda bid: bid.price)    
+                self.winning_bid = max(self.bids, key=lambda bid: bid.value)    
                 self.write_log("Auction for station {} ended. Winner: {}".format(self.station.id, self.winning_bid.station.id))
             else:
                 self.write_log("Auction for station {} ended. No bids.".format(self.station.id))

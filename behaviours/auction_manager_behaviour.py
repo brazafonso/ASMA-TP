@@ -5,6 +5,14 @@ from objects.auction import Auction
 
 import jsonpickle
 
+class AuctionManagerPaydayBehaviour(PeriodicBehaviour):
+    async def run(self):
+        # Increase airline budget by their profit margin
+        with self.agent.airlines_lock:
+            for airline_id in self.agent.airlines:
+                self.agent.write_log("Auction Manager: It's payday for {}.".format(airline_id))
+                self.agent.airlines[airline_id].payday()
+
 class AuctionManagerCleanerBehaviour(PeriodicBehaviour):
     
     async def run(self):

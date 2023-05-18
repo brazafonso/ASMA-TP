@@ -23,6 +23,7 @@ class AuctionManagerAgent(agent.Agent):
         self.add_behaviour(AuctionManagerUpdateAirlinesBehaviour(period=5))
         self.add_behaviour(AuctionManagerCleanerBehaviour(period=3))
         self.add_behaviour(AuctionManagerStatusSender(period=5))
+        self.add_behaviour(AuctionManagerPaydayBehaviour(period=30))
 
     def write_log(self,message):
         '''Escreve os logs no ficheiro especificado, ou no stdout por default'''

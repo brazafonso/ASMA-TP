@@ -5,6 +5,7 @@ from objects.position import Position
 
 import threading
 import os
+import operator
 
 class AirportMap():
     '''Classe representante do mapa do aeroporto'''
@@ -14,7 +15,6 @@ class AirportMap():
         self.name = map_json['name']
         self.width = map_json['width']
         self.height = map_json['height']
-        self.max_queue = map_json['max_queue']
         self.map = map_json['map']
         self.map_draw = [[' ' for _ in range(self.width)] for _ in range(self.height)]
 
@@ -370,9 +370,13 @@ class AirportMap():
                         posxlist = []
                         posxlist.append(self.__stations[i].get_pos_x())
 
+        road_width_list = []
+
         for i,key in enumerate(pos_gares):
 
             road_width = pos_gares[key][-1] - pos_gares[key][0]
+
+            road_width_list.append(road_width)
 
             for posr in pos_roads:
 
@@ -431,6 +435,21 @@ class AirportMap():
                     self.replacer(key-2,pos_gares[key][0],bottomline)
                     self.replacer(key-3,pos_gares[key][0],midline)
                     self.replacer(key-4,topline_x,topline)
+
+        self.join_roads(pos_roads,road_width_list)
+
+    def join_roads(self,pos_roads,road_width_list):
+        p_r = sorted(pos_roads,key=operator.itemgetter(1))
+
+        if len(p_r)>1:
+            for i in range(1,len(p_r)):
+                mid_diff = int(self.width/2) - int(road_width_list[i]/2)
+                
+                verticalline_x = int(road_width_list[i]/2) + mid_diff - 2
+
+                for j in range(p_r[i-1][1]+4,p_r[i][1]-3):
+                    self.replacer(j,verticalline_x,'|  |')
+
 
     def update_landing_queue(self,landing_queue):
 

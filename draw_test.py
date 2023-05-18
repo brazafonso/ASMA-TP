@@ -36,7 +36,7 @@ from objects import airport_map,airstrip,station
 #print(' AC100')
 #print('‾'*141)
 
-f = open('config/1.json')
+f = open('config/ac.json')
 
 ap_map = json.load(f)
 

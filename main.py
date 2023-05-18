@@ -238,8 +238,6 @@ if __name__ == "__main__":
 
                         future_airlines.append(airline_agent.start())
                         
-                        break # TODO: Test only one airline
-
                     futureAM.result()
 
                     for future in future_airlines:

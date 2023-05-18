@@ -10,7 +10,7 @@ class Auction:
     def __init__(self, base_value, station, logs, logs_file):
         self.base_value = base_value
         self.station = station
-        self.end_time = time.time() + 15 # TODO: Adjust auction duration
+        self.end_time = time.time() + 30
         self.bids = []
         self.winning_bid = None
         self.state = Auction.OPEN

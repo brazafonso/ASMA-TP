@@ -17,7 +17,7 @@ class StationManagerListener(CyclicBehaviour):
         closest_station = None
         min_distance = None
         async with self.agent.pending_arrivals_lock:
-            for airstrip in available_airstrips:
+            for airstrip in available_airstrips.values():
                 # Check if this airstrip is in the pending arrivals
                 airstrip_available = True
                 for station_id in self.agent.pending_arrivals:
@@ -28,7 +28,7 @@ class StationManagerListener(CyclicBehaviour):
                     
                 # Check closest station to this airstrip
                 if airstrip_available:
-                    for station in stations:
+                    for station in stations.values():
                         if station.id not in self.agent.pending_arrivals and station.state == 0 and station.type == plane.type:
                             if closest_station is None:
                                 closest_airstrip = airstrip

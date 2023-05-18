@@ -76,7 +76,7 @@ def create_plane_agents(n_planes,control_tower,station_manager,airport_map:Airpo
         for type,dict in stations_dic.items():
             max = int(max_ground_planes/n_types)
             assigned = 0
-            for station in dict:
+            for station in dict.values():
                 airline_name = station.airline_name
                 plane_agent = PlaneAgent(f'plane{plane_id}@{USER}',PASSWORD,state=False,airline_name=airline_name,
                                    type=type,plane_speed=plane_speed,max_wait_in_station=max_wait_in_station,
@@ -263,6 +263,8 @@ if __name__ == "__main__":
                 for plane in ground_plane_agents:
                     futureP.append(plane.start())
 
+
+                time.sleep(spawn_time)
                 # Iniciar agentes aviao no ar (delay de spawn)
                 for plane in air_plane_agents:
                     futureP.append(plane.start())

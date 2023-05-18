@@ -6,8 +6,6 @@ from objects.auction import Auction
 import jsonpickle
 
 class AuctionManagerCleanerBehaviour(PeriodicBehaviour):
-
-    # TODO: Increase budget of airline per number of stations
     
     async def run(self):
         check_bids = [] # (station.id, airline.jid, bid)
@@ -67,10 +65,10 @@ class AuctionManagerCleanerBehaviour(PeriodicBehaviour):
                 self.agent.stations[station_id] = (station, None)
             
             # Update station ownwers in AirportMap object
-            stations = []
+            stations = {}
             for station_id in self.agent.stations:
                 station = self.agent.stations[station_id][0]
-                stations.append(station.get_copy())
+                stations[station_id] = station.get_copy()
 
             self.get('airport_map').update_stations(stations)
 

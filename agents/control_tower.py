@@ -41,7 +41,7 @@ class ControlTowerAgent(agent.Agent):
             ---------
 '''
         for plane in landing_queue:
-            status += f'{plane.id}\n'
+            status += f'{plane}\n'
 
         status += '''
          ________________
@@ -49,23 +49,23 @@ class ControlTowerAgent(agent.Agent):
             ----------
 '''
         for _,plane,_ in take_off_queue:
-            status += f'{plane.id}\n'
+            status += f'{plane}\n'
 
         status += '''
          ___________
         | Airstrips |
            -------
 '''
-        for strip in airstrips:
-            status += f'{str(strip)}\n'
+        for strip in airstrips.values():
+            status += f'{strip}\n'
 
         status += '''
          __________
         | Stations |
             ----
 '''
-        for station in stations:
-            status += f'{str(station)}\n'
+        for station in stations.values():
+            status += f'{station}\n'
         return status
     
 

@@ -49,15 +49,14 @@ class PlaneListenLandingBehaviour(State):
     async def run(self):
         self.agent.write_log(f'{self.agent.name}: In PlaneListenLandingBehaviour')
         #TODO decidir/ajustar tempo de timeout
-        msg = await self.receive(timeout=self.agent.max_wait_in_station)
+        msg = await self.receive(timeout=self.agent.max_wait_landing)
 
         if msg:
             performative = msg.get_metadata('performative')
 
             fromA = msg.sender
             
-            self.agent.write_log(f'{self.agent.name}: Recived message with the performative \
-                  {performative} from {fromA}')
+            self.agent.write_log(f'{self.agent.name}: Recived message with the performative {performative} from {fromA}')
 
             if str(fromA) == self.get('control_tower'):
                 if performative == 'inform':
@@ -78,8 +77,7 @@ class PlaneListenLandingBehaviour(State):
                             await self.send(msg)
 
                             #Permission granted to land in airstrip and go to station
-                            self.agent.write_log(f'{self.agent.name}: Permission granted to land in airstrip \
-                                {airstrip.id} and go to station {station.id}')
+                            self.agent.write_log(f'{self.agent.name}: Permission granted to land in airstrip {airstrip.id} and go to station {station.id}')
 
                             time_now = datetime.datetime.now()
 
@@ -122,36 +120,31 @@ class PlaneListenLandingBehaviour(State):
 
                         else:
 
-                            self.agent.write_log(f'{self.agent.name}: Unexpected message type {type}. \
-                                                   {self.agent.name} will leave airport!')
+                            self.agent.write_log(f'{self.agent.name}: Unexpected message type {type}. {self.agent.name} will leave airport!')
                         
                             self.kill()      
 
                 elif performative =='refuse':
 
-                    self.agent.write_log(f'{self.agent.name}: Recived a message with performative \
-                                         \'refuse\' from Control Tower. {self.agent.name} will leave airport!')
+                    self.agent.write_log(f'{self.agent.name}: Recived a message with performative \'refuse\' from Control Tower. {self.agent.name} will leave airport!')
                     
                     self.kill()
                 
                 else:
                     
-                    self.agent.write_log(f'{self.agent.name}: Unexpected performative {performative}.\
-                          {self.agent.name} will leave airport!')
+                    self.agent.write_log(f'{self.agent.name}: Unexpected performative {performative}. {self.agent.name} will leave airport!')
                     
                     self.kill()
                 
             else:
 
-                self.agent.write_log(f'{self.agent.name}: Unexpected mensage from agent {fromA} while \
-                      landing. {self.agent.name} will leave airport!')
+                self.agent.write_log(f'{self.agent.name}: Unexpected mensage from agent {fromA} while landing. {self.agent.name} will leave airport!')
                 
                 self.kill()
 
         else:
             
-            self.agent.write_log(f'{self.agent.name}: Timeout reached in waiting for a response \
-                                  from Control Tower while in landing State. {self.agent.name} will leave airport!')
+            self.agent.write_log(f'{self.agent.name}: Timeout reached in waiting for a response from Control Tower while in landing State. {self.agent.name} will leave airport!')
             package = Package('give up landing',self.agent.plane)
             msg = Message(to=self.get('control_tower'))
             msg.set_metadata("performative", "inform")
@@ -169,13 +162,12 @@ class PlaneRequestTakeoffBehaviour(State):
         #TODO faz mais sentido definir quando se cria o Avião mas depois não temos a 
         # certeza se passamos da data com as esperas que introduzimos. Pode ser dicutido
 
-        offset = random.randint(1,10)
+        offset = random.randint(1,self.agent.max_wait_in_station)
         data_agora = datetime.datetime.now()
         data_descolagem = data_agora + datetime.timedelta(seconds = offset)
         self.agent.plane.flight.set_take_off_date(data_descolagem)
 
-        self.agent.write_log(f'{self.agent.name}: Waiting for {(data_descolagem-data_agora).seconds} seconds \
-                             until take_off!')
+        self.agent.write_log(f'{self.agent.name}: Waiting for {(data_descolagem-data_agora).seconds} seconds until requesting takeoff!')
 
         while((data_descolagem-data_agora).seconds>1):
             data_agora = datetime.datetime.now()
@@ -202,8 +194,7 @@ class PlaneListenTakeoffBehavior(State):
 
             fromA = msg.sender
 
-            self.agent.write_log(f'{self.agent.name}: Recived message with the performative \
-                  {performative} from {fromA}')
+            self.agent.write_log(f'{self.agent.name}: Recived message with the performative {performative} from {fromA}')
 
             if str(fromA) == self.get('station_manager'):
                 
@@ -217,8 +208,7 @@ class PlaneListenTakeoffBehavior(State):
 
                         airstrip, station = package.body
 
-                        self.agent.write_log(f'{self.agent.name}: Permission granted to takeoff in airstrip \
-                                {airstrip.id} in position X:{airstrip.pos.x},Y:{airstrip.pos.y}')
+                        self.agent.write_log(f'{self.agent.name}: Permission granted to takeoff in airstrip {airstrip.id} in position X:{airstrip.pos.x},Y:{airstrip.pos.y}')
 
                         #Tempo Gare -> Pista
 
@@ -255,29 +245,24 @@ class PlaneListenTakeoffBehavior(State):
 
                     else:
 
-                        self.agent.write_log(f'{self.agent.name}: Unexpected message type {type}. \
-                                                   {self.agent.name} will leave airport!')
+                        self.agent.write_log(f'{self.agent.name}: Unexpected message type {type}.  {self.agent.name} will leave airport!')
                         
                         self.kill()
 
                 else:
                                 
-                    self.agent.write_log(f'{self.agent.name}: Unexpected performative {performative}.\
-                          {self.agent.name} will leave airport!')
+                    self.agent.write_log(f'{self.agent.name}: Unexpected performative {performative}. {self.agent.name} will leave airport!')
                     
                     self.kill()
                         
             else:
 
-                self.agent.write_log(f'{self.agent.name}: Unexpected mensage from agent {fromA} while \
-                      taking-off. {self.agent.name} will leave airport!')
+                self.agent.write_log(f'{self.agent.name}: Unexpected mensage from agent {fromA} while taking-off. {self.agent.name} will leave airport!')
                 
                 self.kill()
         else:
 
-            self.agent.write_log(f'{self.agent.name}: Timeout reached in waiting for a response \
-                                 from Station Manager while in take-off State. {self.agent.name} \
-                                 will go back to State PlaneRequestTakeoffBehaviour!')
+            self.agent.write_log(f'{self.agent.name}: Timeout reached in waiting for a response from Station Manager while in take-off State. {self.agent.name} will go back to State PlaneRequestTakeoffBehaviour!')
             self.set_next_state(STATE_THREE)
 
 

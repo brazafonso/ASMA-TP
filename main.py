@@ -21,6 +21,8 @@ import argparse
 USER = ""
 PASSWORD = ""
 max_queue = 5
+request_check_frequency = 2
+min_request_handle_time = 10
 max_planes = 5
 spawn_time = 2
 dash_board_period = 2
@@ -53,11 +55,16 @@ def parse_arguments()->argparse.Namespace:
 def load_config():
     '''Loads values from configuration file'''
     global max_queue,max_planes,spawn_time
+    global request_check_frequency,min_request_handle_time
     global dash_board_period,plane_speed,max_wait_in_station
     global max_wait_landing,max_wait_take_off,origin_list
     global destination_list,airlines_list
     if 'max_queue' in config:
         max_queue = config['max_queue']
+    if 'request_check_frequency' in config:
+        request_check_frequency = config['request_check_frequency']
+    if 'min_request_handle_time' in config:
+        min_request_handle_time = config['min_request_handle_time']
     if 'max_planes' in config:
         max_planes = config['max_planes']
     if 'spawn_time' in config:
@@ -163,7 +170,9 @@ def draw_map(airport_map:AirportMap):
 
 def create_control_tower(args,airport_map:AirportMap,CT,SM):
     '''Cria um agente torre de controlo'''
-    control_tower = ControlTowerAgent(CT,PASSWORD)
+    control_tower = ControlTowerAgent(CT,PASSWORD,
+                                      check_frequency=request_check_frequency,
+                                      min_request_handle_time=min_request_handle_time)
     control_tower.set('airport_map',airport_map.get_copy())
     control_tower.set('max_queue',max_queue)
     control_tower.set('n_planes',n_planes if args.stop else -1)

@@ -90,7 +90,6 @@ class PlaneListenLandingBehaviour(State):
 
                             #Tempo Ar -> Pista
 
-                            # Demora 7 segundos a aterrar com a velocidade default 10
 
                             speed = self.agent.plane_speed
 

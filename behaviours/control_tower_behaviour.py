@@ -13,7 +13,7 @@ class ControlTowerListener(CyclicBehaviour):
             # Get message
             msg = await self.receive(timeout=10)
             current_time = time.time()
-            # If message and content are not None
+
             if msg:
                   self.agent.write_log('Control Tower: Got message')
                   performative = msg.get_metadata('performative')
@@ -177,7 +177,7 @@ class ControlTowerRequestsHandler(PeriodicBehaviour):
             choice = None
 
             # Tratar de pedidos de aterragem (70% de probabilidade de ter prioridade)
-            if type_chance > 2:
+            if type_chance > 2 or len(self.agent.take_off_queue) == 0:
                   i,plane,timestamp = await self.choose_landing_request()
                   if plane:
                         current_time = time.time()

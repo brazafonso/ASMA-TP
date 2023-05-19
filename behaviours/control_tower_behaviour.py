@@ -176,7 +176,7 @@ class ControlTowerRequestsHandler(PeriodicBehaviour):
                   plane = self.agent.landing_queue[0]
                   available_airstrips = self.get('airport_map').available_airstrips()
                   if available_airstrips:
-                        self.agent.write_log('Control tower:Sending requests to station manager')
+                        self.agent.write_log('Control tower: Sending requests to station manager')
                         package = Package('landing request',(available_airstrips,plane))
                         station_manager = self.get('station_manager')
                         msg = Message(to=self.get('station_manager'))
@@ -184,7 +184,7 @@ class ControlTowerRequestsHandler(PeriodicBehaviour):
                         msg.body = jsonpickle.encode(package)
 
                         await self.send(msg)
-                        self.agent.write_log('Control tower:landing request sent')
+                        self.agent.write_log('Control tower: landing request sent')
 
             # Tratar de pedidos de descolagem
             elif len(self.agent.take_off_queue)>0:
@@ -192,12 +192,12 @@ class ControlTowerRequestsHandler(PeriodicBehaviour):
                   current_time = time.time()
                   # verifica se o pedido nunca foi tratado ou ja passou mais de 10 segundos desde ultima vez
                   if not timestamp or timestamp < current_time - min_time:
-                        self.agent.write_log('Control tower:Choosing airstrip for takeoff')
+                        self.agent.write_log('Control tower: Choosing airstrip for takeoff')
                         self.agent.take_off_queue[i] = (pos,plane,current_time)
                         airstrip = self.get('airport_map').closest_available_airstrip(pos)
                         # reserver pista, avisar gestor de gares e atualizar lista de espera para descolar
                         if airstrip:
-                              self.agent.write_log('Control tower:Sending airstrip for takeoff')
+                              self.agent.write_log('Control tower: Sending airstrip for takeoff')
                               self.agent.take_off_queue.pop(i)
                               self.get('airport_map').reserve_airstrip(airstrip.id,plane)
                               package = Package('available airstrip',(airstrip,plane.id))

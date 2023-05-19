@@ -19,18 +19,18 @@ start_time = datetime.datetime.now()
 class PlaneFSMBehaviour(FSMBehaviour):
 
     async def on_start(self):
-        self.agent.write_log(f'{self.agent.name} começou o seu comportamento!')
+        self.agent.write_log(f'{self.agent.name}: Started it\'s behaviour!')
 
     async def on_end(self):
-        self.agent.write_log(f'{self.agent.name} acabou o seu comportamento!')
+        self.agent.write_log(f'{self.agent.name}: Finished it\'s behaviour!')
         await self.agent.stop()
 
 class PlaneRequestLandingBehaviour(State):
 
     async def run(self):
-        self.agent.write_log('Plane in PlaneRequestLandingBehaviour')
+        self.agent.write_log(f'{self.agent.name}: In PlaneRequestLandingBehaviour')
         #O agente Avião muda o estado de pedir para descolar se já estiver estacionado numa gare
-        self.agent.write_log(f'Plane State {self.agent.plane.state}')
+        self.agent.write_log(f'{self.agent.name}: State {self.agent.plane.state}')
         if not self.agent.plane.state:
             self.set_next_state(STATE_THREE)
         else:
@@ -41,13 +41,13 @@ class PlaneRequestLandingBehaviour(State):
             
             await self.send(msg)
             
-            self.agent.write_log('Landing request sent')
+            self.agent.write_log(f'{self.agent.name}: Landing request sent')
             self.set_next_state(STATE_TWO)
         
 class PlaneListenLandingBehaviour(State):
 
     async def run(self):
-        self.agent.write_log('Plane in PlaneListenLandingBehaviour')
+        self.agent.write_log(f'{self.agent.name}: In PlaneListenLandingBehaviour')
         #TODO decidir/ajustar tempo de timeout
         msg = await self.receive(timeout=self.agent.max_wait_in_station)
 
@@ -55,9 +55,9 @@ class PlaneListenLandingBehaviour(State):
             performative = msg.get_metadata('performative')
 
             fromA = msg.sender
-
-            self.agent.write_log(f'{self.agent.name} recebeu uma mensagem com a performativa \
-                  {performative} do agente {fromA}')
+            
+            self.agent.write_log(f'{self.agent.name}: Recived message with the performative \
+                  {performative} from {fromA}')
 
             if str(fromA) == self.get('control_tower'):
                 if performative == 'inform':
@@ -77,23 +77,19 @@ class PlaneListenLandingBehaviour(State):
                             
                             await self.send(msg)
 
-
-                            self.agent.write_log(f'Permição consedida ao avião {self.agent.name} para aterrar \
-                                na pista {airstrip.id} e para estacionar na gare {station.id}')
+                            #Permission granted to land in airstrip and go to station
+                            self.agent.write_log(f'{self.agent.name}: Permission granted to land in airstrip \
+                                {airstrip.id} and go to station {station.id}')
 
                             time_now = datetime.datetime.now()
 
-                            #TODO: Verificar tempo de inicio de converçações com a torre de controlo
-                            self.agent.write_log('Plane: Landing')
                             while((time_now-start_time).seconds<20):
 
                                 time_now = datetime.datetime.now()
 
                                 await asyncio.sleep(0.5)
 
-                            #TODO: Verificar o tempo passado na pista de aterragem
-
-                            # Neste momento vai demorar cerca de 7 segundos a aterrar 
+                            # Demora 7 segundos a aterrar com a velocidade default 10
 
                             speed = self.agent.plane_speed
 
@@ -112,8 +108,6 @@ class PlaneListenLandingBehaviour(State):
                             
                             await self.send(msg)                            
 
-                            #TODO: Preciso de ter informação sobre a distância do avião à gare para fazer isto dinâmico
-
                             airstrip_pos = (airstrip.get_pos_x(),airstrip.get_pos_y())
 
                             station_pos = (station.get_pos_x(),station.get_pos_y())
@@ -122,47 +116,42 @@ class PlaneListenLandingBehaviour(State):
 
                             park_time = distance_airstirp_station / speed
                             
-                            #TODO: Verificar tempo de viagem até à gare
-
                             await asyncio.sleep(park_time)
-
-                            #TODO: Avisar a Gare? 
 
                             self.set_next_state(STATE_THREE)
 
                         else:
 
-                            self.agent.write_log(f'Tipo da mensagem {type} inesperada \
-                            agente {self.agent.jid} vai abandonar o aeroporto!')
+                            self.agent.write_log(f'{self.agent.name}: Unexpected message type {type}. \
+                                                   {self.agent.name} will leave airport!')
                         
                             self.kill()      
 
-                #TODO definir a performative de abandonar o aeroporto
                 elif performative =='refuse':
 
-                    self.agent.write_log(f'Agente {self.agent.jid} vai abandonar o aeroporto, porque \
-                          recebeu uma mensagem com a performative refuse do aeroporto!')
+                    self.agent.write_log(f'{self.agent.name}: Recived a message with performative \
+                                         \'refuse\' from Control Tower. {self.agent.name} will leave airport!')
                     
                     self.kill()
                 
                 else:
                     
-                    self.agent.write_log(f'Performative {performative} inesperada \
-                          agente {self.agent.jid} vai abandonar o aeroporto!')
+                    self.agent.write_log(f'{self.agent.name}: Unexpected performative {performative}.\
+                          {self.agent.name} will leave airport!')
                     
                     self.kill()
                 
             else:
 
-                self.agent.write_log(f'Mensagem recibida do agente {fromA} ao tentar aterrar \
-                      agente {self.agent.jid} vai abandonar o aeroporto!')
+                self.agent.write_log(f'{self.agent.name}: Unexpected mensage from agent {fromA} while \
+                      landing. {self.agent.name} will leave airport!')
                 
                 self.kill()
 
         else:
             
-            self.agent.write_log(f'O agente {self.agent.jid} não recebeu mensagem de resposta da \
-                  Torre de Controlo.')
+            self.agent.write_log(f'{self.agent.name}: Timeout reached in waiting for a response \
+                                  from Control Tower while in landing State. {self.agent.name} will leave airport!')
             package = Package('give up landing',self.agent.plane)
             msg = Message(to=self.get('control_tower'))
             msg.set_metadata("performative", "inform")
@@ -175,7 +164,7 @@ class PlaneListenLandingBehaviour(State):
 class PlaneRequestTakeoffBehaviour(State):
 
     async def run(self):
-        self.agent.write_log('Plane in PlaneRequestTakeoffBehaviour')
+        self.agent.write_log(f'{self.agent.name}: In PlaneRequestTakeoffBehaviour')
 
         #TODO faz mais sentido definir quando se cria o Avião mas depois não temos a 
         # certeza se passamos da data com as esperas que introduzimos. Pode ser dicutido
@@ -185,7 +174,8 @@ class PlaneRequestTakeoffBehaviour(State):
         data_descolagem = data_agora + datetime.timedelta(seconds = offset)
         self.agent.plane.flight.set_take_off_date(data_descolagem)
 
-        self.agent.write_log(f'Plane: waiting for {(data_descolagem-data_agora).seconds} seconds')
+        self.agent.write_log(f'{self.agent.name}: Waiting for {(data_descolagem-data_agora).seconds} seconds \
+                             until take_off!')
 
         while((data_descolagem-data_agora).seconds>1):
             data_agora = datetime.datetime.now()
@@ -204,7 +194,7 @@ class PlaneRequestTakeoffBehaviour(State):
 class PlaneListenTakeoffBehavior(State):
 
     async def run(self):
-        self.agent.write_log('Plane in PlaneListenTakeoffBehavior')
+        self.agent.write_log(f'{self.agent.name}: In PlaneListenTakeoffBehavior')
         msg = await self.receive(timeout=self.agent.max_wait_take_off)
 
         if msg:
@@ -212,8 +202,8 @@ class PlaneListenTakeoffBehavior(State):
 
             fromA = msg.sender
 
-            self.agent.write_log(f'{self.agent.name} recebou uma mensagem com a performativa \
-                    {performative} do agente {fromA}')
+            self.agent.write_log(f'{self.agent.name}: Recived message with the performative \
+                  {performative} from {fromA}')
 
             if str(fromA) == self.get('station_manager'):
                 
@@ -227,13 +217,8 @@ class PlaneListenTakeoffBehavior(State):
 
                         airstrip, station = package.body
 
-                        self.agent.write_log(f'Permição consedida ao avião {self.agent.jid} para descolar \
-                            na pista localizada na posição X:{airstrip.pos.x},Y:{airstrip.pos.y}')
-
-                        #TODO Preciso de saber distâncias para fazer o sleep dinâmico. Neste caso o station manager pode 
-                        # mandar também a posição da gare
-
-                        #TODO: Discutir tempos
+                        self.agent.write_log(f'{self.agent.name}: Permission granted to takeoff in airstrip \
+                                {airstrip.id} in position X:{airstrip.pos.x},Y:{airstrip.pos.y}')
 
                         #Tempo Gare -> Pista
 
@@ -250,6 +235,8 @@ class PlaneListenTakeoffBehavior(State):
                         await asyncio.sleep(unpark_time)
 
                         #Tempo Pista -> Ar
+
+                        # Demora 7 segundos a aterrar com a velocidade default 10
 
                         distance = airstrip.get_pos_x()
 
@@ -268,28 +255,29 @@ class PlaneListenTakeoffBehavior(State):
 
                     else:
 
-                        self.agent.write_log(f'Tipo da mensagem {type} inesperada \
-                                agente {self.agent.jid} vai abandonar o aeroporto!')
+                        self.agent.write_log(f'{self.agent.name}: Unexpected message type {type}. \
+                                                   {self.agent.name} will leave airport!')
                         
                         self.kill()
 
                 else:
                                 
-                    self.agent.write_log(f'Performative {performative} inesperada \
-                        agente {self.agent.jid} vai abandonar o aeroporto!')
+                    self.agent.write_log(f'{self.agent.name}: Unexpected performative {performative}.\
+                          {self.agent.name} will leave airport!')
                     
                     self.kill()
                         
             else:
 
-                self.agent.write_log(f'Mensagem recibida do agente {fromA} ao tentar levantar \
-                    agente {self.agent.jid} vai abandonar o aeroporto!')
+                self.agent.write_log(f'{self.agent.name}: Unexpected mensage from agent {fromA} while \
+                      taking-off. {self.agent.name} will leave airport!')
                 
                 self.kill()
         else:
 
-            self.agent.write_log(f'O agente {self.agent.jid} não recebeu mensagem de resposta do \
-                  Gestor de Gares.')
+            self.agent.write_log(f'{self.agent.name}: Timeout reached in waiting for a response \
+                                 from Station Manager while in take-off State. {self.agent.name} \
+                                 will go back to State PlaneRequestTakeoffBehaviour!')
             self.set_next_state(STATE_THREE)
 
 

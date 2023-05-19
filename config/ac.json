@@ -7,8 +7,7 @@
     "max_wait_in_station": 2,
     "max_wait_landing": 60,
     "max_wait_take_off": 60,
-    "origin" : "Porto",
-    "destination" : "Lisboa", 
+    "origins" : ["Porto","Lisboa","Londres"],
     "width":145,
     "height":37,
     "airlines":

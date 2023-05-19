@@ -31,6 +31,7 @@ max_wait_take_off = 60
 origin_list=['Porto','Lisboa']
 destination_list=['Porto','Lisboa']
 airlines_list = ["Tap"]
+plane_types = types = ['commercial','goods']
 
 def parse_arguments()->argparse.Namespace:
     """Process arguments from stdin"""
@@ -45,7 +46,8 @@ def parse_arguments()->argparse.Namespace:
     parser.add_argument('-ac','--airport_config' ,type=str                                      ,default='config/ac.json'                                   ,help='Airport Configuration file.')
     parser.add_argument('-l','--logs'                                                                                           ,action='store_true'        ,help='Activating logging.')
     parser.add_argument('-lf','--logs_file'      ,type=argparse.FileType('w',encoding='utf-8')  ,default=sys.stdout                                         ,help='File for logging.')
-    parser.add_argument('-a','--auction'                                                                                           ,action='store_true'        ,help='Activate auction.')
+    parser.add_argument('-a','--auction'                                                                                        ,action='store_true'        ,help='Activate auction.')
+    parser.add_argument('-s','--stop'                                                                                           ,action='store_true'        ,help='Activates gracious end when all planes are dealt with.')
     return parser.parse_args()
 
 def load_config():
@@ -82,19 +84,14 @@ def load_config():
 
 
 def choose_rand(list:list):
-    '''Escolhe aleatoriamente uma empresa da lista de empresas'''
+    '''Escolhe aleatoriamente uma lista'''
 
     chosen = None
     if list:
         chosen = list[random.randint(0,len(list)-1)]
     return chosen
 
-def get_plane_type():
-    '''Escolhe aleatoriamente um tipo de aviao'''
-    type = None
-    types = ['comercial','goods']
-    type = types[random.randint(0,len(types)-1)]
-    return type
+
 
 def create_plane_agents(n_planes,control_tower,station_manager,airport_map:AirportMap,logs,logs_file):
     '''Cria a lista de agentes aviao, alguns em gares e outros no ar e atualiza mapa do aeroporto'''
@@ -137,7 +134,7 @@ def create_plane_agents(n_planes,control_tower,station_manager,airport_map:Airpo
     for _ in range(0,n_planes):
         airline_name = choose_rand(airlines_list)
         origin = choose_rand(origin_list)
-        type = get_plane_type()
+        type = choose_rand(plane_types)
         plane_agent = PlaneAgent(f'plane{plane_id}@{USER}',PASSWORD,state=True,airline_name=airline_name,
                                    type=type,plane_speed=plane_speed,max_wait_in_station=max_wait_in_station,
                                    max_wait_landing=max_wait_landing,max_wait_take_off=max_wait_take_off,
@@ -169,7 +166,7 @@ def create_control_tower(args,airport_map:AirportMap,CT,SM):
     control_tower = ControlTowerAgent(CT,PASSWORD)
     control_tower.set('airport_map',airport_map.get_copy())
     control_tower.set('max_queue',max_queue)
-    control_tower.set('n_planes',n_planes)
+    control_tower.set('n_planes',n_planes if args.stop else -1)
     control_tower.set('station_manager',SM)
     control_tower.set('logs',args.logs)
     control_tower.set('logs_file',args.logs_file)
@@ -299,10 +296,18 @@ if __name__ == "__main__":
                 # Ler configuracoes utilizadas
                 load_config()
 
+
                 # Criar avioes (devido aos que começam nas gares)
                 n_planes = random.randint(1,max_planes)
                 ground_plane_agents,air_plane_agents,airport_map = create_plane_agents(n_planes,CT,SM,airport_map,args.logs,args.logs_file)
-                print('Info:',len(ground_plane_agents),len(air_plane_agents),n_planes)
+                print(f'''
+ -------------
+| Planes Info |
+ -------------
+|    Total : {n_planes}
+|    Starting in the ground : {len(ground_plane_agents)}
+|    Starting in the air : {len(air_plane_agents)}
+-------------------------------------''')
                 
                 # Desenha aeroporto
                 draw_map(airport_map)

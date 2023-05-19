@@ -510,7 +510,6 @@ class AirportMap():
             pos = airstrip.pos
 
             if airstrip.state == 1:
-                print(airstrip)
 
                 plane = airstrip.plane
 
@@ -544,8 +543,6 @@ class AirportMap():
             pos = station.pos
 
             if station.state == 1:
-
-                print(station)
 
                 plane = station.plane
 

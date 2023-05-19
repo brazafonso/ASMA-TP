@@ -57,7 +57,7 @@ class Auction:
             self.state = Auction.CLOSED
             if self.bids:
                 self.winning_bid = max(self.bids, key=lambda bid: bid.value)    
-                self.write_log("Auction for station {} ended. Winner: {}".format(self.station.id, self.winning_bid.station.id))
+                self.write_log("Auction for station {} ended. Station sold from {} to {} for {}.".format(self.station.id, self.station.airline_name, self.winning_bid.bidder_jid, self.winning_bid.value))
             else:
                 self.write_log("Auction for station {} ended. No bids.".format(self.station.id))
 

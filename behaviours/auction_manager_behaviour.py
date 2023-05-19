@@ -53,8 +53,15 @@ class AuctionManagerCleanerBehaviour(PeriodicBehaviour):
                         airline_name = self.agent.airlines[airline_jid].name
                         update_owners.append((station_id, airline_name))
 
+                        self.agent.write_log("Auction Manager: Station {} previously owned by {} is now owned by {}.".format(station_id, self.agent.stations[station_id][0].airline_name, airline_name))
+                        self.agent.write_log("Auction Manager: {} paid {} for station {}.".format(airline_name, bid.value, station_id))
+
+                        old_budget = self.agent.airlines[airline_jid].budget
+
                         # Update airline budget
                         self.agent.airlines[airline_jid].budget -= bid.value
+
+                        self.agent.write_log("Auction Manager: {} budget changed from {} to {}.".format(airline_name, old_budget, self.agent.airlines[airline_jid].budget))
 
                     else:
                         # Send reject proposal

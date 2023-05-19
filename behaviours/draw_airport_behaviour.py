@@ -14,6 +14,7 @@ class DrawAirportBehaviour(PeriodicBehaviour):
     async def run(self):
 
         #Envio de mensagem à Torre de Controlo a pedir a informação de estado
+
         package = Package('airport status request',)
         msg = Message(to=self.get('control_tower'))
         msg.set_metadata("performative", "request")
@@ -38,6 +39,8 @@ class DrawAirportBehaviour(PeriodicBehaviour):
                     
                     self.agent.get('airport_map').update_landing_queue(landing_queue)
                     self.agent.get('airport_map').update_take_off_queue(take_off_queue)
+
+                    self.agent.get('airport_map').update_lt_queues_verbose()
 
                     self.agent.get('airport_map').draw_map()
                         

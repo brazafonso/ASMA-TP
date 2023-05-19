@@ -22,3 +22,7 @@ class Flight:
 
     def set_take_off_date(self,take_off_date):
         self.take_off_date = take_off_date
+
+    def __str__(self) -> str:
+        str = f'Start:{self.start}; Destination:{self.destination};'
+        return str

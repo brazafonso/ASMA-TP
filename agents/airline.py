@@ -11,7 +11,7 @@ class AirlineAgent(agent.Agent):
         self.airline = airline
 
     async def setup(self): # arguments passed on start()
-        self.write_log(f"AirlineAgent started with jid {self.jid}")
+        self.write_log(f"AirlineAgent: Started with jid {self.jid}")
 
         self.subscribed = False
 

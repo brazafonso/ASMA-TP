@@ -203,7 +203,6 @@ class AirportMap():
         for y,line in enumerate(self.map):
             for x,space in enumerate(line):
                 if space['type'] == 'airstrip':
-                    # TODO: meter x como metade da largura do mapa, para usar sempre o ponto medio da pista
                     airstrips_to_append[airstrip_id] = Airstrip(id=airstrip_id,x=x,y=y)
                     airstrip_id += 1
                 elif space['type'] == 'station':
@@ -450,7 +449,7 @@ class AirportMap():
 
             self.replacer(1,1,' '*(self.width-2))
 
-            fila_de_aterragem = 'Fila de Aterragem:'
+            fila_de_aterragem = 'Landing Queue:'
 
             for plane in self.__landing_queue:
             
@@ -477,7 +476,7 @@ class AirportMap():
 
             self.replacer(self.height-2,1,' '*(self.width-2))
 
-            fila_de_descolagem = 'Fila de Descolagem:'
+            fila_de_descolagem = 'Take-off Queue:'
 
             for _,plane,_ in self.__take_off_queue:
 
@@ -566,6 +565,28 @@ class AirportMap():
             else:
 
                 self.replacer(pos.y,pos.x,'|xx|'+' '*3)
+
+    def update_lt_queues_verbose(self):
+
+        lq_str = "Landing Queue: "
+
+        toq_str = "Take-off Queue: "
+
+        for i,plane in enumerate(self.__landing_queue):
+            if (i == 0):
+                lq_str += (plane.__str__() + '\n')
+            else:
+                lq_str += ((' '*15) + plane.__str__() + '\n')
+
+
+        for i,(_,plane,_) in enumerate(self.__take_off_queue):
+            if (i == 0):
+                toq_str += (plane.__str__() + '\n')
+            else:
+                toq_str += ((' '*16) + plane.__str__() + '\n')
+
+        print(lq_str)
+        print(toq_str)
 
     def draw_map(self):
         # Clear screen before drawing

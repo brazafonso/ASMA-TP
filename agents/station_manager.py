@@ -8,7 +8,7 @@ import threading
 class StationManagerAgent(agent.Agent):
 
     async def setup(self):
-        self.write_log("StationManagerAgent started at {}".format(self.jid))
+        self.write_log("StationManagerAgent: Started at {}".format(self.jid))
         
         # "Station ID" : ("Airstrip ID", timestamp, plane)
         self.pending_arrivals = {}

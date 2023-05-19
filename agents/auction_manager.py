@@ -5,7 +5,7 @@ import threading
 
 class AuctionManagerAgent(agent.Agent):
     async def setup(self):
-        self.write_log("AuctionManagerAgent started at {}".format(self.jid))
+        self.write_log("AuctionManagerAgent: Started at {}".format(self.jid))
 
         # station.id : (station, Auction)
         self.stations = {}

@@ -13,7 +13,6 @@ STATE_TWO = 'STATE_TWO'
 STATE_THREE = 'STATE_THREE'
 STATE_FOUR = 'STATE_FOUR'
 
-#TODO: Não sei bem onde começar este start_time
 start_time = datetime.datetime.now()
 
 class PlaneFSMBehaviour(FSMBehaviour):
@@ -29,7 +28,9 @@ class PlaneRequestLandingBehaviour(State):
 
     async def run(self):
         self.agent.write_log(f'{self.agent.name}: In PlaneRequestLandingBehaviour')
+
         #O agente Avião muda o estado de pedir para descolar se já estiver estacionado numa gare
+
         self.agent.write_log(f'{self.agent.name}: State {self.agent.plane.state}')
         if not self.agent.plane.state:
             self.set_next_state(STATE_THREE)
@@ -48,7 +49,7 @@ class PlaneListenLandingBehaviour(State):
 
     async def run(self):
         self.agent.write_log(f'{self.agent.name}: In PlaneListenLandingBehaviour')
-        #TODO decidir/ajustar tempo de timeout
+        
         msg = await self.receive(timeout=self.agent.max_wait_landing)
 
         if msg:
@@ -69,6 +70,7 @@ class PlaneListenLandingBehaviour(State):
                             airstrip, station = package.body
                             
                             # Confirmar à torre de controlo que ainda esta a espera
+
                             package = Package('still waiting',self.agent.jid)
                             msg = Message(to=self.get('control_tower'))
                             msg.set_metadata("performative", "inform")
@@ -76,7 +78,6 @@ class PlaneListenLandingBehaviour(State):
                             
                             await self.send(msg)
 
-                            #Permission granted to land in airstrip and go to station
                             self.agent.write_log(f'{self.agent.name}: Permission granted to land in airstrip {airstrip.id} and go to station {station.id}')
 
                             time_now = datetime.datetime.now()
@@ -86,6 +87,8 @@ class PlaneListenLandingBehaviour(State):
                                 time_now = datetime.datetime.now()
 
                                 await asyncio.sleep(0.5)
+
+                            #Tempo Ar -> Pista
 
                             # Demora 7 segundos a aterrar com a velocidade default 10
 
@@ -104,7 +107,9 @@ class PlaneListenLandingBehaviour(State):
                             msg.set_metadata("performative", "inform")
                             msg.body = jsonpickle.encode(package)
                             
-                            await self.send(msg)                            
+                            await self.send(msg) 
+
+                            #Tempo Pista -> Gare                           
 
                             airstrip_pos = (airstrip.get_pos_x(),airstrip.get_pos_y())
 
@@ -159,9 +164,6 @@ class PlaneRequestTakeoffBehaviour(State):
     async def run(self):
         self.agent.write_log(f'{self.agent.name}: In PlaneRequestTakeoffBehaviour')
 
-        #TODO faz mais sentido definir quando se cria o Avião mas depois não temos a 
-        # certeza se passamos da data com as esperas que introduzimos. Pode ser dicutido
-
         offset = random.randint(1,self.agent.max_wait_in_station)
         data_agora = datetime.datetime.now()
         data_descolagem = data_agora + datetime.timedelta(seconds = offset)
@@ -174,7 +176,7 @@ class PlaneRequestTakeoffBehaviour(State):
             await asyncio.sleep(0.5)
 
         package = Package('takeoff request',self.agent.jid)
-        msg = Message(to=self.get('station_manager')) # assumindo que envias isto qnd querias o avião
+        msg = Message(to=self.get('station_manager'))
         msg.set_metadata("performative", "request")
         msg.body = jsonpickle.encode(package)
                 

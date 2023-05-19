@@ -9,16 +9,11 @@ class Dashboard_Manager(Agent):
         super().__init__(jid, password, verify_security)
         self.period = period
 
-
-
-
     async def setup(self):
-        #Set Variables
-
+        self.write_log(f'Dashboard Manager: Starting id {self.jid}')
         #Set Behaviors
         draw = DrawAirportBehaviour(period=self.period)
         self.add_behaviour(draw)
-
 
     def write_log(self,message):
         '''Escreve os logs no ficheiro especificado, ou no stdout por default'''

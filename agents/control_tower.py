@@ -12,7 +12,7 @@ class ControlTowerAgent(agent.Agent):
     
     # Agent setup
     async def setup(self):
-        self.write_log(f'Control tower starting id : {self.jid}')
+        self.write_log(f'Control Tower: Starting id {self.jid}')
         self.landing_queue = []
         self.take_off_queue = []
         self.add_behaviour(ControlTowerListener())

@@ -73,9 +73,9 @@ def load_config():
     if 'max_wait_take_off' in config:
         max_wait_take_off = config["max_wait_take_off"]
     if 'origin' in config:
-        origin_list = config["origin"]
+        origin_list = config["origins"]
     if 'destination' in config:
-        destination_list = config["destination"]
+        destination_list = config["destinations"]
     if 'airlines' in config:
         airlines_conf = config["airlines"]
         airlines_list = list(airlines_conf.keys())

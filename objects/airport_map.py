@@ -452,7 +452,7 @@ class AirportMap():
 
             fila_de_aterragem = 'Fila de Aterragem:'
 
-            for plane in self.__landing_queue:
+            for plane,_ in self.__landing_queue:
             
                 plane_id_match = re.findall(r'(\d+)',str(plane.id))
 

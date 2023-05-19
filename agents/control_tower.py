@@ -22,7 +22,7 @@ class ControlTowerAgent(agent.Agent):
 
     def pop_landing_queue(self,plane_id):
             '''Remove o aviao da queue de aterragem'''
-            for i,plane,_ in enumerate(self.landing_queue):
+            for i,(plane,_) in enumerate(self.landing_queue):
                   if plane.id == plane_id:
                         self.landing_queue.pop(i)
                         break
@@ -40,7 +40,7 @@ class ControlTowerAgent(agent.Agent):
         | Landing Queue |
             ---------
 '''
-        for plane in landing_queue:
+        for plane,_ in landing_queue:
             status += f'{plane}\n'
 
         status += '''

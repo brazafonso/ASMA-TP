@@ -192,6 +192,12 @@ class AirportMap():
         with self.__stations_lock:
             self.__stations = stations
 
+    def update_stations_metadata(self,stations):
+        '''Atualizar estado das gares'''
+        with self.__stations_lock:
+            for id,station in stations.items():
+                self.__stations[int(id)].update_metadata(station)
+
 
     def scrape_airport_map(self):
         '''Obtém informação mais detalhada a partir do mapa (como as pistas e gares)'''
@@ -569,7 +575,7 @@ class AirportMap():
 
         toq_str = "Take-off Queue: "
 
-        for i,plane in enumerate(self.__landing_queue):
+        for i,(plane,_) in enumerate(self.__landing_queue):
             if (i == 0):
                 lq_str += (plane.__str__() + '\n')
             else:

@@ -29,6 +29,9 @@ class ControlTowerListener(CyclicBehaviour):
                                     msg = Message(to=source)
                                     msg.set_metadata("performative", "refuse")
                                     await self.send(msg)
+                                    n_planes = self.get('n_planes')
+                                    self.set('n_planes',n_planes - 1)
+                                    self.agent.write_log(f'Control Tower: Plane dealt with')
                         #  Pedido de estado de aeroporto
                         elif type == 'airport status request':
                               self.agent.write_log('Control Tower: Airport status request')
@@ -194,7 +197,7 @@ class ControlTowerRequestsHandler(PeriodicBehaviour):
                                     self.agent.write_log('Control tower:landing request sent')
 
             # Tratar de pedidos de descolagem
-            elif not choice and len(self.agent.take_off_queue)>0:
+            if not choice and len(self.agent.take_off_queue)>0:
                   i,pos,plane,timestamp = await self.choose_take_off_request()
                   current_time = time.time()
                   # verifica se o pedido nunca foi tratado ou ja passou mais de 10 segundos desde ultima vez

@@ -19,6 +19,18 @@ class Station():
     
     def get_pos_y(self):
         return self.pos.y
+    
+
+    def update_metadata(self,station):
+        '''
+        Atualiza os seus dados de acordo com a station dada\n
+        Nao altera o aviao nem o seu estado
+        '''
+        self.type = station.type
+        self.pos = station.pos
+        self.airline_name = station.airline_name
+        self.base_value = station.base_value
+
 
     def __str__(self) -> str:
         str= f'''Station {self.id}:

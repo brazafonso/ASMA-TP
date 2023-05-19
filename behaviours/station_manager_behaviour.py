@@ -173,7 +173,7 @@ class StationManagerListener(CyclicBehaviour):
                 elif type == 'station status report':
                     stations = package.body
                     self.agent.write_log('Station manager: Updating stations status.')
-                    self.get('airport_map').update_stations(stations)
+                    self.get('airport_map').update_stations_metadata(stations)
 
 
     async def delete_arrival(self,plane):

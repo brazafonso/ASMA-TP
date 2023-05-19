@@ -223,7 +223,7 @@ class PlaneListenTakeoffBehavior(State):
                         distance_airstirp_station = math.sqrt(math.pow((station_pos[0]-airstrip_pos[0]),2) + math.pow((station_pos[1]-airstrip_pos[1]),2))
 
                         unpark_time = distance_airstirp_station / speed
-
+                        self.agent.write_log(f'{self.agent.name}: Taking {unpark_time} seconds to reach the airstrip.')
                         await asyncio.sleep(unpark_time)
 
                         #Tempo Pista -> Ar
@@ -234,6 +234,7 @@ class PlaneListenTakeoffBehavior(State):
 
                         time = distance / speed
                         
+                        self.agent.write_log(f'{self.agent.name}: Taking {time} seconds to complete take off.')
                         await asyncio.sleep(time)
 
                         package = Package('took off',self.agent.jid)
@@ -265,6 +266,6 @@ class PlaneListenTakeoffBehavior(State):
         else:
 
             self.agent.write_log(f'{self.agent.name}: Timeout reached in waiting for a response from Station Manager while in take-off State. {self.agent.name} will go back to State PlaneRequestTakeoffBehaviour!')
-            self.set_next_state(STATE_THREE)
+            self.set_next_state(STATE_FOUR)
 
 

@@ -12,6 +12,7 @@ class ControlTowerListener(CyclicBehaviour):
       async def run(self):
             # Get message
             msg = await self.receive(timeout=10)
+            current_time = time.time()
             # If message and content are not None
             if msg:
                   self.agent.write_log('Control Tower: Got message')
@@ -23,7 +24,7 @@ class ControlTowerListener(CyclicBehaviour):
                         if type == 'landing request':
                               self.agent.write_log('Control Tower: Landing request received')
                               if len(self.agent.landing_queue) < self.get('max_queue'):
-                                    self.agent.landing_queue.append((package.body,None))
+                                    self.agent.landing_queue.append((package.body,current_time - self.agent.min_request_handle_time))
                               # Fila de espera cheia, recusa aterragem
                               else:
                                     msg = Message(to=source)
@@ -90,7 +91,7 @@ class ControlTowerListener(CyclicBehaviour):
                         if type == 'takeoff request':
                               self.agent.write_log('Control Tower: TakeOff request')
                               pos, plane = package.body
-                              self.agent.take_off_queue.append((pos,plane,None))
+                              self.agent.take_off_queue.append((pos,plane,current_time - self.agent.min_request_handle_time))
 
             # Se ja tiverem sido tratados todos os avioes, encerra graciosamente
             if self.get('n_planes') == 0:
@@ -231,8 +232,8 @@ class ControlTowerRequestsHandler(PeriodicBehaviour):
                         chosen = (i,pos,plane,timestamp)
                   else:
                         # escolher aviao com timestamp mais antiga
-                        if chosen[2] and timestamp:
-                              if timestamp and timestamp > chosen[2]:
+                        if chosen[3] and timestamp:
+                              if timestamp and timestamp > chosen[3]:
                                     chosen = (i,pos,plane,timestamp)
                         elif timestamp:
                               chosen = (i,pos,plane,timestamp)
@@ -288,6 +289,7 @@ class ControlTowerStationStatusHandler(OneShotBehaviour):
             status_package = self.get('stations_status')
             stations = status_package.body
             self.get('airport_map').update_stations(stations)
+
 
 
 

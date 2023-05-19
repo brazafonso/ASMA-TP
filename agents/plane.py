@@ -42,7 +42,7 @@ class PlaneAgent(agent.Agent):
         fsm.add_transition(source=STATE_ONE,dest=STATE_THREE)
         fsm.add_transition(source=STATE_TWO,dest=STATE_THREE)
         fsm.add_transition(source=STATE_THREE,dest=STATE_FOUR)
-        fsm.add_transition(source=STATE_FOUR,dest=STATE_THREE)
+        fsm.add_transition(source=STATE_FOUR,dest=STATE_FOUR)
         self.add_behaviour(fsm)
 
 

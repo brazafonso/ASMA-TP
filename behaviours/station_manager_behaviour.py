@@ -9,6 +9,24 @@ import time
 class StationManagerListener(CyclicBehaviour):
     '''Listener principal do station manager'''
 
+
+    async def choose_station(self,stations,airstrip,plane,closest_airstrip,closest_station,min_distance):
+        '''Tries to choose a station for the given airstrip and plane'''
+        for station in stations:
+            if station.id not in self.agent.pending_arrivals and station.state == 0 and station.type == plane.type:
+                if closest_station is None:
+                    closest_airstrip = airstrip
+                    closest_station = station
+                    min_distance = airstrip.pos.distance(station.pos)
+                else:
+                    distance = airstrip.pos.distance(station.pos)
+                    if distance < min_distance:
+                        closest_airstrip = airstrip
+                        closest_station = station
+                        min_distance = distance
+        return closest_airstrip,closest_station,min_distance
+
+
     async def choose_airstrip(self, stations, available_airstrips, plane, retries=1):
         if retries == 0:
             return None, None
@@ -17,6 +35,10 @@ class StationManagerListener(CyclicBehaviour):
         closest_station = None
         min_distance = None
         async with self.agent.pending_arrivals_lock:
+            airline_name = plane.airline_name.strip()
+            airline_stations = [x for x in stations.values() if x.airline_name.strip() == airline_name]
+            valid_stations = [x for x in stations.values() if x.airline_name == None]
+
             for airstrip in available_airstrips.values():
                 # Check if this airstrip is in the pending arrivals
                 airstrip_available = True
@@ -28,18 +50,16 @@ class StationManagerListener(CyclicBehaviour):
                     
                 # Check closest station to this airstrip
                 if airstrip_available:
-                    for station in stations.values():
-                        if station.id not in self.agent.pending_arrivals and station.state == 0 and station.type == plane.type:
-                            if closest_station is None:
-                                closest_airstrip = airstrip
-                                closest_station = station
-                                min_distance = airstrip.pos.distance(station.pos)
-                            else:
-                                distance = airstrip.pos.distance(station.pos)
-                                if distance < min_distance:
-                                    closest_airstrip = airstrip
-                                    closest_station = station
-                                    min_distance = distance
+                    
+                    # Try to search for a companies station
+                    if airline_stations:
+                        closest_airstrip,closest_station,min_distance = await self.choose_station(airline_stations,airstrip,plane,closest_airstrip,closest_station,min_distance)
+
+                    # If no station is available, searches for a station that is not owened
+                    if closest_airstrip is None or closest_station is None:
+                        if valid_stations:
+                            closest_airstrip,closest_station,min_distance = await self.choose_station(valid_stations,airstrip,plane,closest_airstrip,closest_station,min_distance)
+
         # If the values are still None, retry
         if closest_airstrip is None or closest_station is None:
             return await self.choose_airstrip(stations, available_airstrips, plane, retries-1)

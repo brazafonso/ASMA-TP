@@ -4,7 +4,7 @@ class Station():
     '''Classe representante de uma gare do aeroporto'''
 
     
-    def __init__(self,id,type,x,y, base_value, airline_name=None):
+    def __init__(self,id,type,x,y, base_value=None, airline_name=None):
         self.id = id
         self.plane = None
         self.type = type
@@ -37,9 +37,13 @@ class Station():
         - type    : {self.type}
         - vacancy : {self.state}'''
         str+='''
+        - airline   : ''' + f'{self.airline_name}' if self.airline_name else ''
+        str+='''
         - plane   : ''' + f'{self.plane.id}' if self.plane else ''
         str +='''
         - pos     : ''' + f'{self.pos}'
+        str+='''
+        - value   : ''' + f'{self.base_value}' if self.base_value else ''
         return str
     
     def isEqual(self, station):

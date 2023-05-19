@@ -23,7 +23,7 @@ class AirlineAgent(agent.Agent):
 
         self.add_behaviour(AirlineListenerBehaviour())
         self.add_behaviour(AirlineSubscribeToAuctionManager())
-        self.add_behaviour(AirlineBiddingBehaviour(period=10)) # TODO: Adjust
+        self.add_behaviour(AirlineBiddingBehaviour(period=10))
 
     def write_log(self,message):
         '''Escreve os logs no ficheiro especificado, ou no stdout por default'''

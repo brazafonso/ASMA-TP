@@ -18,6 +18,7 @@
                     "type": "commercial",
                     "budget": 2000,
                     "costs": 500,
+                    "profit_margin":20,
                     "strategy":
                         {
                             "parallel_bids": 2,
@@ -30,6 +31,7 @@
                     "type": "commercial",
                     "budget": 1000,
                     "costs": 100,
+                    "profit_margin":10,
                     "strategy":
                         {
                             "parallel_bids": 1,
@@ -37,16 +39,56 @@
                             "relative_max_increment": 0.1
                         }
                 },
+            "EasyJet":
+                {
+                    "type": "commercial",
+                    "budget": 1000,
+                    "costs": 150,
+                    "profit_margin":10,
+                    "strategy":
+                        {
+                            "parallel_bids": 1,
+                            "relative_max_bid": 0.35,
+                            "relative_max_increment": 0.1
+                        }
+                },
             "FedEx":
                 {
                     "type": "goods",
-                    "budget": 10000,
-                    "costs": 1500,
+                    "budget": 15000,
+                    "costs": 3000,
+                    "profit_margin":15,
                     "strategy":
                         {
-                            "parallel_bids": 5,
+                            "parallel_bids": 3,
                             "relative_max_bid": 0.05,
                             "relative_max_increment": 0.2
+                        }
+                },
+            "UPS":
+                {
+                    "type": "goods",
+                    "budget": 12000,
+                    "costs": 2000,
+                    "profit_margin":10,
+                    "strategy":
+                        {
+                            "parallel_bids": 2,
+                            "relative_max_bid": 0.05,
+                            "relative_max_increment": 0.15
+                        }
+                },
+            "Cargolux":
+                {
+                    "type": "goods",
+                    "budget": 5000,
+                    "costs": 1000,
+                    "profit_margin":15,
+                    "strategy":
+                        {
+                            "parallel_bids": 1,
+                            "relative_max_bid": 0.05,
+                            "relative_max_increment": 0.1
                         }
                 }
     },
@@ -3129,7 +3171,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"TAP",
+                "airline_name":"EasyJet",
                 "purpose":"commercial"
             },
             {
@@ -3162,7 +3204,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"TAP",
+                "airline_name":"EasyJet",
                 "purpose":"commercial"
             },
             {
@@ -3195,7 +3237,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"TAP",
+                "airline_name":"EasyJet",
                 "purpose":"commercial"
             },
             {
@@ -3228,7 +3270,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"TAP",
+                "airline_name":"EasyJet",
                 "purpose":"commercial"
             },
             {
@@ -3261,7 +3303,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"TAP",
+                "airline_name":"EasyJet",
                 "purpose":"commercial"
             },
             {
@@ -3294,7 +3336,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"TAP",
+                "airline_name":"EasyJet",
                 "purpose":"commercial"
             },
             {
@@ -3327,7 +3369,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"TAP",
+                "airline_name":"EasyJet",
                 "purpose":"commercial"
             },
             {
@@ -3360,7 +3402,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"TAP",
+                "airline_name":"EasyJet",
                 "purpose":"commercial"
             },
             {
@@ -3393,7 +3435,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"TAP",
+                "airline_name":"EasyJet",
                 "purpose":"commercial"
             },
             {
@@ -3426,7 +3468,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"TAP",
+                "airline_name":"EasyJet",
                 "purpose":"commercial"
             },
             {
@@ -10164,7 +10206,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"FedEx",
+                "airline_name":"UPS",
                 "purpose":"commercial"
             },
             {
@@ -10197,7 +10239,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"FedEx",
+                "airline_name":"UPS",
                 "purpose":"commercial"
             },
             {
@@ -14617,7 +14659,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"FedEx",
+                "airline_name":"UPS",
                 "purpose":"goods"
             },
             {
@@ -14650,7 +14692,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"FedEx",
+                "airline_name":"UPS",
                 "purpose":"goods"
             },
             {
@@ -14683,7 +14725,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"FedEx",
+                "airline_name":"Cargolux",
                 "purpose":"goods"
             },
             {
@@ -14716,7 +14758,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"FedEx",
+                "airline_name":"Cargolux",
                 "purpose":"goods"
             },
             {
@@ -14749,7 +14791,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"FedEx",
+                "airline_name":"Cargolux",
                 "purpose":"goods"
             },
             {
@@ -14782,7 +14824,7 @@
             {
                 "type":"station",
                 "base_value":500,
-                "airline_name":"FedEx",
+                "airline_name":"Cargolux",
                 "purpose":"goods"
             },
             {

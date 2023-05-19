@@ -67,7 +67,7 @@ class AirlineListenerBehaviour(CyclicBehaviour):
                     accepted_bid = pkg.body
                     with self.agent.my_bids_lock:
                         if accepted_bid.station.id in self.agent.my_bids:
-                            self.agent.my_bids.remove(accepted_bid.station.id)
+                            del self.agent.my_bids[accepted_bid.station.id]
 
             elif performative == 'reject-proposal':
                 if type == 'bid rejected':
@@ -75,7 +75,7 @@ class AirlineListenerBehaviour(CyclicBehaviour):
                     rejected_bid = pkg.body
                     with self.agent.my_bids_lock:
                         if rejected_bid.station.id in self.agent.my_bids:
-                            self.agent.my_bids.remove(rejected_bid.station.id)
+                            del self.agent.my_bids[accepted_bid.station.id]
 
 class AirlineBiddingBehaviour(PeriodicBehaviour):
     '''Comportamento de bidding da companhia aerea'''
@@ -97,7 +97,7 @@ class AirlineBiddingBehaviour(PeriodicBehaviour):
                     with self.agent.my_bids_lock:
 
                         # Check current bids size
-                        if len(self.agent.my_bids) >= self.agent.airline.max_bids:
+                        if len(self.agent.my_bids) >= self.agent.airline.parallel_bids:
                             self.agent.write_log("Airline Bidding Behaviour ({}): Max bids reached".format(self.agent.jid))
                             return None
 
@@ -117,7 +117,7 @@ class AirlineBiddingBehaviour(PeriodicBehaviour):
                     increment = station.base_value * random.uniform(0, self.agent.airline.relative_max_increment)
                     
                     bid_value = min(station.base_value + increment, balance_after_bids * self.agent.airline.relative_max_bid)
-                    return Bid(self.airline.jid, Bid.BUY, bid_value, station)
+                    return Bid(self.agent.airline.jid, Bid.BUY, bid_value, station)
                         
 
             elif auction_state == Auction.CLOSED:

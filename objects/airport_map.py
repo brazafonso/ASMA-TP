@@ -66,15 +66,15 @@ class AirportMap():
     def get_stations(self):
         stations = {}
         with self.__stations_lock:
-            for id,station in self.__stations.items():
-                stations[id] = station.get_copy()
+            for station_id in self.__stations:
+                stations[station_id] = self.__stations[station_id].get_copy()
         return stations
     
     def get_airstrips(self):
         with self.__airstrips_lock:
             airstrips = {}
-            for id,airstrip in self.__airstrips.items():
-                airstrips[id] = airstrip.get_copy()
+            for airstrip_id in self.__airstrips:
+                airstrips[airstrip_id] = self.__airstrips[airstrip_id].get_copy()
             return airstrips
     
     def get_num_stations(self):

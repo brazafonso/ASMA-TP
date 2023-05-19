@@ -10,7 +10,7 @@ class Auction:
     def __init__(self, base_value, station, logs, logs_file):
         self.base_value = base_value
         self.station = station
-        self.end_time = time.time() + 15 # TODO: Adjust auction duration
+        self.end_time = time.time() + 30
         self.bids = []
         self.winning_bid = None
         self.state = Auction.OPEN
@@ -40,7 +40,7 @@ class Auction:
         if self.winning_bid:
             with self.lock:
                 self.bids.remove(self.winning_bid)
-                self.winning_bid = max(self.bids, key=lambda bid: bid.price)
+                self.winning_bid = max(self.bids, key=lambda bid: bid.value)
 
 
     def run(self):
@@ -56,8 +56,8 @@ class Auction:
         with self.lock:
             self.state = Auction.CLOSED
             if self.bids:
-                self.winning_bid = max(self.bids, key=lambda bid: bid.price)    
-                self.write_log("Auction for station {} ended. Winner: {}".format(self.station.id, self.winning_bid.station.id))
+                self.winning_bid = max(self.bids, key=lambda bid: bid.value)    
+                self.write_log("Auction for station {} ended. Station sold from {} to {} for {}.".format(self.station.id, self.station.airline_name, self.winning_bid.bidder_jid, self.winning_bid.value))
             else:
                 self.write_log("Auction for station {} ended. No bids.".format(self.station.id))
 

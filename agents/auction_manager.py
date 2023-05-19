@@ -12,17 +12,18 @@ class AuctionManagerAgent(agent.Agent):
         self.stations_lock = threading.Lock()
 
         # Populate stations
-        stations_list = self.get('airport_map').get_stations()
-        for station in stations_list:
-            self.stations[station.id] = (station, None)
+        stations_dict = self.get('airport_map').get_stations()
+        for station_id in stations_dict:
+            self.stations[station_id] = (stations_dict[station_id], None)
 
         self.airlines = {} # {airline.jid : airline}
         self.airlines_lock = threading.Lock()
 
         self.add_behaviour(AuctionManagerListenerBehaviour())
-        self.add_behaviour(AuctionManagerUpdateAirlinesBehaviour(period=5)) # TODO: Adjust
-        self.add_behaviour(AuctionManagerCleanerBehaviour(period=3)) # TODO: Adjust
-        self.add_behaviour(AuctionManagerStatusSender(period=5)) # TODO: Adjust
+        self.add_behaviour(AuctionManagerUpdateAirlinesBehaviour(period=5))
+        self.add_behaviour(AuctionManagerCleanerBehaviour(period=3))
+        self.add_behaviour(AuctionManagerStatusSender(period=5))
+        self.add_behaviour(AuctionManagerPaydayBehaviour(period=30))
 
     def write_log(self,message):
         '''Escreve os logs no ficheiro especificado, ou no stdout por default'''

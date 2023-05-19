@@ -228,8 +228,9 @@ if __name__ == "__main__":
                         type = airlines_conf[airline_name]["type"]
                         budget = airlines_conf[airline_name]["budget"]
                         costs = airlines_conf[airline_name]["costs"]
+                        profit_margin = airlines_conf[airline_name]["profit_margin"]
                         strategy = airlines_conf[airline_name]["strategy"]
-                        airline_obj = Airline(airline_jid, airline_name, type, budget, costs, strategy)
+                        airline_obj = Airline(airline_jid, airline_name, type, budget, costs, profit_margin, strategy)
                         
                         airline_agent = AirlineAgent(airline_jid, PASSWORD, airline=airline_obj)
                         airline_agent.set('auction_manager',AM)
@@ -238,8 +239,6 @@ if __name__ == "__main__":
 
                         future_airlines.append(airline_agent.start())
                         
-                        break # TODO: Test only one airline
-
                     futureAM.result()
 
                     for future in future_airlines:

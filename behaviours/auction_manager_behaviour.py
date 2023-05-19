@@ -5,9 +5,15 @@ from objects.auction import Auction
 
 import jsonpickle
 
-class AuctionManagerCleanerBehaviour(PeriodicBehaviour):
+class AuctionManagerPaydayBehaviour(PeriodicBehaviour):
+    async def run(self):
+        # Increase airline budget by their profit margin
+        with self.agent.airlines_lock:
+            for airline_id in self.agent.airlines:
+                self.agent.write_log("Auction Manager: It's payday for {}.".format(airline_id))
+                self.agent.airlines[airline_id].payday()
 
-    # TODO: Increase budget of airline per number of stations
+class AuctionManagerCleanerBehaviour(PeriodicBehaviour):
     
     async def run(self):
         check_bids = [] # (station.id, airline.jid, bid)
@@ -47,8 +53,15 @@ class AuctionManagerCleanerBehaviour(PeriodicBehaviour):
                         airline_name = self.agent.airlines[airline_jid].name
                         update_owners.append((station_id, airline_name))
 
+                        self.agent.write_log("Auction Manager: Station {} previously owned by {} is now owned by {}.".format(station_id, self.agent.stations[station_id][0].airline_name, airline_name))
+                        self.agent.write_log("Auction Manager: {} paid {} for station {}.".format(airline_name, bid.value, station_id))
+
+                        old_budget = self.agent.airlines[airline_jid].budget
+
                         # Update airline budget
                         self.agent.airlines[airline_jid].budget -= bid.value
+
+                        self.agent.write_log("Auction Manager: {} budget changed from {} to {}.".format(airline_name, old_budget, self.agent.airlines[airline_jid].budget))
 
                     else:
                         # Send reject proposal
@@ -67,10 +80,10 @@ class AuctionManagerCleanerBehaviour(PeriodicBehaviour):
                 self.agent.stations[station_id] = (station, None)
             
             # Update station ownwers in AirportMap object
-            stations = []
+            stations = {}
             for station_id in self.agent.stations:
                 station = self.agent.stations[station_id][0]
-                stations.append(station.get_copy())
+                stations[station_id] = station.get_copy()
 
             self.get('airport_map').update_stations(stations)
 
